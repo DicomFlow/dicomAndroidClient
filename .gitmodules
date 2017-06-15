@@ -1,0 +1,3 @@
+[submodule "dicom-message-android-lib"]
+	path = dicom-message-android-lib
+	url = https://github.com/ricardosbarbosa/dicom-message-android-lib.git
