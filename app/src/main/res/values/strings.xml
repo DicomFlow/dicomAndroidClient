@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">AndroidDicomFlow</string>
+    <string name="title_serviço_detail">Serviço Detail</string>
+    <string name="title_action_list">Actions</string>
+    <string name="title_action_detail">Action Detail</string>
+    <string name="title_activity_main">MainActivity</string>
+</resources>
