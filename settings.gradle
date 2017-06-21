@@ -1,1 +1,1 @@
-include ':app', ':dicom-message-android-lib'
+include ':app'

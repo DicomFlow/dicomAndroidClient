@@ -13,7 +13,10 @@ import com.github.dicomflow.androiddicomflow.R;
 import com.github.dicomflow.androiddicomflow.activities.ActionDetailActivity;
 import com.github.dicomflow.androiddicomflow.models.protocolo.Action;
 import com.github.dicomflow.androiddicomflow.models.protocolo.DicomFlowProtocol;
+import com.github.dicomflow.androiddicomflow.models.protocolo.services.certificate.Certificate;
 import com.github.dicomflow.androiddicomflow.models.protocolo.services.Service;
+import com.github.dicomflow.androiddicomflow.models.protocolo.services.certificate.CertificateAction;
+import com.github.dicomflow.androiddicomflow.models.protocolo.xml.DicomFlowXmlSerializer;
 
 /**
  * A fragment representing a single Action detail screen.
@@ -67,7 +70,10 @@ public class ActionDetailFragment extends Fragment {
 
         // Show the dummy content as text in a TextView.
         if (action != null) {
-            ((TextView) rootView.findViewById(R.id.action_detail)).setText(action.details);
+            ((Certificate)action.service).theAction = (CertificateAction)action;
+            String xmlString = DicomFlowXmlSerializer.serialize(action.service);
+
+            ((TextView) rootView.findViewById(R.id.action_detail)).setText(xmlString);
         }
 
         return rootView;

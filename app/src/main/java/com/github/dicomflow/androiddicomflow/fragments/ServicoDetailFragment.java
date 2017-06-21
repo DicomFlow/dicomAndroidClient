@@ -63,7 +63,7 @@ public class ServicoDetailFragment extends Fragment {
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
-                appBarLayout.setTitle(service.name);
+                appBarLayout.setTitle(service.getName());
             }
         }
     }
@@ -75,7 +75,7 @@ public class ServicoDetailFragment extends Fragment {
 
         // Show the dummy content as text in a TextView.
         if (service != null) {
-            ((TextView) rootView.findViewById(R.id.serviço_detail)).setText(service.details);
+            ((TextView) rootView.findViewById(R.id.serviço_detail)).setText(service.getDetails());
 
             View recyclerView = rootView.findViewById(R.id.action_list);
             assert recyclerView != null;

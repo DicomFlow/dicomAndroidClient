@@ -9,10 +9,12 @@ import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.widget.MultiAutoCompleteTextView;
 
 import com.github.dicomflow.androiddicomflow.R;
 import com.github.dicomflow.androiddicomflow.fragments.ActionDetailFragment;
 import com.github.dicomflow.androiddicomflow.fragments.ServicoDetailFragment;
+import com.github.dicomflow.androiddicomflow.models.protocolo.xml.DicomFlowXmlSerializer;
 
 /**
  * An activity representing a single Action detail screen. This

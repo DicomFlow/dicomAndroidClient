@@ -31,5 +31,5 @@ dependencies {
     compile 'com.novoda:sexp:1.0.8'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
-    compile project(':dicom-message-android-lib')
+    compile files('libs/simple-xml-2.6.jar')
 }

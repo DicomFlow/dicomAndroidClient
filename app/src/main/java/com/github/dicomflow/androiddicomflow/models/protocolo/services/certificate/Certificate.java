@@ -1,12 +1,21 @@
-package com.github.dicomflow.androiddicomflow.models.protocolo.services;
+package com.github.dicomflow.androiddicomflow.models.protocolo.services.certificate;
 
 import com.github.dicomflow.androiddicomflow.models.protocolo.Action;
+import com.github.dicomflow.androiddicomflow.models.protocolo.services.Service;
+
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
 
 /**
  * Created by ricardobarbosa on 15/06/17.
  */
 
+@Root
 public class Certificate extends Service {
+
+    @Element
+    public Action theAction = null;
+
     public Certificate() {
         super("Certificate", "Serviço utilizado para a troca de certificados entre entidades de saude que pretendem comunicar-se para executar ações sobre imagens médicas");
         addAction(new RequestAction(this));
@@ -14,21 +23,10 @@ public class Certificate extends Service {
         addAction(new ConfirmAction(this));
     }
 
-    protected class RequestAction extends Action {
-        public RequestAction(Service s) {
-            super(s, "Request", "", "");
-        }
+    public Certificate(CertificateAction certificateAction) {
+        this();
+        theAction = certificateAction;
     }
 
-    protected class ResultAction extends Action {
-        public ResultAction(Service s) {
-            super(s, "Result", "", "");
-        }
-    }
 
-    protected class ConfirmAction extends Action {
-        public ConfirmAction(Service s) {
-            super(s, "Confirm", "", "");
-        }
-    }
 }

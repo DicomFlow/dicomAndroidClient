@@ -1,6 +1,6 @@
 package com.github.dicomflow.androiddicomflow.models.protocolo;
 
-import com.github.dicomflow.androiddicomflow.models.protocolo.services.Certificate;
+import com.github.dicomflow.androiddicomflow.models.protocolo.services.certificate.Certificate;
 import com.github.dicomflow.androiddicomflow.models.protocolo.services.Discovery;
 import com.github.dicomflow.androiddicomflow.models.protocolo.services.Find;
 import com.github.dicomflow.androiddicomflow.models.protocolo.services.Request;
@@ -43,7 +43,7 @@ public class DicomFlowProtocol {
 
     private void addItem(Service service) {
         SERVICOS.add(service);
-        STRING_SERVICO_HASH_MAP.put(service.name, service);
+        STRING_SERVICO_HASH_MAP.put(service.getName(), service);
     }
 
 }

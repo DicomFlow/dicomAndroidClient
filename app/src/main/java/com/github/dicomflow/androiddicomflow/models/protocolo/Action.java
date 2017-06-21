@@ -2,10 +2,14 @@ package com.github.dicomflow.androiddicomflow.models.protocolo;
 
 import com.github.dicomflow.androiddicomflow.models.protocolo.services.Service;
 
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
+
+@Root
 public abstract class Action {
-    public final String name;
-    public final String description;
-    public final String details;
+    @Element public String name;
+    @Element public String description;
+    @Element public String details;
 
     public final Service service;
 
@@ -32,4 +36,33 @@ public abstract class Action {
 //        </xs:extension>
 //      </xs:complexContent>
 //    </xs:complexType>
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
+    public Service getService() {
+        return service;
+    }
 }
