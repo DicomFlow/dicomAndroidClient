@@ -7,28 +7,48 @@ import com.github.dicomflow.androiddicomflow.models.protocolo.Action;
  */
 
 public class Discovery extends Service {
-    public Discovery() {
-        super("Discovery", "");
-        addAction(new VerifyAllServicesAction(this));
-        addAction(new VerifyServicesAction(this));
-        addAction(new VerifyResultAction(this));
+    Discovery() {}
+
+    @Override
+    public String getName() {
+        return "DISCOVERY";
     }
 
-    protected class VerifyAllServicesAction extends Action {
-        public VerifyAllServicesAction(Service s) {
-            super(s,"VerifyAllServicesAction", "", "");
+    @Override
+    public String getAction() {
+        return null;
+    }
+
+    protected static class VerifyAllServicesAction extends Action {
+        public VerifyAllServicesAction() {
+            super();
+        }
+
+        @Override
+        public String getName() {
+            return "VerifyAllServicesAction".toUpperCase();
         }
     }
 
-    protected class VerifyServicesAction extends Action {
-        public VerifyServicesAction(Service s) {
-            super(s,"VerifyServicesAction", "", "");
+    protected static class VerifyServicesAction extends Action {
+        public VerifyServicesAction() {
+            super();
+        }
+
+        @Override
+        public String getName() {
+            return "VerifyServicesAction".toUpperCase();
         }
     }
 
-    protected class VerifyResultAction extends Action {
-        public VerifyResultAction(Service s) {
-            super(s,"VerifyResultAction", "", "");
+    protected static class VerifyResultAction extends Action {
+        public VerifyResultAction() {
+            super();
+        }
+
+        @Override
+        public String getName() {
+            return "VerifyResultAction".toUpperCase();
         }
     }
 

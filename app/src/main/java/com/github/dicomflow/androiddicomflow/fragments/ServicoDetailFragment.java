@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.dicomflow.androiddicomflow.adapters.ActionRecyclerViewAdapter;
-import com.github.dicomflow.androiddicomflow.models.protocolo.DicomFlowProtocol;
+import com.github.dicomflow.androiddicomflow.models.protocolo.services.DicomFlowProtocol;
 import com.github.dicomflow.androiddicomflow.R;
 import com.github.dicomflow.androiddicomflow.activities.ServiceListActivity;
 import com.github.dicomflow.androiddicomflow.activities.ServiceDetailActivity;
@@ -75,7 +75,7 @@ public class ServicoDetailFragment extends Fragment {
 
         // Show the dummy content as text in a TextView.
         if (service != null) {
-            ((TextView) rootView.findViewById(R.id.serviço_detail)).setText(service.getDetails());
+            ((TextView) rootView.findViewById(R.id.serviço_detail)).setText(service.version);
 
             View recyclerView = rootView.findViewById(R.id.action_list);
             assert recyclerView != null;
@@ -87,7 +87,7 @@ public class ServicoDetailFragment extends Fragment {
 
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView, @NonNull Service service) {
-        recyclerView.setAdapter(new ActionRecyclerViewAdapter(mTwoPane, service.ACTIONS));
+        recyclerView.setAdapter(new ActionRecyclerViewAdapter(mTwoPane, DicomFlowProtocol.getInstance().STRING_SERVICE_LIST_OF_ACTION_HASH_MAP.get(service.getName())));
     }
 
 }

@@ -7,22 +7,37 @@ import com.github.dicomflow.androiddicomflow.models.protocolo.Action;
  */
 
 public class Find extends Service {
-    public Find() {
-        super("Find", "");
-        addAction(new PutAction(this));
-        addAction(new ResultAction(this));
+    Find() {
+        super();
     }
 
-    protected class PutAction extends Action {
-        public PutAction(Service s) {
-            super(s,"Put", "", "");
+    protected static class PutAction extends Action {
+        public PutAction() {
+            super();
+        }
+
+        @Override
+        public String getName() {
+            return "PUT";
         }
     }
 
-    protected class ResultAction extends Action {
-        public ResultAction(Service s) {
-            super(s,"Result", "", "");
+    protected static class ResultAction extends Action {
+        public ResultAction() {
+            super();
+        }
+        @Override
+        public String getName() {
+            return "RESULT";
         }
     }
 
+    @Override
+    public String getName() {
+        return "FIND";
+    }
+    @Override
+    public String getAction() {
+        return null;
+    }
 }

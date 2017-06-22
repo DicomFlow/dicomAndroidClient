@@ -7,24 +7,34 @@ import com.github.dicomflow.androiddicomflow.models.protocolo.Action;
  */
 
 public class Request extends Service {
-    public Request() {
-        super("Request", "");
-        addAction(new PutAction(this));
-        addAction(new ResultAction(this));
-    }
+    Request() {}
 
-    protected class PutAction extends Action {
-        public PutAction(Service s) {
-            super(s,"Put", "", "");
+    protected static class PutAction extends Action {
+        public PutAction() {
+            super();
+        }
+        @Override
+        public String getName() {
+            return "PUT";
         }
     }
 
-    protected class ResultAction extends Action {
-        public ResultAction(Service s) {
-            super(s,"Result", "", "");
+    protected static class ResultAction extends Action {
+        public ResultAction() {
+            super();
+        }
+        @Override
+        public String getName() {
+            return "RESULT";
         }
     }
 
-
-
+    @Override
+    public String getName() {
+        return "REQUEST";
+    }
+    @Override
+    public String getAction() {
+        return null;
+    }
 }

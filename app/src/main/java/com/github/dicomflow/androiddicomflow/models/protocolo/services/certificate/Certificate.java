@@ -1,32 +1,31 @@
 package com.github.dicomflow.androiddicomflow.models.protocolo.services.certificate;
 
-import com.github.dicomflow.androiddicomflow.models.protocolo.Action;
 import com.github.dicomflow.androiddicomflow.models.protocolo.services.Service;
+import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.Domain;
+import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.Mail;
+import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.Port;
 
 import org.simpleframework.xml.Element;
-import org.simpleframework.xml.Root;
 
 /**
  * Created by ricardobarbosa on 15/06/17.
  */
+public abstract class Certificate extends Service {
 
-@Root
-public class Certificate extends Service {
+    @Element public final Domain domain;
+    @Element public final Mail mail;
+    @Element public final Port port;
 
-    @Element
-    public Action theAction = null;
-
-    public Certificate() {
-        super("Certificate", "Serviço utilizado para a troca de certificados entre entidades de saude que pretendem comunicar-se para executar ações sobre imagens médicas");
-        addAction(new RequestAction(this));
-        addAction(new ResultAction(this));
-        addAction(new ConfirmAction(this));
+    public Certificate(Domain domain, Mail mail, Port port) {
+        super();
+        this.domain = domain;
+        this.mail = mail;
+        this.port = port;
     }
 
-    public Certificate(CertificateAction certificateAction) {
-        this();
-        theAction = certificateAction;
+    @Override
+    public String getName() {
+        return "CERTIFICATE";
     }
-
 
 }

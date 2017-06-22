@@ -1,53 +1,87 @@
 package com.github.dicomflow.androiddicomflow.models.protocolo.services;
 
+import android.support.annotation.NonNull;
+
 import com.github.dicomflow.androiddicomflow.models.protocolo.Action;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
-@Root
+@Root(name = "service")
 public abstract class Service  {
-    public final List<Action> ACTIONS = new ArrayList<Action>();
+    /**
+     * atributos
+     */
+    private String name = "";
+    private String action;
+    @Attribute public String version = "1.0";
 
-    public final Map<String, Action> STRING_ACTION_HASH_MAP = new HashMap<String, Action>();
 
-    @Element private String name;
-    @Attribute private String details;
+    /**
+     * elementos obrigatorios
+     */
+    @Element private String timeout;
+    @Element private String timestamp;
+    @Element private String messageID;
 
-    public Service(String name, String details) {
+    public Service() {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DDhh:mm:ssZ");
+        Date date = new Date();
+        timestamp = dateFormat.format(date);
+        messageID = UUID.randomUUID().toString();
+        timeout = String.valueOf(date.getTime());
+    }
+
+    @Attribute public abstract String getName();
+    @Attribute public abstract String getAction();
+
+    /**
+     * getters
+     */
+
+
+    public String getTimeout() {
+        return timeout;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public String getMessageID() {
+        return messageID;
+    }
+
+    /**
+     * setters
+     */
+    @Attribute public void setName(String name) {
         this.name = name;
-        this.details = details;
+    }
+    @Attribute public void setAction(String action) {
+        this.action = action;
     }
 
-    @Override
-    public String toString() {
-        return name;
+    public void setTimeout(String timeout) {
+        this.timeout = timeout;
     }
 
-    protected void addAction(Action action) {
-        ACTIONS.add(action);
-        STRING_ACTION_HASH_MAP.put(action.name, action);
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 
-    public String getName() {
-        return name;
+    public void setMessageID(String messageID) {
+        this.messageID = messageID;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDetails() {
-        return details;
-    }
-
-    public void setDetails(String details) {
-        this.details = details;
-    }
 }

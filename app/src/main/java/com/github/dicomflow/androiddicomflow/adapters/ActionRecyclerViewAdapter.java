@@ -43,8 +43,8 @@ public class ActionRecyclerViewAdapter
     @Override
     public void onBindViewHolder(final ActionViewHolder holder, int position) {
         holder.action = actionList.get(position);
-        holder.mIdView.setText(actionList.get(position).name);
-        holder.mContentView.setText(actionList.get(position).description);
+        holder.mIdView.setText(actionList.get(position).getName());
+        holder.mContentView.setText(actionList.get(position).getName());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,7 +52,7 @@ public class ActionRecyclerViewAdapter
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
                     arguments.putString(ServicoDetailFragment.ARG_SERVICE_ID, holder.action.service.getName());
-                    arguments.putString(ActionDetailFragment.ARG_ACTION_ID, holder.action.name);
+                    arguments.putString(ActionDetailFragment.ARG_ACTION_ID, holder.action.getName());
                     ServicoDetailFragment fragment = new ServicoDetailFragment();
                     fragment.setArguments(arguments);
                     Context context = v.getContext();
@@ -63,7 +63,7 @@ public class ActionRecyclerViewAdapter
                     Context context = v.getContext();
                     Intent intent = new Intent(context, ActionDetailActivity.class);
                     intent.putExtra(ServicoDetailFragment.ARG_SERVICE_ID, holder.action.service.getName());
-                    intent.putExtra(ActionDetailFragment.ARG_ACTION_ID, holder.action.name);
+                    intent.putExtra(ActionDetailFragment.ARG_ACTION_ID, holder.action.getName());
 
                     context.startActivity(intent);
                 }

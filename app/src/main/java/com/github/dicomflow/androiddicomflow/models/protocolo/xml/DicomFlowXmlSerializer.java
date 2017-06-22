@@ -44,6 +44,10 @@ public class DicomFlowXmlSerializer {
             StringBuilder conteudo = new StringBuilder("");
             while ((sCurrentLine = bufferedReader.readLine()) != null) {
                 conteudo.append(sCurrentLine);
+                conteudo.append("\n");
+                conteudo.append("\t");
+                if(sCurrentLine.startsWith("<\\"));
+                    conteudo.deleteCharAt(conteudo.length()-1);
             }
 
             return conteudo.toString();

@@ -43,7 +43,7 @@ public class ServiceRecyclerViewAdapter
     public void onBindViewHolder(final ServiceViewHolder holder, int position) {
         holder.service = serviceList.get(position);
         holder.mIdView.setText(serviceList.get(position).getName());
-        holder.mContentView.setText(serviceList.get(position).getDetails());
+        holder.mContentView.setText(serviceList.get(position).version);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

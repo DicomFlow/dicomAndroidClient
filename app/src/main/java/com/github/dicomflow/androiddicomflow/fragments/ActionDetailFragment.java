@@ -12,10 +12,8 @@ import android.widget.TextView;
 import com.github.dicomflow.androiddicomflow.R;
 import com.github.dicomflow.androiddicomflow.activities.ActionDetailActivity;
 import com.github.dicomflow.androiddicomflow.models.protocolo.Action;
-import com.github.dicomflow.androiddicomflow.models.protocolo.DicomFlowProtocol;
-import com.github.dicomflow.androiddicomflow.models.protocolo.services.certificate.Certificate;
+import com.github.dicomflow.androiddicomflow.models.protocolo.services.DicomFlowProtocol;
 import com.github.dicomflow.androiddicomflow.models.protocolo.services.Service;
-import com.github.dicomflow.androiddicomflow.models.protocolo.services.certificate.CertificateAction;
 import com.github.dicomflow.androiddicomflow.models.protocolo.xml.DicomFlowXmlSerializer;
 
 /**
@@ -52,13 +50,13 @@ public class ActionDetailFragment extends Fragment {
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
             DicomFlowProtocol dicomFlowProtocol =  DicomFlowProtocol.getInstance();
-            Service service = dicomFlowProtocol.STRING_SERVICO_HASH_MAP.get(getArguments().getString(ServicoDetailFragment.ARG_SERVICE_ID));
-            action = service.STRING_ACTION_HASH_MAP.get(getArguments().getString(ARG_ACTION_ID));
+//            Service service = dicomFlowProtocol.STRING_SERVICO_HASH_MAP.get(getArguments().getString(ServicoDetailFragment.ARG_SERVICE_ID));
+            action = dicomFlowProtocol.STRING_ACTION_HASH_MAP.get(getArguments().getString(ARG_ACTION_ID));
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
-                appBarLayout.setTitle(action.name);
+                appBarLayout.setTitle(action.getName());
             }
         }
     }
@@ -70,9 +68,7 @@ public class ActionDetailFragment extends Fragment {
 
         // Show the dummy content as text in a TextView.
         if (action != null) {
-            ((Certificate)action.service).theAction = (CertificateAction)action;
             String xmlString = DicomFlowXmlSerializer.serialize(action.service);
-
             ((TextView) rootView.findViewById(R.id.action_detail)).setText(xmlString);
         }
 
