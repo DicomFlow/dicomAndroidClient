@@ -129,26 +129,26 @@ public class MainActivity extends AppCompatActivity {
 
 
         /*************/
-        String xmlString = DicomFlowXmlSerializer.serialize(service);
+        String xmlString = DicomFlowXmlSerializer.serialize(requestPut);
         ((TextView) findViewById(R.id.text)).setText(xmlString);
 
-//        Serializer serializer = new Persister();
-//        File file = new File("/storage/emulated/0/DicomFiles/request_PUT.xml");
-//        try {
-//            RequestPut requestPut1 = serializer.read(RequestPut.class, file);
-//            Snackbar.make(getWindow().getDecorView().getRootView(), requestPut1.getName(), Snackbar.LENGTH_INDEFINITE).show();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
         Serializer serializer = new Persister();
-        File file = new File("/storage/emulated/0/DicomFiles/request_RESULT.xml");
+        File file = new File("/storage/emulated/0/DicomFiles/request_PUT.xml");
         try {
-            RequestResult requestResult1 = serializer.read(RequestResult.class, file);
-            Snackbar.make(getWindow().getDecorView().getRootView(), requestResult1.name, Snackbar.LENGTH_INDEFINITE).show();
+            RequestPut requestPut1 = serializer.read(RequestPut.class, file);
+            Snackbar.make(getWindow().getDecorView().getRootView(), requestPut1.name, Snackbar.LENGTH_INDEFINITE).show();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+//        Serializer serializer = new Persister();
+//        File file = new File("/storage/emulated/0/DicomFiles/request_RESULT.xml");
+//        try {
+//            RequestResult requestResult1 = serializer.read(RequestResult.class, file);
+//            Snackbar.make(getWindow().getDecorView().getRootView(), requestResult1.name, Snackbar.LENGTH_INDEFINITE).show();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
 //        Serializer serializer = new Persister();
 //        File file = new File("/storage/emulated/0/DicomFiles/Result.xml");
