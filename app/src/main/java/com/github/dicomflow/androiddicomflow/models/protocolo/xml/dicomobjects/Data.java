@@ -21,15 +21,17 @@ import java.io.IOException;
 @Root
 public class Data {
     @Attribute public final String filename;
-    @Element(name = "bytes") public final String encoded;
+    @Element(name = "bytes", required = false) public final String encoded;
 
-    public Data(@Attribute(name = "filename") String filename) {
-        if (filename != null) {
+    public Data(
+            @Attribute(name = "filename") String filename,
+            @Element(name = "bytes", required = false) String encoded) {
+        if (filename != null && !filename.isEmpty()) {
             this.filename = filename;
             this.encoded = encodeFileToBase64Binary(filename);
         }else {
             this.filename = "";
-            this.encoded = "";
+            this.encoded = encoded != null ? encoded : "";
         }
 
     }

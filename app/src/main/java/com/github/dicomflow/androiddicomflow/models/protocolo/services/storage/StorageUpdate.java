@@ -14,13 +14,9 @@ public class StorageUpdate extends Storage {
     @Element public final DicomObject object;
 
     public StorageUpdate(Url url, DicomObject object){
+        super("UPDATE");
         this.url = url;
         this.object = object;
-    }
-
-    @Override
-    public String getAction() {
-        return "SAVE";
     }
 
 }

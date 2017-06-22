@@ -7,11 +7,7 @@ import com.github.dicomflow.androiddicomflow.models.protocolo.services.Service;
  */
 public abstract class Storage extends Service {
 
-    public Storage() {}
-
-    @Override
-    public String getName() {
-        return "STORAGE";
+    public Storage(String action) {
+        super("STORAGE", action);
     }
-
 }

@@ -68,15 +68,15 @@ public class DicomFlowProtocol {
 
     private void addService(Service service) {
         SERVICOS.add(service);
-        STRING_SERVICO_HASH_MAP.put(service.getName(), service);
+        STRING_SERVICO_HASH_MAP.put(service.name, service);
     }
     protected void addAction(Action action) {
         ACTIONS.add(action);
         STRING_ACTION_HASH_MAP.put(action.getName(), action);
-        if(STRING_SERVICE_LIST_OF_ACTION_HASH_MAP.get(action.service.getName()) == null) {
-            STRING_SERVICE_LIST_OF_ACTION_HASH_MAP.put(action.service.getName(), new ArrayList<Action>());
+        if(STRING_SERVICE_LIST_OF_ACTION_HASH_MAP.get(action.service.name) == null) {
+            STRING_SERVICE_LIST_OF_ACTION_HASH_MAP.put(action.service.name, new ArrayList<Action>());
         }
-        STRING_SERVICE_LIST_OF_ACTION_HASH_MAP.get(action.service.getName()).add(action);
+        STRING_SERVICE_LIST_OF_ACTION_HASH_MAP.get(action.service.name).add(action);
     }
 
 

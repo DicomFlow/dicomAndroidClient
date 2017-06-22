@@ -16,16 +16,11 @@ public abstract class Certificate extends Service {
     @Element public final Mail mail;
     @Element public final Port port;
 
-    public Certificate(Domain domain, Mail mail, Port port) {
-        super();
+    public Certificate(String action,Domain domain, Mail mail, Port port) {
+        super("CERTIFICATE", action);
         this.domain = domain;
         this.mail = mail;
         this.port = port;
-    }
-
-    @Override
-    public String getName() {
-        return "CERTIFICATE";
     }
 
 }

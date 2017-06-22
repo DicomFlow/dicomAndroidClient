@@ -15,13 +15,8 @@ public abstract class DiscoveryVerifyResult extends Discovery {
     @ElementList(inline = true) public final List<Result> results;
 
     public DiscoveryVerifyResult(int priority, String timezone, List<Result> results) {
-        super(priority, timezone);
+        super("VERIFYRESULT", priority, timezone);
         this.results = results;
-    }
-
-    @Override
-    public String getAction() {
-        return "VERIFYRESULT";
     }
 
 }

@@ -12,12 +12,10 @@ public class StorageSave extends Storage {
     @Element public final Url url;
 
     public StorageSave(Url url){
+        super("SAVE");
         this.url = url;
     }
 
-    @Override
-    public String getAction() {
-        return "SAVE";
-    }
+
 
 }

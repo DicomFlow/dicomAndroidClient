@@ -14,12 +14,8 @@ public class SharingPut extends Sharing {
     @ElementList(name = "ulrs", inline = true) public final List<Url> urls;
 
     public SharingPut(List<Url> urls){
+        super("PUT");
         this.urls = urls;
-    }
-
-    @Override
-    public String getAction() {
-        return "PUT";
     }
 
 }

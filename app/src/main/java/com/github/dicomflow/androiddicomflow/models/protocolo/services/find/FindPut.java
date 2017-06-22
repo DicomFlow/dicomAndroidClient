@@ -19,14 +19,10 @@ public class FindPut extends Find {
     @Element public final String timezone;
 
     public FindPut(int priority, List<Search> searches, String timezone) {
+        super("PUT");
         this.priority = priority;
         this.searches = searches;
         this.timezone = timezone;
-    }
-
-    @Override
-    public String getAction() {
-        return "PUT";
     }
 
 }

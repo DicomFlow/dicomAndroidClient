@@ -63,7 +63,7 @@ public class ServicoDetailFragment extends Fragment {
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
-                appBarLayout.setTitle(service.getName());
+                appBarLayout.setTitle(service.name);
             }
         }
     }
@@ -87,7 +87,7 @@ public class ServicoDetailFragment extends Fragment {
 
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView, @NonNull Service service) {
-        recyclerView.setAdapter(new ActionRecyclerViewAdapter(mTwoPane, DicomFlowProtocol.getInstance().STRING_SERVICE_LIST_OF_ACTION_HASH_MAP.get(service.getName())));
+        recyclerView.setAdapter(new ActionRecyclerViewAdapter(mTwoPane, DicomFlowProtocol.getInstance().STRING_SERVICE_LIST_OF_ACTION_HASH_MAP.get(service.name)));
     }
 
 }

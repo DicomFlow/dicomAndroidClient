@@ -42,7 +42,7 @@ public class ServiceRecyclerViewAdapter
     @Override
     public void onBindViewHolder(final ServiceViewHolder holder, int position) {
         holder.service = serviceList.get(position);
-        holder.mIdView.setText(serviceList.get(position).getName());
+        holder.mIdView.setText(serviceList.get(position).name);
         holder.mContentView.setText(serviceList.get(position).version);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -50,7 +50,7 @@ public class ServiceRecyclerViewAdapter
             public void onClick(View v) {
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putString(ServicoDetailFragment.ARG_SERVICE_ID, holder.service.getName());
+                    arguments.putString(ServicoDetailFragment.ARG_SERVICE_ID, holder.service.name);
                     ServicoDetailFragment fragment = new ServicoDetailFragment();
                     fragment.setArguments(arguments);
                     Context context = v.getContext();
@@ -60,7 +60,7 @@ public class ServiceRecyclerViewAdapter
                 } else {
                     Context context = v.getContext();
                     Intent intent = new Intent(context, ServiceDetailActivity.class);
-                    intent.putExtra(ServicoDetailFragment.ARG_SERVICE_ID, holder.service.getName());
+                    intent.putExtra(ServicoDetailFragment.ARG_SERVICE_ID, holder.service.name);
 
                     context.startActivity(intent);
                 }

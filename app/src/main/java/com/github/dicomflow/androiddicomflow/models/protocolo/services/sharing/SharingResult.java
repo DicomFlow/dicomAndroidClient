@@ -15,13 +15,8 @@ public class SharingResult extends Sharing {
     @ElementList(name = "results", inline = true) public final List<Result> results;
 
     public SharingResult(List<Result> results){
+        super("RESULT");
         this.results = results;
-    }
-
-
-    @Override
-    public String getAction() {
-        return "RESULT";
     }
 
 }

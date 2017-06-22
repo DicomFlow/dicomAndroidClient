@@ -1,20 +1,23 @@
 package com.github.dicomflow.androiddicomflow.activities;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
 import com.github.dicomflow.androiddicomflow.R;
 import com.github.dicomflow.androiddicomflow.models.protocolo.services.Service;
+import com.github.dicomflow.androiddicomflow.models.protocolo.services.request.Request;
 import com.github.dicomflow.androiddicomflow.models.protocolo.services.request.RequestPut;
 import com.github.dicomflow.androiddicomflow.models.protocolo.services.request.RequestResult;
-import com.github.dicomflow.androiddicomflow.models.protocolo.services.storage.StorageDelete;
 import com.github.dicomflow.androiddicomflow.models.protocolo.xml.DicomFlowXmlSerializer;
+import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.ActionDescriptor;
 import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.Completed;
 import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.Credentials;
 import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.Data;
 import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.DicomObject;
+import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.FieldDescriptor;
 import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.Patient;
 import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.Result;
 import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.Serie;
@@ -22,6 +25,10 @@ import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.S
 import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.Study;
 import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.Url;
 
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,47 +79,85 @@ public class MainActivity extends AppCompatActivity {
 
 
         /** UPDATE **/
-        DicomObject dicomObject = new DicomObject(credentials, "i", DicomObject.Type.Study);
+        DicomObject dicomObject = new DicomObject(credentials, "i", DicomObject.Type.Study.name());
 //        Service service = new StorageUpdate(url, dicomObject);
 
         /** DELETE **/
         List<DicomObject> objects =  new ArrayList<>();
         objects.add(dicomObject);
-        DicomObject dicomObject2 = new DicomObject(credentials, "3", DicomObject.Type.Instance);
+        DicomObject dicomObject2 = new DicomObject(credentials, "3", DicomObject.Type.Instance.name());
         objects.add(dicomObject2);
         //Service service = new StorageDelete(objects);
         
         String requestType = "REPORT";
 //        Service service = new RequestPut(requestType, url);
 
-        List<Result> results = new ArrayList<>();
-        RequestPut requestPut = new RequestPut(RequestPut.Type.Report, url);
+
+        RequestPut requestPut = new RequestPut(RequestResult.RequestType.Report.name(), url);
 
         //simular recebimento do xml por email
-        Service serviceXml = DicomFlowXmlSerializer.deserialize("/storage/emulated/0/DicomFiles/request_PUT.xml");
-
-        Service service = new RequestResult((RequestPut) serviceXml, results);
-//        Service service = new RequestResult(requestPut, results);
+//        Service serviceXml = DicomFlowXmlSerializer.deserialize("/storage/emulated/0/DicomFiles/request_PUT.xml");
+//
+//        Service service = new RequestResult((RequestPut) serviceXml, results);
+        List<Result> results = new ArrayList<>();
         List<ServiceDescriptor> serviceDescriptors = new ArrayList<>();
-        String timestamp = "";
+        List<ActionDescriptor> actionsDescritors = new ArrayList<>();
+        List<FieldDescriptor> fieldDescritors = new ArrayList<>();
+        FieldDescriptor fieldDescritor = new FieldDescriptor("name", "status");
+        fieldDescritors.add(fieldDescritor);
+        ActionDescriptor actionsDescritor= new ActionDescriptor("name", "status", fieldDescritors);
+        actionsDescritors.add(actionsDescritor);
+        ServiceDescriptor serviceDescriptor = new ServiceDescriptor("name", "status", actionsDescritors);
+        serviceDescriptors.add(serviceDescriptor);
+        String timestamp = "asasasa";
         List<Url> urls = new ArrayList<>();
-        Completed completed = new Completed(Completed.Status.SUCCESS, "Sucesso!!!");
-        Data data = new Data(null);
-        results.add(new Result(
-                (Result.IResult) service,
+        urls.add(url);
+        Completed completed = new Completed(Completed.Status.SUCCESS.name(), "Sucesso!!!");
+        Data data = new Data("", "");
+        Result result = new Result(
                 completed,
                 data,
                 requestType,
                 objects,
+                requestPut.messageID,
                 serviceDescriptors,
                 timestamp,
-                urls
-        ));
+                urls);
+        results.add(result);
+
+        Service service = new RequestResult(results);
 
 
         /*************/
         String xmlString = DicomFlowXmlSerializer.serialize(service);
         ((TextView) findViewById(R.id.text)).setText(xmlString);
+
+//        Serializer serializer = new Persister();
+//        File file = new File("/storage/emulated/0/DicomFiles/request_PUT.xml");
+//        try {
+//            RequestPut requestPut1 = serializer.read(RequestPut.class, file);
+//            Snackbar.make(getWindow().getDecorView().getRootView(), requestPut1.getName(), Snackbar.LENGTH_INDEFINITE).show();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
+        Serializer serializer = new Persister();
+        File file = new File("/storage/emulated/0/DicomFiles/request_RESULT.xml");
+        try {
+            RequestResult requestResult1 = serializer.read(RequestResult.class, file);
+            Snackbar.make(getWindow().getDecorView().getRootView(), requestResult1.name, Snackbar.LENGTH_INDEFINITE).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//        Serializer serializer = new Persister();
+//        File file = new File("/storage/emulated/0/DicomFiles/Result.xml");
+//        try {
+//            Result result1 = serializer.read(Result.class, file);
+//            Snackbar.make(getWindow().getDecorView().getRootView(), result1.originalMessageID, Snackbar.LENGTH_INDEFINITE).show();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
 }

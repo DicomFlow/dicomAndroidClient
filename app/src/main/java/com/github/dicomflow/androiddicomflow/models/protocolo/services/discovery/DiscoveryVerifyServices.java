@@ -14,13 +14,8 @@ public abstract class DiscoveryVerifyServices extends Discovery {
     @ElementList(name = "services", inline = true) public final List<ServiceDescriptor> serviceDescriptors;
 
     public DiscoveryVerifyServices(int priority, String timezone, List<ServiceDescriptor> serviceDescriptors) {
-        super(priority, timezone);
+        super("VERIFYSERVICES", priority, timezone);
         this.serviceDescriptors = serviceDescriptors;
-    }
-
-    @Override
-    public String getAction() {
-        return "VERIFYSERVICES";
     }
 
 }

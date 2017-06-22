@@ -17,11 +17,11 @@ public class DicomObject {
     @Attribute public final String id;
     @Attribute public final String type;
 
-    public DicomObject(@Element(name = "credentials") Credentials credentials,
+    public DicomObject(@Element(name = "credential") Credentials credentials,
                        @Attribute(name = "id") String id,
-                       @Attribute(name = "type") Type type) {
+                       @Attribute(name = "type") String type) {
         this.credentials = credentials;
         this.id = id;
-        this.type = type.name();
+        this.type = type;
     }
 }

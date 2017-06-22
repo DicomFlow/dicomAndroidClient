@@ -17,9 +17,9 @@ public class Completed {
     @Attribute public final String status;
     @Element public final String completedMessage;
 
-    public Completed(@Attribute(name = "status") Status status,
+    public Completed(@Attribute(name = "status") String status,
                      @Element(name = "completedMessage") String completedMessage) {
-        this.status = status.name();
+        this.status = status;
         this.completedMessage = completedMessage;
     }
 }

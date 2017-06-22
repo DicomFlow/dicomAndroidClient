@@ -10,12 +10,7 @@ import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.P
 public class CertificateRequest extends Certificate {
 
     public CertificateRequest(Domain domain, Mail mail, Port port) {
-        super(domain,mail,port);
-    }
-
-    @Override
-    public String getAction() {
-        return "REQUEST";
+        super("REQUEST", domain, mail, port);
     }
 
 }

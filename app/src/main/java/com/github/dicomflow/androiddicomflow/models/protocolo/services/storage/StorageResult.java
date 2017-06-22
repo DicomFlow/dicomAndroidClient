@@ -16,13 +16,10 @@ public class StorageResult extends Storage {
     @ElementList(name = "results" ) public final List<Result> results;
 
     public StorageResult(List<DicomObject> objects, List<Result> results){
+        super("RESULT");
         this.objects = objects;
         this.results = results;
     }
 
-    @Override
-    public String getAction() {
-        return "RESULT";
-    }
 
 }

@@ -2,31 +2,38 @@ package com.github.dicomflow.androiddicomflow.models.protocolo.services.request;
 
 import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.Result;
 
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Root;
 
 import java.util.List;
 
 /**
  * Created by netolucena on 22/06/2017.
  */
+@Root(name = "service")
+public class RequestResult extends Request{
 
-public class RequestResult extends Request implements Result.IResult{
-    public final RequestPut requestPut;
+    @ElementList(name = "results", inline = true) public final List<Result> results;
 
-    @ElementList(name = "results" ) public final List<Result> results;
-
-    public RequestResult(RequestPut requestPut, List<Result> results) {
-        this.requestPut = requestPut;
+    public RequestResult(
+            @ElementList(name = "results", inline = true) List<Result> results) {
+        super("RESULT");
         this.results = results;
     }
 
-    @Override
-    public String getAction() {
-        return "RESULT";
+    public RequestResult(@Attribute(name = "name") String name,
+                         @Attribute(name = "action") String action,
+                         @Attribute(name = "version") String version,
+                         @Element(name = "timeout") String timeout,
+                         @Element(name = "timestamp") String timestamp,
+                         @Element(name = "messageID")String messageID,
+                         @ElementList(name = "results", inline = true) List<Result> results) {
+        super(name, action, version, timeout, timestamp, messageID);
+        this.results = results;
     }
 
-    @Override
-    public String getOriginalMessageID() {
-        return requestPut.messageID;
-    }
+
+
 }

@@ -16,12 +16,9 @@ public class StorageDelete extends Storage {
     @ElementList(name = "objects" ) public final List<DicomObject> objects;
 
     public StorageDelete(List<DicomObject> objects){
+        super("DELETE");
         this.objects = objects;
     }
 
-    @Override
-    public String getAction() {
-        return "DELETE";
-    }
 
 }

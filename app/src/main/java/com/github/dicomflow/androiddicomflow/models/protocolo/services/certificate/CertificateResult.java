@@ -15,14 +15,9 @@ public class CertificateResult extends Certificate {
     @Element public final String status;
 
     public CertificateResult(Domain domain, Mail mail, Port port, String credential, String status) {
-        super(domain,mail,port);
+        super("RESULT", domain,mail,port);
         this.credential = credential;
         this.status = status;
-    }
-
-    @Override
-    public String getAction() {
-        return "RESULT";
     }
 
 }

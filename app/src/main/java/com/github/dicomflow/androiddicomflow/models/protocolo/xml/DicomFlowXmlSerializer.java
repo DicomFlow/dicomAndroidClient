@@ -87,7 +87,7 @@ public class DicomFlowXmlSerializer {
             File root = new File(Environment.getExternalStorageDirectory(), "DicomFiles");
             root.mkdirs();
 
-            File xmlFile = new File(root, String.format("%s_%s.xml", service.getName().toLowerCase(),service.getAction()));
+            File xmlFile = new File(root, String.format("%s_%s.xml", service.name.toLowerCase(),service.action));
             if (xmlFile.exists ()) xmlFile.delete();
 
             Log.d("File", xmlFile.getAbsolutePath());
@@ -107,7 +107,7 @@ public class DicomFlowXmlSerializer {
                 conteudo.append("\n");
                 conteudo.append("\t");
                 if(sCurrentLine.startsWith("<\\"));
-                    conteudo.deleteCharAt(conteudo.length()-1);
+                conteudo.deleteCharAt(conteudo.length()-1);
             }
 
             return conteudo.toString();
@@ -118,6 +118,46 @@ public class DicomFlowXmlSerializer {
         }
 
         return "???";
+    }
+
+    public static String serialize(Object o) {
+        Serializer serializer = new Persister();
+
+        try {
+            File root = new File(Environment.getExternalStorageDirectory(), "DicomFiles");
+            root.mkdirs();
+
+            File xmlFile = new File(root, String.format("%s.xml", o.getClass().getSimpleName()));
+            if (xmlFile.exists ()) xmlFile.delete();
+
+            Log.d("File", xmlFile.getAbsolutePath());
+            xmlFile.createNewFile();
+
+            FileWriter writer = new FileWriter(xmlFile);
+            serializer.write(o, writer);
+            writer.flush();
+            writer.close();
+
+            FileReader reader = new FileReader(xmlFile);
+            BufferedReader bufferedReader = new BufferedReader(reader);
+            String sCurrentLine = null;
+            StringBuilder conteudo = new StringBuilder("");
+            while ((sCurrentLine = bufferedReader.readLine()) != null) {
+                conteudo.append(sCurrentLine);
+                conteudo.append("\n");
+                conteudo.append("\t");
+                if(sCurrentLine.startsWith("<\\"));
+                conteudo.deleteCharAt(conteudo.length()-1);
+            }
+
+            return conteudo.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "?????";
     }
 
 

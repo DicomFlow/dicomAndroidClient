@@ -15,14 +15,9 @@ public class CertificateConfirm extends Certificate {
     @Element public final String status;
 
     public CertificateConfirm(Domain domain, Mail mail, Port port, String credential, String status) {
-        super(domain,mail,port);
+        super("CONFIRM", domain,mail,port);
         this.credential = credential;
         this.status = status;
-    }
-
-    @Override
-    public String getAction() {
-        return "CONFIRM";
     }
 
 }

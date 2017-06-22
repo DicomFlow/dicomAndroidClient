@@ -51,7 +51,7 @@ public class ActionRecyclerViewAdapter
             public void onClick(View v) {
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putString(ServicoDetailFragment.ARG_SERVICE_ID, holder.action.service.getName());
+                    arguments.putString(ServicoDetailFragment.ARG_SERVICE_ID, holder.action.service.name);
                     arguments.putString(ActionDetailFragment.ARG_ACTION_ID, holder.action.getName());
                     ServicoDetailFragment fragment = new ServicoDetailFragment();
                     fragment.setArguments(arguments);
@@ -62,7 +62,7 @@ public class ActionRecyclerViewAdapter
                 } else {
                     Context context = v.getContext();
                     Intent intent = new Intent(context, ActionDetailActivity.class);
-                    intent.putExtra(ServicoDetailFragment.ARG_SERVICE_ID, holder.action.service.getName());
+                    intent.putExtra(ServicoDetailFragment.ARG_SERVICE_ID, holder.action.service.name);
                     intent.putExtra(ActionDetailFragment.ARG_ACTION_ID, holder.action.getName());
 
                     context.startActivity(intent);

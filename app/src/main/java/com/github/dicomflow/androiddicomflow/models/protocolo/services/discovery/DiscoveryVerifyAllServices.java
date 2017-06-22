@@ -10,13 +10,9 @@ public abstract class DiscoveryVerifyAllServices extends Discovery {
     @Element public final int detail;
 
     public DiscoveryVerifyAllServices(int detail, int priority, String timezone) {
-        super(priority, timezone);
+        super("VERIFYALLSERVICES", priority, timezone);
         this.detail = detail;
     }
 
-    @Override
-    public String getAction() {
-        return "VERIFYALLSERVICES";
-    }
 
 }

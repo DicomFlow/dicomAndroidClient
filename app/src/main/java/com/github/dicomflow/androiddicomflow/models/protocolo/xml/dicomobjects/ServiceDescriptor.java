@@ -13,11 +13,11 @@ import java.util.List;
 public class ServiceDescriptor {
     @Attribute public final String name;
     @Attribute public final String status;
-    @ElementList(name = "actionDescriptors") public final List<ActionDescriptor> actionDescriptors;
+    @ElementList(inline = true) public final List<ActionDescriptor> actionDescriptors;
 
     public ServiceDescriptor(@Attribute(name="name") String name,
                              @Attribute(name="status") String status,
-                             @ElementList(name = "actionDescriptors") List<ActionDescriptor> actionDescriptors) {
+                             @ElementList(inline = true) List<ActionDescriptor> actionDescriptors) {
         this.name = name;
         this.status = status;
         this.actionDescriptors = actionDescriptors;

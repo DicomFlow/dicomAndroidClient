@@ -12,14 +12,15 @@ import java.util.List;
  * Created by ricardobarbosa on 21/06/17.
  */
 @Root
-public class Url extends ValueObject{
+public class Url{
+    @Attribute(name = "value") public final String value;
     @Element public final Credentials credentials;
     @ElementList(name = "patients", inline = true) public final List<Patient> patients;
 
-    public Url(@Element(name="value") String value,
-               @ElementList(name="credentials") Credentials credentials,
+    public Url(@Attribute(name = "value") String value,
+               @Element(name="credentials") Credentials credentials,
                @ElementList(name="patients", inline = true) List<Patient> patients) {
-        super(value);
+        this.value = value;
         this.credentials = credentials;
         this.patients = patients;
     }
