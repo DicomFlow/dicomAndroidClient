@@ -14,9 +14,11 @@ import java.util.List;
 @Root
 public class Url extends ValueObject{
     @Element public final Credentials credentials;
-    @ElementList(name = "patient", inline = true) public final List<Patient> patients;
+    @ElementList(name = "patients", inline = true) public final List<Patient> patients;
 
-    public Url(String value, Credentials credentials, List<Patient> patients) {
+    public Url(@Element(name="value") String value,
+               @ElementList(name="credentials") Credentials credentials,
+               @ElementList(name="patients", inline = true) List<Patient> patients) {
         super(value);
         this.credentials = credentials;
         this.patients = patients;

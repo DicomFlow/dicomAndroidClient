@@ -14,7 +14,7 @@ import java.util.List;
 public class Search {
     @ElementList(inline = true) public final List<Patient> patients;
 
-    public Search(List<Patient> patients) {
+    public Search(@ElementList(name="patients", inline = true) List<Patient> patients) {
         this.patients = patients;
     }
 }

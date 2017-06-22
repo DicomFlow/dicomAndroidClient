@@ -23,13 +23,13 @@ public class Result {
     @ElementList(name = "urls") public final List<Url> urls;
 
     public Result(IResult iResult,
-                  Completed completed,
-                  Data data,
-                  String report,
-                  List<DicomObject> objects,
-                  List<ServiceDescriptor> serviceDescriptors,
-                  String timestamp,
-                  List<Url> urls) {
+                  @Element(name="completed") Completed completed,
+                  @Element(name="data") Data data,
+                  @Element(name="report") String report,
+                  @ElementList(name = "objects" )List<DicomObject> objects,
+                  @ElementList(name = "serviceDescriptors" )List<ServiceDescriptor> serviceDescriptors,
+                  @Element(name="timestamp") String timestamp,
+                  @ElementList(name="urls") List<Url> urls) {
         this.iResult = iResult;
         this.completed = completed;
         this.data = data;
