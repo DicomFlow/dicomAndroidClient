@@ -19,7 +19,11 @@ public class Patient {
 
     @ElementList(name = "study", inline = true) public final List<Study> studies;
 
-    public Patient(String id, String name, String gender, String birthdate, List<Study> studies) {
+    public Patient(@Attribute(name = "id") String id,
+                   @Attribute(name = "name") String name,
+                   @Attribute(name = "gender") String gender,
+                   @Attribute(name = "birthdate") String birthdate,
+                   @ElementList(name = "study", inline = true) List<Study> studies) {
         this.id = id;
         this.name = name;
         this.gender = gender;

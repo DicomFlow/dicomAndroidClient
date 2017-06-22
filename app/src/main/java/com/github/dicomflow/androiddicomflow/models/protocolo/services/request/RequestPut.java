@@ -10,12 +10,14 @@ import org.simpleframework.xml.Element;
 
 public class RequestPut extends Request {
 
+    public enum Type { Report, Processing}
+
     @Element public final String requestType;
 
     @Element public final Url url;
 
-    public RequestPut(String requestType, Url url) {
-        this.requestType = requestType;
+    public RequestPut(Type requestType, Url url) {
+        this.requestType = requestType.name();
         this.url = url;
     }
 

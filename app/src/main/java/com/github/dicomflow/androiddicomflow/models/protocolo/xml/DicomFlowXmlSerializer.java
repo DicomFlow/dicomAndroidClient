@@ -4,12 +4,16 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.github.dicomflow.androiddicomflow.models.protocolo.services.Service;
+import com.github.dicomflow.androiddicomflow.models.protocolo.services.request.Request;
+import com.github.dicomflow.androiddicomflow.models.protocolo.services.request.RequestPut;
+import com.github.dicomflow.androiddicomflow.models.protocolo.services.request.RequestResult;
 
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,6 +24,62 @@ import java.io.IOException;
 
 public class DicomFlowXmlSerializer {
 
+    public static Service deserialize(String filepath) {
+        try {
+            Serializer serializer = new Persister();
+            File file = new File(filepath);
+            return serializer.read(getXmlClass(filepath), file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Class<? extends Service> getXmlClass(String filepath) {
+
+
+        try {
+            FileReader reader = new FileReader(filepath);
+            BufferedReader bufferedReader = new BufferedReader(reader);
+            String sCurrentLine = null;
+
+            //<service
+            // version="?"
+            // name="CERTIFICATE"
+            // action="REQUEST"
+            // type="" >
+            String firstLine = bufferedReader.readLine().toLowerCase();
+
+            if (firstLine.contains("certificate")) {
+
+
+            } else if (firstLine.contains("storage")) {
+
+            } else if (firstLine.contains("find")) {
+
+            } else if (firstLine.contains("sharing")) {
+
+            } else if (firstLine.contains("request")) {
+
+                if (firstLine.contains("put")) {
+                    return RequestPut.class;
+                }
+                else if (firstLine.contains("result")) {
+                    return RequestResult.class;
+                }
+
+            } else if (firstLine.contains("discovery")) {
+
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
     public static String serialize(Service service) {
         Serializer serializer = new Persister();
 
@@ -27,7 +87,7 @@ public class DicomFlowXmlSerializer {
             File root = new File(Environment.getExternalStorageDirectory(), "DicomFiles");
             root.mkdirs();
 
-            File xmlFile = new File(root, String.format("%s.xml", service.getName().toLowerCase()));
+            File xmlFile = new File(root, String.format("%s_%s.xml", service.getName().toLowerCase(),service.getAction()));
             if (xmlFile.exists ()) xmlFile.delete();
 
             Log.d("File", xmlFile.getAbsolutePath());
@@ -59,4 +119,6 @@ public class DicomFlowXmlSerializer {
 
         return "???";
     }
+
+
 }

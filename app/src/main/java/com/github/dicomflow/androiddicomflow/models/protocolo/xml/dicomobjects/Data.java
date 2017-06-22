@@ -23,9 +23,15 @@ public class Data {
     @Attribute public final String filename;
     @Element(name = "bytes") public final String encoded;
 
-    public Data(String filename) {
-        this.filename = filename;
-        this.encoded = encodeFileToBase64Binary(filename);
+    public Data(@Attribute(name = "filename") String filename) {
+        if (filename != null) {
+            this.filename = filename;
+            this.encoded = encodeFileToBase64Binary(filename);
+        }else {
+            this.filename = "";
+            this.encoded = "";
+        }
+
     }
 
     private String encodeFileToBase64Binary(String filename){

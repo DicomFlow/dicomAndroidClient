@@ -17,7 +17,9 @@ public class DicomObject {
     @Attribute public final String id;
     @Attribute public final String type;
 
-    public DicomObject(Credentials credentials, String id, Type type) {
+    public DicomObject(@Element(name = "credentials") Credentials credentials,
+                       @Attribute(name = "id") String id,
+                       @Attribute(name = "type") Type type) {
         this.credentials = credentials;
         this.id = id;
         this.type = type.name();

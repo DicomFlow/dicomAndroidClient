@@ -15,7 +15,10 @@ public class Serie {
     @Attribute public final String description;
     @Attribute public final Integer instances;
 
-    public Serie(String id, String bodypart, String description, Integer instances){
+    public Serie(@Attribute(name = "id") String id,
+                 @Attribute(name = "bodypart") String bodypart,
+                 @Attribute(name = "description") String description,
+                 @Attribute(name = "instances") Integer instances){
         this.id = id;
 
         this.bodypart = bodypart;

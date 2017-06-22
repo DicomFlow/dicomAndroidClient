@@ -1,6 +1,7 @@
 package com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects;
 
 import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
@@ -12,9 +13,9 @@ import java.util.List;
 
 @Root
 public class Credentials {
-    @ElementList(name = "value", inline = true, entry = "value") public final List<String> values;
+    @Element() public final String value;
 
-    public Credentials(List<String> values) {
-        this.values = values;
+    public Credentials(@Element(name = "value") String value) {
+        this.value = value;
     }
 }
