@@ -7,9 +7,8 @@ import android.widget.TextView;
 
 import com.github.dicomflow.androiddicomflow.R;
 import com.github.dicomflow.androiddicomflow.models.protocolo.services.Service;
+import com.github.dicomflow.androiddicomflow.models.protocolo.services.request.RequestPut;
 import com.github.dicomflow.androiddicomflow.models.protocolo.services.storage.StorageDelete;
-import com.github.dicomflow.androiddicomflow.models.protocolo.services.storage.StorageSave;
-import com.github.dicomflow.androiddicomflow.models.protocolo.services.storage.StorageUpdate;
 import com.github.dicomflow.androiddicomflow.models.protocolo.xml.DicomFlowXmlSerializer;
 import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.Credentials;
 import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.DicomObject;
@@ -18,7 +17,6 @@ import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.S
 import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.Study;
 import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.Url;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,7 +78,10 @@ public class MainActivity extends AppCompatActivity {
         objects.add(dicomObject);
         DicomObject dicomObject2 = new DicomObject(credentials, "3", DicomObject.Type.Instance);
         objects.add(dicomObject2);
-        Service service = new StorageDelete(objects);
+        //Service service = new StorageDelete(objects);
+        
+        String requestType = "REPORT";
+        Service service = new RequestPut(requestType, url);
 
         /*************/
         String xmlString = DicomFlowXmlSerializer.serialize(service);
