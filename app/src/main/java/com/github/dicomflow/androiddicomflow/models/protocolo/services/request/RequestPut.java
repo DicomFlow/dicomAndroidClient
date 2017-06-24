@@ -17,6 +17,8 @@ import java.util.List;
 @Root(name = "service")
 public class RequestPut extends Request {
 
+    public enum RequestType { Report, Processing }
+
     @Element(name = "requestType") public final String requestType;
     @Element(name = "url") public final Url url;
 

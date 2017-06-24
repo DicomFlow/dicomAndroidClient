@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "380609825283",
+    "firebase_url": "https://androiddicomflow.firebaseio.com",
+    "project_id": "androiddicomflow",
+    "storage_bucket": "androiddicomflow.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:380609825283:android:02e100d23bef7b87",
+        "android_client_info": {
+          "package_name": "com.github.dicomflow.androiddicomflow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "380609825283-hd665nf1hvb6g5immisct14v19rjm977.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.github.dicomflow.androiddicomflow",
+            "certificate_hash": "221711f7aeeaae60cbd8387f503171df10299f7e"
+          }
+        },
+        {
+          "client_id": "380609825283-o0g5mr4tk6ueolughj8u0hnqacua92bc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDl-42q08LlA46i2PNLPI-wUpS2xP35NY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "380609825283-o0g5mr4tk6ueolughj8u0hnqacua92bc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

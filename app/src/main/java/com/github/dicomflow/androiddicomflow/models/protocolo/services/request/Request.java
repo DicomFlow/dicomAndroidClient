@@ -7,8 +7,6 @@ import com.github.dicomflow.androiddicomflow.models.protocolo.services.Service;
  */
 public abstract class Request extends Service {
 
-    public enum RequestType { Report, Processing }
-
     public Request(String action) {
         super("REQUEST", action);
     }

@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 //        Service service = new RequestPut(requestType, url);
 
 
-        RequestPut requestPut = new RequestPut(RequestResult.RequestType.Report.name(), url);
+        RequestPut requestPut = new RequestPut(RequestPut.RequestType.Report.name(), url);
 
         //simular recebimento do xml por email
 //        Service serviceXml = DicomFlowXmlSerializer.deserialize("/storage/emulated/0/DicomFiles/request_PUT.xml");
