@@ -2,17 +2,18 @@ package com.github.dicomflow.androiddicomflow.activities;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 
-
+import com.github.dicomflow.androiddicomflow.R;
 import com.github.dicomflow.androiddicomflow.adapters.ServiceRecyclerViewAdapter;
 import com.github.dicomflow.androiddicomflow.models.protocolo.services.DicomFlowProtocol;
-import com.github.dicomflow.androiddicomflow.R;
+
+import java.io.File;
 
 /**
  * An activity representing a list of Serviços. This activity
@@ -43,7 +44,15 @@ public class ServiceListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                try {
+                    GMailSender sender = new GMailSender("dicomflow@gmail.com", "pr0t0c0l0ap1d1c0m");
+                    sender.sendMail("This is Subject", "This is Body",
+                            "dicomflow@gmail.com", "juracylucena@gmail.com");
+                } catch (Exception e) {
+                    Snackbar.make(view, "Erro no envio do email ", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+                Snackbar.make(view, "Email Enviado ... ", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
