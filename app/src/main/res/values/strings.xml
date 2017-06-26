@@ -88,4 +88,8 @@
 
     <string name="id_fmt">User ID: %s</string>
     <string name="email_fmt">Email: %s</string>
+    <string name="title_requests_list">Requisições</string>
+    <string name="title_requests_put_list">Envios</string>
+    <string name="title_requests_result_list">Solicitações</string>
+    <string name="title_requests_detail">Detalhes da Requisiçāo</string>
 </resources>

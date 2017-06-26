@@ -1,0 +1,55 @@
+Index: app/src/main/java/com/github/dicomflow/androiddicomflow/activities/GoogleSignInActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/github/dicomflow/androiddicomflow/activities/GoogleSignInActivity.java	(date 1498314178000)
++++ app/src/main/java/com/github/dicomflow/androiddicomflow/activities/GoogleSignInActivity.java	(revision )
+@@ -23,7 +23,6 @@
+ import android.util.Log;
+ import android.view.View;
+ import android.widget.TextView;
+-import android.widget.Toast;
+ 
+ import com.facebook.AccessToken;
+ import com.facebook.CallbackManager;
+@@ -34,14 +33,11 @@
+ import com.facebook.login.widget.LoginButton;
+ import com.github.dicomflow.androiddicomflow.R;
+ import com.google.android.gms.auth.api.Auth;
+-import com.google.android.gms.auth.api.credentials.Credential;
+ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+ import com.google.android.gms.common.ConnectionResult;
+ import com.google.android.gms.common.api.GoogleApiClient;
+-import com.google.android.gms.common.api.ResultCallback;
+-import com.google.android.gms.common.api.Status;
+ import com.google.android.gms.tasks.OnCompleteListener;
+ import com.google.android.gms.tasks.Task;
+ import com.google.firebase.auth.AuthCredential;
+@@ -286,13 +282,23 @@
+ 
+             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
+             findViewById(R.id.sign_out_and_disconnect).setVisibility(View.VISIBLE);
++
++            intentForAnotherActivity();
+         } else {
+             mStatusTextView.setText(R.string.signed_out);
+             mDetailTextView.setText(null);
+ 
+             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
+             findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
++
++//            ouxe
+         }
++        //
++    }
++
++    private void intentForAnotherActivity() {
++        Intent intent = new Intent(this, MainActivity.class);
++        startActivity(intent);
+     }
+     //endregion
+ 
+\ No newline at end of file
