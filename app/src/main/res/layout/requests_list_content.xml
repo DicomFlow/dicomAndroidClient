@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin"
+        android:textAppearance="?attr/textAppearanceListItem"
+        tools:text="Id"
+        android:layout_alignParentLeft="true"/>
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin"
+        android:textAppearance="?attr/textAppearanceListItem"
+        tools:text="detalhe"
+        android:layout_toRightOf="@id/id"
+        android:layout_toLeftOf="@id/detail"/>
+
+    <LinearLayout
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical"
+        android:layout_centerVertical="true">
+        <com.mikepenz.iconics.view.IconicsImageView
+            android:id="@+id/downloadButtom"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:iiv_color="@color/blue_grey_500"
+            app:iiv_icon="gmd-cloud-download"
+            android:padding="5dp"
+            android:layout_margin="5dp"/>
+        <com.mikepenz.iconics.view.IconicsImageView
+            android:id="@+id/forwardButtom"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:iiv_color="@color/blue_grey_500"
+            app:iiv_icon="gmd-forward"
+            android:padding="5dp"
+            android:layout_margin="5dp"/>
+        <com.mikepenz.iconics.view.IconicsImageView
+            android:id="@+id/resultButtom"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:iiv_color="@color/blue_grey_500"
+            app:iiv_icon="gmd-mail-reply"
+            android:padding="5dp"
+            android:layout_margin="5dp"/>
+
+    </LinearLayout>
+</RelativeLayout>
