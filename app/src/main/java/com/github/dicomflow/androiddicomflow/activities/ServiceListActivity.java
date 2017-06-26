@@ -44,14 +44,18 @@ public class ServiceListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    GMailSender sender = new GMailSender("dicomflow@gmail.com", "pr0t0c0l0ap1d1c0m");
-                    sender.sendMail("This is Subject", "This is Body",
-                            "dicomflow@gmail.com", "juracylucena@gmail.com");
-                } catch (Exception e) {
-                    Snackbar.make(view, "Erro no envio do email ", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
+                new Thread(new Runnable(){
+                    public void run(){
+                        try {
+                            GMailSender sender = new GMailSender("dicomflow@gmail.com", "pr0t0c0l0ap1d1c0m");
+                            sender.sendMail("This is Subject", "This is Body",
+                                    "dicomflow@gmail.com", "juracylucena@gmail.com");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+
                 Snackbar.make(view, "Email Enviado ... ", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
