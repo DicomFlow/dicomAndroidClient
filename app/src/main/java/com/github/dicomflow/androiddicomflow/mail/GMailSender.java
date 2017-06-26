@@ -1,4 +1,4 @@
-package com.github.dicomflow.androiddicomflow.activities;
+package com.github.dicomflow.androiddicomflow.mail;
 
 import com.github.dicomflow.androiddicomflow.models.protocolo.services.Service;
 
@@ -18,13 +18,18 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.StringWriter;
 import java.security.Security;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
-import com.github.dicomflow.androiddicomflow.models.protocolo.services.request.Request;
 import com.github.dicomflow.androiddicomflow.models.protocolo.services.request.RequestPut;
 import com.github.dicomflow.androiddicomflow.models.protocolo.xml.DicomFlowXmlSerializer;
+import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.Credentials;
+import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.Patient;
+import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.Serie;
+import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.Study;
+import com.github.dicomflow.androiddicomflow.models.protocolo.xml.dicomobjects.Url;
 
 /**
  * Created by Neto on 24/06/2017.
@@ -62,18 +67,18 @@ public class GMailSender extends javax.mail.Authenticator {
         return new PasswordAuthentication(user, password);
     }
 
-    public synchronized void sendMail(String subject, String body, String sender, String recipients) throws Exception {
+    public synchronized void sendMail(String subject, String body, String sender, String recipients, Service service) throws Exception {
         try{
             MimeMessage message = new MimeMessage(session);
-
-            RequestPut requestPut = new RequestPut("REPORT", null);
-            Multipart multipart = buildServiceBodyPart(requestPut);
+            Multipart multipart = buildServiceBodyPart(service);
             message.setContent(multipart);
 
-            DataHandler handler = new DataHandler(new ByteArrayDataSource(body.getBytes(), "text/plain"));
+            //DataHandler handler = new DataHandler(new ByteArrayDataSource(body.getBytes(), "text/plain"));
+            //message.setDataHandler(handler);
+
             message.setSender(new InternetAddress(sender));
             message.setSubject(subject);
-            message.setDataHandler(handler);
+
             if (recipients.indexOf(',') > 0) {
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));
             } else {

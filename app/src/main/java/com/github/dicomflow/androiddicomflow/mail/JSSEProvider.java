@@ -1,4 +1,4 @@
-package com.github.dicomflow.androiddicomflow.activities;
+package com.github.dicomflow.androiddicomflow.mail;
 
 import java.security.AccessController;
 import java.security.Provider;
