@@ -4,6 +4,9 @@ import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by ricardobarbosa on 21/06/17.
  */
@@ -24,4 +27,14 @@ public class DicomObject {
         this.id = id;
         this.type = type;
     }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        map.put("type", type);
+        map.put("credentials", credentials.toMap());
+        return map;
+    }
+
+
 }

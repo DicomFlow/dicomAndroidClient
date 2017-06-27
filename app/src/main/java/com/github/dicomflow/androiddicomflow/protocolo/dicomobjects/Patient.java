@@ -4,7 +4,9 @@ import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ricardobarbosa on 21/06/17.
@@ -29,5 +31,17 @@ public class Patient {
         this.gender = gender;
         this.birthdate = birthdate;
         this.studies = studies;
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        map.put("name", name);
+        map.put("gender", gender);
+        map.put("birthdate", birthdate);
+        Map<String, Object> mapList = new HashMap<String, Object>();
+        for (Study p : studies) mapList.put(p.id, p.toMap());
+        map.put("studies", mapList);
+        return map;
     }
 }

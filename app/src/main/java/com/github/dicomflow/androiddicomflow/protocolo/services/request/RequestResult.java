@@ -1,13 +1,16 @@
 package com.github.dicomflow.androiddicomflow.protocolo.services.request;
 
 import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Result;
+import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Serie;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by netolucena on 22/06/2017.
@@ -36,6 +39,14 @@ public class RequestResult extends Request{
         this.results = results;
     }
 
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+
+        Map<String, Object> mapList = new HashMap<String, Object>();
+        for (Result o : results) mapList.put(o.id.toString(), o.toMap());
+        map.put("results", mapList);
+        return map;
+    }
 
 
 }

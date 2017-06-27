@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by ricardobarbosa on 22/06/17.
@@ -49,4 +51,12 @@ public class Data {
 
         return encodedfile;
     }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("filename", filename);
+        map.put("encoded", encoded);
+        return map;
+    }
+
 }

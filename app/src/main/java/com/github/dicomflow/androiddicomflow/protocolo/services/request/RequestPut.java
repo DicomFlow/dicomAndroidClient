@@ -6,6 +6,8 @@ import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
+import java.util.Map;
+
 /**
  * Created by netolucena on 22/06/2017.
  */
@@ -38,5 +40,13 @@ public class RequestPut extends Request {
         super(name, action, from, version, timeout, timestamp, messageID);
         this.requestType = requestType;
         this.url = url;
+    }
+
+    @Override
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = super.toMap();
+        map.put("requestType", requestType);
+        map.put("url", url.toMap());
+        return map;
     }
 }

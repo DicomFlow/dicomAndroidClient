@@ -1,12 +1,18 @@
 package com.github.dicomflow.androiddicomflow.protocolo.dicomobjects;
 
 
+import android.support.annotation.NonNull;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.builder.Diff;
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ricardobarbosa on 21/06/17.
@@ -23,5 +29,16 @@ public class Url{
         this.value = value;
         this.credentials = credentials;
         this.patients = patients;
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("value", value);
+        map.put("credentials", credentials.toMap());
+
+        Map<String, Object> mapPatients = new HashMap<String, Object>();
+        for (Patient p : patients) mapPatients.put(p.id, p.toMap());
+        map.put("pacients", mapPatients);
+        return map;
     }
 }

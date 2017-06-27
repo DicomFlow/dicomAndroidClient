@@ -40,6 +40,7 @@ dependencies {
     compile 'com.firebaseui:firebase-ui-database:2.0.0'
     compile "com.mikepenz:iconics-core:2.8.7@aar"
     compile 'com.mikepenz:google-material-typeface:2.2.0.1@aar'
+    compile 'org.apache.commons:commons-lang3:3.6'
     testCompile 'junit:junit:4.12'
 
 }

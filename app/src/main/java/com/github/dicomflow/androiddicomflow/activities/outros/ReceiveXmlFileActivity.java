@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -13,9 +12,6 @@ import android.widget.Toast;
 import com.github.dicomflow.androiddicomflow.R;
 import com.github.dicomflow.androiddicomflow.protocolo.DicomFlowXmlSerializer;
 import com.github.dicomflow.androiddicomflow.protocolo.services.Service;
-import com.github.dicomflow.androiddicomflow.protocolo.services.request.RequestPut;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,7 +21,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class ReceiveXmlFileActivity extends BaseActivity {
 
@@ -71,7 +66,7 @@ public class ReceiveXmlFileActivity extends BaseActivity {
                             Toast.makeText(ReceiveXmlFileActivity.this, "Error: could not fetch user.", Toast.LENGTH_SHORT).show();
                         } else {
                             // Write new post
-                            writeNewPost(userId, service);
+                            writeNewService(userId, service);
                         }
 
                         finish();
@@ -86,7 +81,7 @@ public class ReceiveXmlFileActivity extends BaseActivity {
 
     }
 
-    private void writeNewPost(String userId, Service service) {
+    private void writeNewService(String userId, Service service) {
 
         // Create new request at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously

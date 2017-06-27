@@ -3,6 +3,9 @@ package com.github.dicomflow.androiddicomflow.protocolo.dicomobjects;
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by ricardobarbosa on 21/06/17.
  */
@@ -23,5 +26,14 @@ public class Serie {
         this.bodypart = bodypart;
         this.description = description;
         this.instances = instances;
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", id);
+        map.put("bodypart", bodypart);
+        map.put("description", description);
+        map.put("instances", instances);
+        return map;
     }
 }
