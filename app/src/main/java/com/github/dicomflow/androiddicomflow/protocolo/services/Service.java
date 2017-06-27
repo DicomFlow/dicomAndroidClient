@@ -17,6 +17,8 @@ public class Service  {
     public final String action;
     @Attribute
     public final String version;
+    @Attribute
+    public final String from;
 
     @Element
     public final String timeout;
@@ -31,16 +33,18 @@ public class Service  {
             @Attribute(name = "version") String version,
             @Element(name = "timeout") String timeout,
             @Element(name = "timestamp") String timestamp,
-            @Element(name = "messageID")String messageID) {
+            @Element(name = "messageID")String messageID,
+            @Element(name = "from")String from) {
         this.name = name;
         this.action = action;
         this.version = version;
         this.timeout = timeout;
         this.timestamp = timestamp;
         this.messageID = messageID;
+        this.from = from;
     }
 
-    public Service(String name, String action) {
+    public Service(String name, String action, String from) {
         this.version = "1.0";
         SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DDhh:mm:ssZ");
         Date date = new Date();
@@ -50,6 +54,7 @@ public class Service  {
         this.timestamp = dateFormat.format(date);
         this.messageID = UUID.randomUUID().toString();
         this.timeout = String.valueOf(date.getTime());
+        this.from = from;
     }
 
 //    public Service(String name, String action) {
