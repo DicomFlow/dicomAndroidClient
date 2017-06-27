@@ -18,22 +18,24 @@ public class RequestPut extends Request {
     @Element(name = "requestType") public final String requestType;
     @Element(name = "url") public final Url url;
 
-    public RequestPut(@Element(name = "requestType") String requestType,
+    public RequestPut(@Attribute(name = "from") String from,
+                      @Element(name = "requestType") String requestType,
                       @Element(name = "url") Url url) {
-        super("PUT");
+        super("PUT", from);
         this.requestType = requestType;
         this.url = url;
     }
 
     public RequestPut(@Attribute(name = "name") String name,
                          @Attribute(name = "action") String action,
+                            @Element(name = "from") String from,
                          @Attribute(name = "version") String version,
                          @Element(name = "timeout") String timeout,
                          @Element(name = "timestamp") String timestamp,
                          @Element(name = "messageID")String messageID,
                       @Element(name = "requestType") String requestType,
                       @Element(name = "url") Url url) {
-        super(name, action, version, timeout, timestamp, messageID);
+        super(name, action, from, version, timeout, timestamp, messageID);
         this.requestType = requestType;
         this.url = url;
     }

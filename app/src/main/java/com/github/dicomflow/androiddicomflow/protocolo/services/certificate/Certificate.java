@@ -16,8 +16,8 @@ public abstract class Certificate extends Service {
     @Element public final Mail mail;
     @Element public final Port port;
 
-    public Certificate(String action,Domain domain, Mail mail, Port port) {
-        super("CERTIFICATE", action);
+    public Certificate(String action, String from, Domain domain, Mail mail, Port port) {
+        super("CERTIFICATE", action, from);
         this.domain = domain;
         this.mail = mail;
         this.port = port;

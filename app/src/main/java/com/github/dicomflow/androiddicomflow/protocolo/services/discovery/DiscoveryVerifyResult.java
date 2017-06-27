@@ -13,8 +13,8 @@ public abstract class DiscoveryVerifyResult extends Discovery {
 
     @ElementList(inline = true) public final List<Result> results;
 
-    public DiscoveryVerifyResult(int priority, String timezone, List<Result> results) {
-        super("VERIFYRESULT", priority, timezone);
+    public DiscoveryVerifyResult(String from, int priority, String timezone, List<Result> results) {
+        super("VERIFYRESULT", from, priority, timezone);
         this.results = results;
     }
 

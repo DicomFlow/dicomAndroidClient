@@ -11,7 +11,7 @@ public abstract class Request extends Service {
         super("REQUEST", action, from);
     }
 
-    public Request(String name, String action, String version, String timeout, String timestamp, String messageID, String from) {
-        super(name, action, version, timeout, timestamp, messageID, from);
+    public Request(String name, String action, String from, String version, String timeout, String timestamp, String messageID) {
+        super(name, action, from, version, timeout, timestamp, messageID);
     }
 }

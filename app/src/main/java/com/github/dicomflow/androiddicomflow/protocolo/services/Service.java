@@ -32,11 +32,11 @@ public class Service  {
     public Service(
             @Attribute(name = "name") String name,
             @Attribute(name = "action") String action,
+            @Element(name = "from") String from,
             @Attribute(name = "version") String version,
             @Element(name = "timeout") String timeout,
             @Element(name = "timestamp") String timestamp,
-            @Element(name = "messageID")String messageID,
-            @Element(name = "from")String from) {
+            @Element(name = "messageID")String messageID) {
         this.name = name;
         this.action = action;
         this.version = version;

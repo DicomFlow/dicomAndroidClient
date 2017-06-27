@@ -7,7 +7,7 @@ import com.github.dicomflow.androiddicomflow.protocolo.services.Service;
  */
 public abstract class Storage extends Service {
 
-    public Storage(String action) {
-        super("STORAGE", action);
+    public Storage(String action, String from) {
+        super("STORAGE", action, from);
     }
 }

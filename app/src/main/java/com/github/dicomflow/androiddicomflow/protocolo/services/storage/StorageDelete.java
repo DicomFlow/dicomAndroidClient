@@ -2,6 +2,7 @@ package com.github.dicomflow.androiddicomflow.protocolo.services.storage;
 
 import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.DicomObject;
 
+import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.ElementList;
 
 import java.util.List;
@@ -13,8 +14,8 @@ public class StorageDelete extends Storage {
 
     @ElementList(name = "objects" ) public final List<DicomObject> objects;
 
-    public StorageDelete(List<DicomObject> objects){
-        super("DELETE");
+    public StorageDelete(@Attribute(name = "from") String from, List<DicomObject> objects){
+        super("DELETE", from);
         this.objects = objects;
     }
 

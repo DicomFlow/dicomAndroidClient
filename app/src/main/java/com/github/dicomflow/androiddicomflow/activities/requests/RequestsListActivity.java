@@ -91,7 +91,7 @@ public class RequestsListActivity extends BaseActivity {
                     patients.add(new Patient("054", "maria", "F", "31/10/1980", studies));
                     Credentials credentials = new Credentials("valor de credential 1");
                     Url url = new Url("www.com...", credentials, patients);
-                    RequestPut requestPut = new RequestPut("REPORT", url);
+                    RequestPut requestPut = new RequestPut("dicomflow@gmail.com", "REPORT", url);
 
 
                     GMailSender sender = new GMailSender("dicomflow@gmail.com", "pr0t0c0l0ap1d1c0m");

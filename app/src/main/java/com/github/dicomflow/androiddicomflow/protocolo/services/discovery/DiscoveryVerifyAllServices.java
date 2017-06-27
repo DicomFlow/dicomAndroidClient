@@ -9,8 +9,8 @@ public abstract class DiscoveryVerifyAllServices extends Discovery {
 
     @Element public final int detail;
 
-    public DiscoveryVerifyAllServices(int detail, int priority, String timezone) {
-        super("VERIFYALLSERVICES", priority, timezone);
+    public DiscoveryVerifyAllServices(String from, int detail, int priority, String timezone) {
+        super("VERIFYALLSERVICES", from, priority, timezone);
         this.detail = detail;
     }
 
