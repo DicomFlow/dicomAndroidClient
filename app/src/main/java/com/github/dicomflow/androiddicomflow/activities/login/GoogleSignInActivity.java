@@ -251,7 +251,7 @@ public class GoogleSignInActivity extends BaseActivity implements
     private void verifyUserOnDatabase() {
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference rootRef = database.getReference();
+        DatabaseReference rootRef = database.getReference("users");
         rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
