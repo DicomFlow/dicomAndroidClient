@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.github.dicomflow.androiddicomflow.R;
@@ -72,6 +73,28 @@ public abstract class RequestListFragment extends Fragment {
                 });
 
                 requestViewHolder.bindToPost(model);
+
+                requestViewHolder.iconicsImageViewDownload.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //TODO implementar codigo de DOWNLOAD aqui
+                        Toast.makeText(v.getContext(), "Implement", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                requestViewHolder.iconicsImageViewForward.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //TODO implementar codigo de SEGUNDA OPINIAO aqui
+                        Toast.makeText(v.getContext(), "Implement", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                requestViewHolder.iconicsImageViewReply.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //TODO implementar codigo de RESULT aqui
+                        Toast.makeText(v.getContext(), "Implement", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         };
         mRecycler.setAdapter(mAdapter);
