@@ -2,10 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.github.dicomflow.androiddicomflow">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -131,14 +132,14 @@
         <activity
             android:name=".activities.requests.RequestsListActivity"
             android:label="@string/title_requests_list"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleInstance"></activity>
+            android:launchMode="singleInstance"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activities.requests.RequestsDetailActivity"
             android:label="@string/title_requests_detail"
+            android:launchMode="singleInstance"
             android:parentActivityName=".activities.requests.RequestsListActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleInstance">
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.github.dicomflow.androiddicomflow.activities.requests.RequestsListActivity" />

@@ -31,8 +31,6 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'com.novoda:sexp:1.0.8'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.sun.mail:android-mail:1.5.5'
-    compile 'com.sun.mail:android-activation:1.5.5'
     compile 'com.google.firebase:firebase-database:11.0.1'
     compile 'com.google.firebase:firebase-auth:11.0.1'
     compile 'com.google.android.gms:play-services-auth:11.0.1'
@@ -41,6 +39,7 @@ dependencies {
     compile "com.mikepenz:iconics-core:2.8.7@aar"
     compile 'com.mikepenz:google-material-typeface:2.2.0.1@aar'
     compile 'org.apache.commons:commons-lang3:3.6'
+    compile 'com.github.yesidlazaro:GmailBackground:1.2.0'
     testCompile 'junit:junit:4.12'
 
 }

@@ -97,6 +97,7 @@ public class DicomFlowXmlSerializer {
             writer.flush();
             writer.close();
 
+            //TODO NAO REMOVER ISSO ATE O FINAL DO PROJETO PODE SER UTIL
             FileReader reader = new FileReader(xmlFile);
             BufferedReader bufferedReader = new BufferedReader(reader);
             String sCurrentLine = null;
@@ -108,8 +109,10 @@ public class DicomFlowXmlSerializer {
                 if(sCurrentLine.startsWith("<\\"));
                 conteudo.deleteCharAt(conteudo.length()-1);
             }
+            reader.close();
+            bufferedReader.close();
 
-            return conteudo.toString();
+            return xmlFile.getAbsolutePath();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
