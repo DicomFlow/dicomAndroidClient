@@ -32,6 +32,10 @@ public class BaseActivity extends AppCompatActivity {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
+    public String getUserEmail() {
+        return FirebaseAuth.getInstance().getCurrentUser().getEmail();
+    }
+
     @Override
     public void onStop() {
         super.onStop();

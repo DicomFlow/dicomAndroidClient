@@ -23,3 +23,12 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class org.apache.** { *; }
+-dontwarn org.apache.**
+
+-keep class com.sun.mail.** { *; }
+-dontwarn com.sun.mail.**
+
+-keep class java.beans.** { *; }
+-dontwarn java.beans.**

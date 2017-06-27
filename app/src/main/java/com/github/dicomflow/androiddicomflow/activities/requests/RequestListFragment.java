@@ -1,7 +1,10 @@
 package com.github.dicomflow.androiddicomflow.activities.requests;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +23,7 @@ import com.google.firebase.database.Query;
 public abstract class RequestListFragment extends Fragment {
 
     private static final String TAG = "RequestListFragment";
+    private static final int CONTACT_PICKER_RESULT = 1000;
 
     private FirebaseDatabase mDatabase;
 
@@ -84,8 +88,7 @@ public abstract class RequestListFragment extends Fragment {
                 requestViewHolder.iconicsImageViewForward.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //TODO implementar codigo de SEGUNDA OPINIAO aqui
-                        Toast.makeText(v.getContext(), "Implement", Toast.LENGTH_SHORT).show();
+                        doLaunchContactPicker(v);
                     }
                 });
                 requestViewHolder.iconicsImageViewReply.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +101,33 @@ public abstract class RequestListFragment extends Fragment {
             }
         };
         mRecycler.setAdapter(mAdapter);
+    }
+
+    public void doLaunchContactPicker(View view) {
+        Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+        contactPickerIntent.setType(ContactsContract.CommonDataKinds.Email.CONTENT_TYPE);
+        startActivityForResult(contactPickerIntent, CONTACT_PICKER_RESULT);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CONTACT_PICKER_RESULT && resultCode == getActivity().RESULT_OK) {
+            // Get the URI and query the content provider for the phone number
+            Uri contactUri = data.getData();
+            String[] projection = new String[]{ContactsContract.CommonDataKinds.Email.ADDRESS};
+            Cursor cursor = getContext().getContentResolver().query(contactUri, projection, null, null, null);
+
+            // If the cursor returned is valid, get the phone number
+            if (cursor != null && cursor.moveToFirst()) {
+                int numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS);
+                String number = cursor.getString(numberIndex);
+                // Do something with the phone number
+                Toast.makeText(getContext(), number, Toast.LENGTH_SHORT).show();
+            }
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
     }
 
     @Override
