@@ -15,7 +15,7 @@ public class CertificateConfirm extends Certificate {
     @Element public final String credential;
     @Element public final String status;
 
-    public CertificateConfirm(@Attribute(name = "from") String from, Domain domain, Mail mail, Port port, String credential, String status) {
+    public CertificateConfirm(String from, Domain domain, Mail mail, Port port, String credential, String status) {
         super("CONFIRM", from, domain,mail,port);
         this.credential = credential;
         this.status = status;

@@ -11,7 +11,7 @@ import org.simpleframework.xml.Attribute;
  */
 public class CertificateRequest extends Certificate {
 
-    public CertificateRequest(@Attribute(name = "from") String from, Domain domain, Mail mail, Port port) {
+    public CertificateRequest(String from, Domain domain, Mail mail, Port port) {
         super("REQUEST", from, domain, mail, port);
     }
 

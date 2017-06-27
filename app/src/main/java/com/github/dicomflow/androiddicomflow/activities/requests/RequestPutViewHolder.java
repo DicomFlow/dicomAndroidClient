@@ -6,21 +6,17 @@ import android.widget.TextView;
 
 import com.github.dicomflow.androiddicomflow.R;
 
-public class RequestViewHolder extends RecyclerView.ViewHolder {
+public class RequestPutViewHolder extends RecyclerView.ViewHolder {
     public final View mView;
-    public final TextView nomePacienteView;
+    public final TextView dataDeEnvioView;
     public final TextView requestPutFromView;
-    public final TextView estudoView;
-    public final TextView modalidadeView;
     public final TextView messageIdView;
 
-    public RequestViewHolder(View view) {
+    public RequestPutViewHolder(View view) {
         super(view);
         mView = view;
-        nomePacienteView = (TextView) view.findViewById(R.id.nome_paciente);
+        dataDeEnvioView = (TextView) view.findViewById(R.id.data_de_envio);
         requestPutFromView = (TextView) view.findViewById(R.id.request_put_from);
-        estudoView = (TextView) view.findViewById(R.id.estudo);
-        modalidadeView = (TextView) view.findViewById(R.id.modalidade);
         messageIdView = (TextView) view.findViewById(R.id.message_id);
     }
 
@@ -30,10 +26,9 @@ public class RequestViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindToPost(Request request) {
-        nomePacienteView.setText(request.);
-        requestPutFromView.setText(request.details);
-        estudoView.setText(request.id);
-        modalidadeView.setText(request.details);
-        messageIdView.setText(request.id);
+        dataDeEnvioView.setText(request.timestamp);
+        //TODO substituir pelo email de quem realmente enviou a mensagem
+        requestPutFromView.setText(request.from);
+        messageIdView.setText(request.messageID);
     }
 }

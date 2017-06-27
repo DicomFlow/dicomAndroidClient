@@ -14,7 +14,7 @@ public class StorageDelete extends Storage {
 
     @ElementList(name = "objects" ) public final List<DicomObject> objects;
 
-    public StorageDelete(@Attribute(name = "from") String from, List<DicomObject> objects){
+    public StorageDelete(String from, List<DicomObject> objects){
         super("DELETE", from);
         this.objects = objects;
     }

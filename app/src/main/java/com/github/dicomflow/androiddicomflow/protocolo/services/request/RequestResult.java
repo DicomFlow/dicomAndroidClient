@@ -18,7 +18,7 @@ public class RequestResult extends Request{
     @ElementList(name = "results", inline = true) public final List<Result> results;
 
     public RequestResult(
-            @Attribute(name = "from") String from,
+            String from,
             @ElementList(name = "results", inline = true) List<Result> results) {
         super("RESULT", from);
         this.results = results;
@@ -26,7 +26,7 @@ public class RequestResult extends Request{
 
     public RequestResult(@Attribute(name = "name") String name,
                          @Attribute(name = "action") String action,
-                         @Attribute(name = "from") String from,
+                         String from,
                          @Attribute(name = "version") String version,
                          @Element(name = "timeout") String timeout,
                          @Element(name = "timestamp") String timestamp,

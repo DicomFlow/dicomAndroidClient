@@ -16,7 +16,7 @@ public class StorageResult extends Storage {
     @ElementList(name = "objects" ) public final List<DicomObject> objects;
     @ElementList(name = "results" ) public final List<Result> results;
 
-    public StorageResult(@Attribute(name = "from") String from, List<DicomObject> objects, List<Result> results){
+    public StorageResult(String from, List<DicomObject> objects, List<Result> results){
         super("RESULT", from);
         this.objects = objects;
         this.results = results;

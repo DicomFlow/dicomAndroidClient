@@ -12,7 +12,7 @@ public class StorageSave extends Storage {
 
     @Element public final Url url;
 
-    public StorageSave(@Attribute(name = "from") String from, Url url){
+    public StorageSave(String from, Url url){
         super("SAVE", from);
         this.url = url;
     }

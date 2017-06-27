@@ -14,7 +14,7 @@ public class SharingPut extends Sharing {
 
     @ElementList(name = "ulrs", inline = true) public final List<Url> urls;
 
-    public SharingPut(@Attribute(name = "from") String from, List<Url> urls){
+    public SharingPut(String from, List<Url> urls){
         super("PUT", from);
         this.urls = urls;
     }

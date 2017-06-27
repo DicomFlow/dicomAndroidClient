@@ -4,26 +4,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    tools:context=".activities.requests.RequestsListActivity">
 
-    <TextView
-        android:id="@+id/id"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem"
-        tools:text="Id"
-        android:layout_alignParentLeft="true"/>
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/text_margin">
+        <TextView
+            android:id="@+id/request_put_from"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            style="@style/Base.TextAppearance.AppCompat.Medium"
+            tools:text="danilo@gmail.com"/>
+        <TextView
+            android:id="@+id/data_de_envio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            style="@style/Base.TextAppearance.AppCompat.Small"
+            tools:text="Paciente"/>
+        <TextView
+            android:id="@+id/message_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textSize="10dp"
+            tools:text="1212oiu343iu434jhj12jn12jn3k4j3"/>
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem"
-        tools:text="detalhe"
-        android:layout_toRightOf="@id/id"
-        android:layout_toLeftOf="@id/detail"/>
 
     <LinearLayout
         android:layout_alignParentRight="true"

@@ -14,7 +14,7 @@ public class StorageUpdate extends Storage {
     @Element public final Url url;
     @Element public final DicomObject object;
 
-    public StorageUpdate(@Attribute(name = "from") String from, Url url, DicomObject object){
+    public StorageUpdate(String from, Url url, DicomObject object){
         super("UPDATE", from);
         this.url = url;
         this.object = object;

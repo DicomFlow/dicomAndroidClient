@@ -77,7 +77,7 @@ public class RequestsDetailFragment extends Fragment {
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
-                appBarLayout.setTitle(mItem.content);
+                appBarLayout.setTitle(mItem.messageID);
             }
         }
     }
@@ -89,7 +89,7 @@ public class RequestsDetailFragment extends Fragment {
 
         // Show the dummy content as text in a TextView.
         if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.requests_detail)).setText(mItem.details);
+            ((TextView) rootView.findViewById(R.id.requests_detail)).setText(mItem.messageID);
             // Initialize Views
             mAuthorView = (TextView) rootView.findViewById(R.id.requests_detail);
         }
@@ -110,7 +110,7 @@ public class RequestsDetailFragment extends Fragment {
                 Request post = dataSnapshot.getValue(Request.class);
 
 //                ((TextView) rootView.findViewById(R.id.requests_detail)).setText(post.details);
-                mAuthorView.setText(post.details);
+                mAuthorView.setText(post.messageID);
             }
 
             @Override

@@ -15,7 +15,7 @@ public class CertificateResult extends Certificate {
     @Element public final String credential;
     @Element public final String status;
 
-    public CertificateResult(@Attribute(name = "from") String from, Domain domain, Mail mail, Port port, String credential, String status) {
+    public CertificateResult(String from, Domain domain, Mail mail, Port port, String credential, String status) {
         super("RESULT", from, domain,mail,port);
         this.credential = credential;
         this.status = status;
