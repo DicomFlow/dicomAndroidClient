@@ -15,6 +15,7 @@ import android.view.View;
 import com.github.dicomflow.androiddicomflow.R;
 import com.github.dicomflow.androiddicomflow.activities.login.GoogleSignInActivity;
 import com.github.dicomflow.androiddicomflow.activities.outros.BaseActivity;
+import com.github.dicomflow.androiddicomflow.activities.outros.ReceiveXmlFileActivity;
 import com.github.dicomflow.androiddicomflow.mail.GMailSender;
 import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Credentials;
 import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Patient;
@@ -45,33 +46,9 @@ public class RequestsListActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 //        startActivity(new Intent(RequestsListActivity.this, NewPostActivity.class));
-                new Thread(new Runnable(){
-                    public void run(){
-                        try {
-                            //Creating Service Object
-                            ArrayList<Patient> patients = new ArrayList<Patient>();
-                            ArrayList<Study> studies = new ArrayList<>();
-                            List<Serie> series = new ArrayList<>();
-                            series.add(new Serie("1", "bodypart", "description", 1));
-                            studies.add(new Study("1","tipo","descricao do estudo", 1, 1l, series));
-                            studies.add(new Study("2","tipo","descricao do estudo 2", 2, 2l, series));
-                            patients.add(new Patient("053", "ricardo", "M", "31/10/1985", studies));
-                            patients.add(new Patient("054", "maria", "F", "31/10/1980", studies));
-                            Credentials credentials = new Credentials("valor de credential 1");
-                            Url url = new Url("www.com...", credentials, patients);
-                            RequestPut requestPut = new RequestPut("REPORT", url);
-
-
-                            GMailSender sender = new GMailSender("dicomflow@gmail.com", "pr0t0c0l0ap1d1c0m");
-                            sender.sendMail("This is Subject", "This is Body",
-                                    "dicomflow@gmail.com", "rbrico@gmail.com", requestPut);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
-
-                Snackbar.make(v, "Email Enviado ... ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+//               enviarEmail(v);
+                //TODO remover esse mock
+                processarXMl();
             }
         });
 
@@ -92,6 +69,41 @@ public class RequestsListActivity extends BaseActivity {
                     .add(R.id.container, fragment)
                     .commit();
         }
+    }
+
+    private void processarXMl() {
+        Intent intent = new Intent(this, ReceiveXmlFileActivity.class);
+        startActivity(intent);
+    }
+
+    private void enviarEmail(View v) {
+        new Thread(new Runnable(){
+            public void run(){
+                try {
+                    //Creating Service Object
+                    ArrayList<Patient> patients = new ArrayList<Patient>();
+                    ArrayList<Study> studies = new ArrayList<>();
+                    List<Serie> series = new ArrayList<>();
+                    series.add(new Serie("1", "bodypart", "description", 1));
+                    studies.add(new Study("1","tipo","descricao do estudo", 1, 1l, series));
+                    studies.add(new Study("2","tipo","descricao do estudo 2", 2, 2l, series));
+                    patients.add(new Patient("053", "ricardo", "M", "31/10/1985", studies));
+                    patients.add(new Patient("054", "maria", "F", "31/10/1980", studies));
+                    Credentials credentials = new Credentials("valor de credential 1");
+                    Url url = new Url("www.com...", credentials, patients);
+                    RequestPut requestPut = new RequestPut("REPORT", url);
+
+
+                    GMailSender sender = new GMailSender("dicomflow@gmail.com", "pr0t0c0l0ap1d1c0m");
+                    sender.sendMail("This is Subject", "This is Body",
+                            "dicomflow@gmail.com", "rbrico@gmail.com", requestPut);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        Snackbar.make(v, "Email Enviado ... ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
     @Override
