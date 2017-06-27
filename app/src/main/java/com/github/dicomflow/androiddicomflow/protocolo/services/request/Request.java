@@ -7,11 +7,11 @@ import com.github.dicomflow.androiddicomflow.protocolo.services.Service;
  */
 public abstract class Request extends Service {
 
-    public Request(String action) {
-        super("REQUEST", action);
+    public Request(String action, String from) {
+        super("REQUEST", action, from);
     }
 
-    public Request(String name, String action, String version, String timeout, String timestamp, String messageID) {
-        super(name, action, version, timeout, timestamp, messageID);
+    public Request(String name, String action, String version, String timeout, String timestamp, String messageID, String from) {
+        super(name, action, version, timeout, timestamp, messageID, from);
     }
 }
