@@ -16,8 +16,8 @@ public class FindPut extends Find {
     @ElementList(inline = true) public final List<Search> searches;
     @Element public final String timezone;
 
-    public FindPut(int priority, List<Search> searches, String timezone) {
-        super("PUT");
+    public FindPut(String from, int priority, List<Search> searches, String timezone) {
+        super("PUT", from);
         this.priority = priority;
         this.searches = searches;
         this.timezone = timezone;

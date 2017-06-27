@@ -32,11 +32,11 @@ public class Service  {
     public Service(
             @Attribute(name = "name") String name,
             @Attribute(name = "action") String action,
+            @Attribute(name = "from") String from,
             @Attribute(name = "version") String version,
             @Element(name = "timeout") String timeout,
             @Element(name = "timestamp") String timestamp,
-            @Element(name = "messageID")String messageID,
-            @Element(name = "from")String from) {
+            @Element(name = "messageID")String messageID) {
         this.name = name;
         this.action = action;
         this.version = version;
@@ -61,6 +61,7 @@ public class Service  {
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
+        result.put("from", from);
         result.put("version", version);
         result.put("timeout", timeout);
         result.put("timestamp", timestamp);

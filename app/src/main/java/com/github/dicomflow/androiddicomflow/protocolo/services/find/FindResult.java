@@ -13,8 +13,8 @@ public class FindResult extends Find {
 
     @ElementList(name = "results", inline = true) public final List<Result> results;
 
-    public FindResult(List<Result> results) {
-        super("RESULT");
+    public FindResult(String from, List<Result> results) {
+        super("RESULT", from);
         this.results = results;
     }
 

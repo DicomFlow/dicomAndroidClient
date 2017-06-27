@@ -22,7 +22,7 @@ public abstract class RequestListFragment extends Fragment {
 
     private FirebaseDatabase mDatabase;
 
-    private FirebaseRecyclerAdapter<Request, RequestViewHolder> mAdapter;
+    private FirebaseRecyclerAdapter<Request, RequestPutViewHolder> mAdapter;
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
 
@@ -54,9 +54,9 @@ public abstract class RequestListFragment extends Fragment {
 
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase);
-        mAdapter = new FirebaseRecyclerAdapter<Request , RequestViewHolder>(Request.class, R.layout.requests_list_content, RequestViewHolder.class, postsQuery) {
+        mAdapter = new FirebaseRecyclerAdapter<Request , RequestPutViewHolder>(Request.class, R.layout.requests_list_content, RequestPutViewHolder.class, postsQuery) {
             @Override
-            protected void populateViewHolder(final RequestViewHolder requestViewHolder, final Request model, final int position) {
+            protected void populateViewHolder(final RequestPutViewHolder requestViewHolder, final Request model, final int position) {
                 final DatabaseReference postRef = getRef(position);
 
                 // Set click listener for the whole post view

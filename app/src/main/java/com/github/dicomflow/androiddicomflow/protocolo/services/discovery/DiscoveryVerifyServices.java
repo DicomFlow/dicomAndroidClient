@@ -13,8 +13,8 @@ public abstract class DiscoveryVerifyServices extends Discovery {
 
     @ElementList(name = "services", inline = true) public final List<ServiceDescriptor> serviceDescriptors;
 
-    public DiscoveryVerifyServices(int priority, String timezone, List<ServiceDescriptor> serviceDescriptors) {
-        super("VERIFYSERVICES", priority, timezone);
+    public DiscoveryVerifyServices(String from, int priority, String timezone, List<ServiceDescriptor> serviceDescriptors) {
+        super("VERIFYSERVICES", from, priority, timezone);
         this.serviceDescriptors = serviceDescriptors;
     }
 

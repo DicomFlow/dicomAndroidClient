@@ -16,7 +16,7 @@ public class RequestPutsFragment extends RequestListFragment {
         // Last 100 posts, these are automatically the 100 most recent
         // due to sorting by push() keys
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference requestsUserRef = databaseReference.getReference("user-requests").child(user.getUid()).child("puts");
+        DatabaseReference requestsUserRef = databaseReference.getReference("user-request").child(user.getUid()).child("put");
         Query recentRequestQuery = requestsUserRef.limitToFirst(100);
         return recentRequestQuery;
     }
