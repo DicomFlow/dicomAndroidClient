@@ -20,17 +20,17 @@ import java.util.Map;
 @Root
 public class Data {
     @Attribute public final String filename;
-    @Element(name = "bytes", required = false) public final String encoded;
+    @Element(name = "bytes", required = false) public final String bytes;
 
     public Data(
             @Attribute(name = "filename") String filename,
             @Element(name = "bytes", required = false) String encoded) {
         if (filename != null && !filename.isEmpty()) {
             this.filename = filename;
-            this.encoded = encodeFileToBase64Binary(filename);
+            this.bytes = encodeFileToBase64Binary(filename);
         }else {
             this.filename = "";
-            this.encoded = encoded != null ? encoded : "";
+            this.bytes = encoded != null ? encoded : "";
         }
 
     }
@@ -55,7 +55,7 @@ public class Data {
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("filename", filename);
-        map.put("encoded", encoded);
+        map.put("encoded", bytes);
         return map;
     }
 

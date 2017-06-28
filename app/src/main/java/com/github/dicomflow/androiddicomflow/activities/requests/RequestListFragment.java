@@ -18,11 +18,14 @@ import android.widget.Toast;
 import com.creativityapps.gmailbackgroundlibrary.BackgroundMail;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.github.dicomflow.androiddicomflow.R;
+
+import com.github.dicomflow.androiddicomflow.mail.GMailBackgroundSender;
 import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Credentials;
 import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Patient;
 import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Serie;
 import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Study;
 import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Url;
+import com.github.dicomflow.androiddicomflow.protocolo.services.*;
 import com.github.dicomflow.androiddicomflow.protocolo.services.Service;
 import com.github.dicomflow.androiddicomflow.protocolo.services.request.RequestPut;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,6 +33,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +43,7 @@ public abstract class RequestListFragment extends Fragment {
 
     private static final String TAG = "RequestListFragment";
     private static final int CONTACT_PICKER_RESULT = 1000;
+    private static final int REPORT_PICKER_RESULT = 2000;
 
     private FirebaseDatabase mDatabase;
 
@@ -109,7 +114,9 @@ public abstract class RequestListFragment extends Fragment {
                 requestViewHolder.iconicsImageViewReply.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(v.getContext(), "Implement", Toast.LENGTH_SHORT).show();
+                        //TODO implementar codigo de RESULT aqui
+                        //Toast.makeText(v.getContext(), "Implement", Toast.LENGTH_SHORT).show();
+                        doLaunchReportPicker(v);
                     }
                 });
             }
@@ -120,6 +127,16 @@ public abstract class RequestListFragment extends Fragment {
     private void doLaunchContactPicker() {
         Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
         startActivityForResult(contactPickerIntent, CONTACT_PICKER_RESULT);
+    }
+
+
+    public void doLaunchReportPicker(View view) {
+        int index = (int) view.getTag();
+
+        Intent reportPickerIntent = new Intent(Intent.ACTION_GET_CONTENT, ContactsContract.Contacts.CONTENT_URI);
+        this.index = index;
+        reportPickerIntent.setType("application/pdf");
+        startActivityForResult(reportPickerIntent, REPORT_PICKER_RESULT);
     }
 
     @Override
@@ -196,8 +213,26 @@ public abstract class RequestListFragment extends Fragment {
             }*/
         }
 
+        if (requestCode == REPORT_PICKER_RESULT && resultCode == getActivity().RESULT_OK) {
+            String filePath = data.getData().getPath();
+            Map<String, Object> params = new HashMap<String, Object>();
+            //int requestIndex = data.getIntExtra("index", -1);
+            if (index >= 0) {
+                Request r =  mAdapter.getItem(index);
+
+                //com.github.dicomflow.androiddicomflow.protocolo.services.Service requestResult = ServiceFactory.getService(ServiceTypes.REQUESTRESULT, params);
+                Service service = createAService();
+                GMailBackgroundSender.enviarEmailWithGmailBackground(getView(), service);
+            }
+        }
+
 
     }
+
+    protected Service createAService() {
+        return null;
+    }
+
 
     private void solicitarSegundaOpiniao(String email, final View view) throws Exception {
 
@@ -230,7 +265,10 @@ public abstract class RequestListFragment extends Fragment {
                     }
                 })
                 .send();
+
     }
+
+
 
     //TODO esse metodo deve sair apos a fabrica
     protected Service mockfabrica() {

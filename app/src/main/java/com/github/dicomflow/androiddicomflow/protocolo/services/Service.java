@@ -48,7 +48,7 @@ public class Service  {
 
     public Service(String name, String action, String from) {
         this.version = "1.0";
-        SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD hh:mm:ssZ");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-DD hh:mm:ssZ");
         Date date = new Date();
 
         this.name = name;

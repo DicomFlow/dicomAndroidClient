@@ -28,7 +28,7 @@ public class RequestResult extends Request{
 
     public RequestResult(@Attribute(name = "name") String name,
                          @Attribute(name = "action") String action,
-                         String from,
+                         @Attribute(name = "from") String from,
                          @Attribute(name = "version") String version,
                          @Element(name = "timeout") String timeout,
                          @Element(name = "timestamp") String timestamp,
