@@ -59,8 +59,14 @@ public class Service  {
         this.from = from;
     }
 
+    public Service(Map<String, Object> params) {
+        this((String) params.get("name"), (String) params.get("action"), (String) params.get("from"));
+    }
+
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
+        result.put("name", name);
+        result.put("action", action);
         result.put("from", from);
         result.put("version", version);
         result.put("timeout", timeout);

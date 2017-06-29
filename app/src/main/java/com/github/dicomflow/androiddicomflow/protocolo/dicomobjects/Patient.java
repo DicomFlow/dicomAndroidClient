@@ -4,6 +4,7 @@ import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,22 @@ public class Patient {
         this.gender = gender;
         this.birthdate = birthdate;
         this.studies = studies;
+    }
+
+    public Patient(Map<String, Object> params) {
+        this.id = (String) params.get("id");
+        this.name = (String) params.get("name");
+        this.gender = (String) params.get("gender");
+        this.birthdate = (String) params.get("birthdate");
+
+        this.studies = new ArrayList<>();
+        List<Map<String, Object>> paramsStudies = (List<Map<String, Object>>) params.get("studies");
+        for (Map<String, Object> paramsStudy : paramsStudies) {
+            //TODO verificar esse null aqui
+            if(paramsStudy == null) continue;
+            this.studies.add(new Study( paramsStudy));
+        }
+
     }
 
     public Map<String, Object> toMap() {

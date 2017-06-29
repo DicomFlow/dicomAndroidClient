@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.Snackbar;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,30 +18,19 @@ import android.widget.Toast;
 import com.creativityapps.gmailbackgroundlibrary.BackgroundMail;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.github.dicomflow.androiddicomflow.R;
-
-import com.github.dicomflow.androiddicomflow.mail.GMailBackgroundSender;
-import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Completed;
-import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Credentials;
-import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Data;
-import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Patient;
-import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Result;
-import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Serie;
-import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Study;
-import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Url;
-import com.github.dicomflow.androiddicomflow.protocolo.services.*;
 import com.github.dicomflow.androiddicomflow.protocolo.services.Service;
-import com.github.dicomflow.androiddicomflow.protocolo.services.request.RequestPut;
-import com.github.dicomflow.androiddicomflow.protocolo.services.request.RequestResult;
+import com.github.dicomflow.androiddicomflow.protocolo.services.ServiceFactory;
+import com.github.dicomflow.androiddicomflow.protocolo.services.ServiceTypes;
 import com.github.dicomflow.androiddicomflow.util.FileUtil;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public abstract class RequestListFragment extends Fragment {
@@ -146,7 +134,7 @@ public abstract class RequestListFragment extends Fragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CONTACT_PICKER_RESULT && resultCode == getActivity().RESULT_OK) {
 
@@ -175,12 +163,8 @@ public abstract class RequestListFragment extends Fragment {
                     name = cursor.getString(nameId);
                     Log.v(TAG, "Got email: " + email);
 
-                    try {
-                        solicitarSegundaOpiniao(email, getView());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Snackbar.make(getView(), "Algo deu errado na solicitacao de segunda opiniao", Snackbar.LENGTH_SHORT).show();
-                    }
+                    solicitarSegundaOpiniao(email, getView());
+
                     Toast.makeText(getContext(), email, Toast.LENGTH_SHORT).show();
 
                 } else {
@@ -221,113 +205,120 @@ public abstract class RequestListFragment extends Fragment {
 
         if (requestCode == REPORT_PICKER_RESULT && resultCode == getActivity().RESULT_OK) {
             if (index >= 0) {
-                Request r =  mAdapter.getItem(index);
+                final Request r =  mAdapter.getItem(index);
+                DatabaseReference ref = DatabaseUtil.getService(getUid(), r.messageID);
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Map<String, Object> params = (Map<String, Object>) dataSnapshot.getValue();
+                        params.put("from", getEmail());
 
-                //String filePath = data.getData().getPath();
-                Uri uri = data.getData();
-                String filePath = FileUtil.getPath(getContext(), uri);
-                String fileName = FileUtil.getFileNameFromFilePath(filePath);
+                        //String filePath = data.getData().getPath();
+                        Uri uri = data.getData();
+                        String filePath = FileUtil.getPath(getContext(), uri);
+                        String fileName = FileUtil.getFileNameFromFilePath(filePath);
+                        params.put("filename", fileName);
+                        params.put("bytes", filePath);
+                        params.put("originalMessageID", r.messageID);
 
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("from", "dicomflow@gmail.com");
-                params.put("filename", fileName);
-                params.put("bytes", filePath);
+                        final Service service = ServiceFactory.getService(ServiceTypes.REQUESTRESULT, params);
 
-                com.github.dicomflow.androiddicomflow.protocolo.services.Service service = ServiceFactory.getService(ServiceTypes.REQUESTRESULT, params);
-                //Service service = createAService2();
-                GMailBackgroundSender.enviarEmailWithGmailBackground(getView(), service);
+                        try {
+                            MessageServiceSender.newBuilder(getContext())
+                                    .withService(service)
+                                    .withMailto(r.from) //TODO trocar pelo from
+                                    .withOnSuccessCallback(new BackgroundMail.OnSuccessCallback() {
+                                        @Override
+                                        public void onSuccess() {
+                                            //do some magic
+                                            String userId = getUid();
+                                            Map<String, Object> params = new HashMap<>();
+
+                                            DatabaseUtil.writeNewService(userId, service, params);
+
+                                            Snackbar.make(getView(), "Segunda opinião solicitada. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                        }
+                                    })
+                                    .withOnFailCallback(new BackgroundMail.OnFailCallback() {
+                                        @Override
+                                        public void onFail() {
+                                            //do some magic
+                                            Snackbar.make(getView(), "Não conseguimos enviar o email. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                        }
+                                    })
+                                    .send();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Snackbar.make(getView(), "Ocorreu um erro no envio. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Snackbar.make(getView(), "Cancelled. sOcorreu um erro no envio. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    }
+
+                });
+
+
             }
         }
-
-
     }
 
-    private void solicitarSegundaOpiniao(String email, final View view) throws Exception {
+    private void solicitarSegundaOpiniao(final String email, final View view) {
 
         final Request request = mAdapter.getItem(index);
 
         //TODO FABRICA AQUI - pedir a fabrica um request
-        final Service requestPutSegundaOpiniao = mockfabrica();
+        DatabaseReference ref = DatabaseUtil.getService(getUid(), request.messageID);
 
-        MessageServiceSender.newBuilder(getContext())
-                .withService(requestPutSegundaOpiniao)
-                .withMailto(email)
-                .withOnSuccessCallback(new BackgroundMail.OnSuccessCallback() {
-                    @Override
-                    public void onSuccess() {
-                        //do some magic
-                        String userId = getUid();
-                        Map<String, Object> params = new HashMap<>();
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String, Object> params = (Map<String, Object>) dataSnapshot.getValue();
+                params.put("from", getEmail());
+                final Service requestPutSegundaOpiniao = ServiceFactory.getService(ServiceTypes.REQUESTPUT, params);
 
-                        params.put("segundaOpinaoDe", request.messageID);
-                        DatabaseUtil.writeNewService(userId, requestPutSegundaOpiniao, params);
+                try {
+                    MessageServiceSender.newBuilder(getContext())
+                            .withService(requestPutSegundaOpiniao)
+                            .withMailto(email)
+                            .withOnSuccessCallback(new BackgroundMail.OnSuccessCallback() {
+                                @Override
+                                public void onSuccess() {
+                                    //do some magic
+                                    String userId = getUid();
+                                    Map<String, Object> params = new HashMap<>();
 
-                        Snackbar.make(view, "Segunda opinião solicitada. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                    }
-                })
-                .withOnFailCallback(new BackgroundMail.OnFailCallback() {
-                    @Override
-                    public void onFail() {
-                        //do some magic
-                        Snackbar.make(view, "Não conseguimos enviar o email. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                    }
-                })
-                .send();
+                                    params.put("segundaOpinaoDe", request.messageID);
+                                    DatabaseUtil.writeNewService(userId, requestPutSegundaOpiniao, params);
+
+                                    Snackbar.make(view, "Segunda opinião solicitada. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                }
+                            })
+                            .withOnFailCallback(new BackgroundMail.OnFailCallback() {
+                                @Override
+                                public void onFail() {
+                                    //do some magic
+                                    Snackbar.make(view, "Não conseguimos enviar o email. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                }
+                            })
+                            .send();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Snackbar.make(getView(), "Algo deu errado na solicitacao de segunda opiniao", Snackbar.LENGTH_SHORT).show();
+                }
+            }
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(view.getContext(), "Errrooo", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
-
-
-
-    //TODO esse metodo deve sair apos a fabrica
-    protected Service mockfabrica() {
-        return null;
-    }
-
-    //TODO remover codigo deste metodo
-    private com.github.dicomflow.androiddicomflow.protocolo.services.Service createAService() {
-        //Creating Service Object
-        ArrayList<Patient> patients = new ArrayList<Patient>();
-        ArrayList<Study> studies = new ArrayList<>();
-        List<Serie> series = new ArrayList<>();
-        series.add(new Serie("1", "bodypart", "description", 1));
-        studies.add(new Study("1", "tipo", "descricao do estudo", 1, 1l, series));
-        studies.add(new Study("2", "tipo", "descricao do estudo 2", 2, 2l, series));
-        patients.add(new Patient("053", "ricardo", "M", "31/10/1985", studies));
-        patients.add(new Patient("054", "maria", "F", "31/10/1980", studies));
-        Credentials credentials = new Credentials("valor de credential 1");
-        Url url = new Url("www.com...", credentials, patients);
-        RequestPut requestPut = new RequestPut("dicomflow@gmail.com", "REPORT", url);
-        return requestPut;
-    }
-
-
-    private com.github.dicomflow.androiddicomflow.protocolo.services.Service createAService2() {
-        //Creating Service Object
-        Completed completed = new Completed("1", "OK");
-        Data data = new Data(null, "Data");
-
-        ArrayList<Patient> patients = new ArrayList<Patient>();
-        ArrayList<Study> studies = new ArrayList<>();
-        List<Serie> series = new ArrayList<>();
-        series.add(new Serie("1", "bodypart", "description", 1));
-        studies.add(new Study("1", "tipo", "descricao do estudo", 1, 1l, series));
-        studies.add(new Study("2", "tipo", "descricao do estudo 2", 2, 2l, series));
-        patients.add(new Patient("053", "ricardo", "M", "31/10/1985", studies));
-        patients.add(new Patient("054", "maria", "F", "31/10/1980", studies));
-        Credentials credentials = new Credentials("valor de credential 1");
-        Url url = new Url("www.com...", credentials, patients);
-        List<Url> urls = new ArrayList<Url>();
-        urls.add(url);
-
-        Result result = new Result(completed, data, "123", "1234", urls);
-
-        List<Result> results = new ArrayList<Result>();
-        results.add(result);
-        RequestResult requestResult = new RequestResult("dicomflow@gmail.com", results);
-
-        return requestResult;
-    }
-
 
     @Override
     public void onDestroy() {
@@ -339,6 +330,9 @@ public abstract class RequestListFragment extends Fragment {
 
     public String getUid() {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
+    }
+    public String getEmail() {
+        return FirebaseAuth.getInstance().getCurrentUser().getEmail();
     }
 
     public abstract Query getQuery(FirebaseDatabase databaseReference);

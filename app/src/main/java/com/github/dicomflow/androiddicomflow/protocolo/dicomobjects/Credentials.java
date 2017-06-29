@@ -12,10 +12,14 @@ import java.util.Map;
 
 @Root
 public class Credentials {
-    @Element() public final String value;
+    @Element(name = "value") public final String value;
 
     public Credentials(@Element(name = "value") String value) {
         this.value = value;
+    }
+
+    public Credentials(Map<String, Object> params) {
+        this.value = (String) params.get("value");
     }
 
     public Map<String, Object> toMap() {

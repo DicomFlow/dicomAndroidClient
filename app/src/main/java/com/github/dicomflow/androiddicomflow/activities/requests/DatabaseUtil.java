@@ -32,4 +32,10 @@ public class DatabaseUtil {
         childUpdates.put(path1, serviceValues);
         rootRef.updateChildren(childUpdates);
     }
+
+    public static DatabaseReference getService(String userId, String messageID) {
+//        String where = String.format("user-%ss%s", service.name.toLowerCase(), service.action.toUpperCase());
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child("user-requestsPUT");
+        return rootRef.child(userId).child(messageID);
+    }
 }

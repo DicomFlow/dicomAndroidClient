@@ -4,6 +4,7 @@ import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,24 @@ public class Study {
         this.size = size;
         this.series = series;
     }
+
+    public Study(Map<String, Object> params) {
+        this.id = (String) params.get("id");
+        this.type = (String) params.get("type");
+        this.description = (String) params.get("description");
+        this.datetime = ((Long) params.get("datetime")).intValue();
+        this.size = (Long) params.get("size");
+
+        this.series = new ArrayList<>();
+        List<Map<String, Object>> paramsSeries = (List<Map<String, Object>>) params.get("series");
+        for (Map<String, Object> paramSerie : paramsSeries) {
+            //TODO verificar esse null aqui
+            if(paramSerie == null) continue;
+            this.series.add(new Serie( paramSerie ));
+        }
+
+    }
+
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();

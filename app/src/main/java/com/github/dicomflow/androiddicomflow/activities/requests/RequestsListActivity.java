@@ -14,6 +14,7 @@ import android.view.View;
 
 import com.github.dicomflow.androiddicomflow.R;
 import com.github.dicomflow.androiddicomflow.activities.login.GoogleSignInActivity;
+import com.github.dicomflow.androiddicomflow.activities.login.GoogleSignInActivity2;
 import com.github.dicomflow.androiddicomflow.activities.outros.BaseActivity;
 import com.github.dicomflow.androiddicomflow.activities.outros.FileChooser;
 import com.github.dicomflow.androiddicomflow.protocolo.DicomFlowXmlSerializer;
@@ -97,7 +98,7 @@ public class RequestsListActivity extends BaseActivity {
         int i = item.getItemId();
         if (i == R.id.action_logout) {
             FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(this, GoogleSignInActivity.class));
+            startActivity(new Intent(this, GoogleSignInActivity2.class));
             finish();
             return true;
         } else {

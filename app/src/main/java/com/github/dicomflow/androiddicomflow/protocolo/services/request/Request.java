@@ -17,6 +17,10 @@ public abstract class Request extends Service {
         super(name, action, from, version, timeout, timestamp, messageID);
     }
 
+    public Request(Map<String, Object> params) {
+        super(params);
+    }
+
     @Override
     public Map<String, Object> toMap() {
         Map<String, Object> map = super.toMap();

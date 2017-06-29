@@ -15,6 +15,13 @@ import java.util.Map;
 @Root(name = "service")
 public class RequestPut extends Request {
 
+    public RequestPut(Map<String, Object> params) {
+        super(params);
+
+        this.requestType = (String) params.get("requestType");
+        this.url = new Url((Map<String, Object> )params.get("url"));
+    }
+
     public enum RequestType { Report, Processing }
 
     @Element(name = "requestType") public final String requestType;

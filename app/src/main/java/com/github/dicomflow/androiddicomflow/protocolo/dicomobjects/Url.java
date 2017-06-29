@@ -10,6 +10,7 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,17 @@ public class Url{
         this.value = value;
         this.credentials = credentials;
         this.patients = patients;
+    }
+
+    public Url(Map<String, Object> params) {
+        this.value = (String) params.get("value");
+        this.credentials = new Credentials((Map<String, Object>) params.get("credentials"));
+
+        Map<String, Object> paramsClientes = (Map<String, Object>) params.get("pacients");
+        this.patients =  new ArrayList<>();
+        for (String key : paramsClientes.keySet()) {
+            this.patients.add(new Patient((Map<String, Object>) paramsClientes.get(key)));
+        }
     }
 
     public Map<String, Object> toMap() {

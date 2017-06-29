@@ -3,6 +3,7 @@ package com.github.dicomflow.androiddicomflow.protocolo.dicomobjects;
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +27,13 @@ public class Serie {
         this.bodypart = bodypart;
         this.description = description;
         this.instances = instances;
+    }
+
+    public Serie(Map<String, Object> params) {
+        this.id = (String) params.get("id");
+        this.bodypart = (String) params.get("bodypart");
+        this.description = (String) params.get("description");
+        this.instances = ((Long) params.get("instances")).intValue();
     }
 
     public Map<String, Object> toMap() {

@@ -11,10 +11,11 @@ import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Url;
 import com.github.dicomflow.androiddicomflow.protocolo.services.request.RequestPut;
 import com.github.dicomflow.androiddicomflow.protocolo.services.request.RequestResult;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 
 /**
@@ -26,11 +27,19 @@ public class ServiceFactory {
         Service service = null;
         try {
             if (serviceType == ServiceTypes.REQUESTPUT) {
-                String from = (String)params.get("from");
-                String requestType = (String)params.get("requestType");
-                Url url = (Url) params.get("url");
-                service = new RequestPut(from, requestType, url);
+
+
+                service = new RequestPut(params);
+
+//                String from = (String)params.get("from");
+//                String requestType = (String)params.get("requestType");
+//                Url url = (Url) params.get("url");
+//                service = new RequestPut(from, requestType, url);
             } else if (serviceType == ServiceTypes.REQUESTRESULT) {
+
+                service = new RequestPut(params);
+
+
                 ArrayList<Patient> patients = new ArrayList<Patient>();
                 ArrayList<Study> studies = new ArrayList<>();
                 List<Serie> series = new ArrayList<>();
@@ -49,12 +58,18 @@ public class ServiceFactory {
 
                 Completed completed = new Completed("1", "OK"); //TODO
                 Integer id = 1; //TODO
-                Result result = new Result(completed, data, "1234", "1234", urls);
+
+                //TODO Param do message original
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-DD hh:mm:ssZ");
+                Date date = new Date();
+                Result result = new Result(completed, data, (String)params.get("originalMessageID"), dateFormat.format(date), urls);
+
                 List resultList = new ArrayList<>();
                 resultList.add(result);
                 service = new RequestResult(from, resultList);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
         return service;
