@@ -1,6 +1,6 @@
 package com.github.dicomflow.androiddicomflow.protocolo.dicomobjects;
 
-import android.util.Base64;
+import com.github.dicomflow.androiddicomflow.util.FileUtil;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
@@ -24,23 +24,7 @@ public class Data {
             @Attribute(name = "filename") String filename,
             @Element(name = "bytes") String encoded) {
             this.filename = filename;
-            this.encoded = encoded;
+            this.encoded = FileUtil.encodeFileToBase64Binary(encoded);
     }
 
-    private String encodeFileToBase64Binary(String filename){
-        String encodedfile = null;
-        try {
-            File file = new File(filename);
-            FileInputStream fileInputStreamReader = new FileInputStream(file);
-            byte[] bytes = new byte[(int)file.length()];
-            fileInputStreamReader.read(bytes);
-            encodedfile = Base64.encodeToString(bytes, Base64.CRLF);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return encodedfile;
-    }
 }

@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.Snackbar;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,6 +33,7 @@ import com.github.dicomflow.androiddicomflow.protocolo.services.*;
 import com.github.dicomflow.androiddicomflow.protocolo.services.Service;
 import com.github.dicomflow.androiddicomflow.protocolo.services.request.RequestPut;
 import com.github.dicomflow.androiddicomflow.protocolo.services.request.RequestResult;
+import com.github.dicomflow.androiddicomflow.util.FileUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -221,10 +223,14 @@ public abstract class RequestListFragment extends Fragment {
             if (index >= 0) {
                 Request r =  mAdapter.getItem(index);
 
-                String filePath = data.getData().getPath();
+                //String filePath = data.getData().getPath();
+                Uri uri = data.getData();
+                String filePath = FileUtil.getPath(getContext(), uri);
+                String fileName = FileUtil.getFileNameFromFilePath(filePath);
+
                 Map<String, Object> params = new HashMap<String, Object>();
                 params.put("from", "dicomflow@gmail.com");
-                params.put("filename", filePath);
+                params.put("filename", fileName);
                 params.put("bytes", filePath);
 
                 com.github.dicomflow.androiddicomflow.protocolo.services.Service service = ServiceFactory.getService(ServiceTypes.REQUESTRESULT, params);
@@ -235,11 +241,6 @@ public abstract class RequestListFragment extends Fragment {
 
 
     }
-
-    protected Service createAService() {
-        return null;
-    }
-
 
     private void solicitarSegundaOpiniao(String email, final View view) throws Exception {
 
@@ -279,6 +280,11 @@ public abstract class RequestListFragment extends Fragment {
 
     //TODO esse metodo deve sair apos a fabrica
     protected Service mockfabrica() {
+        return null;
+    }
+
+    //TODO remover codigo deste metodo
+    private com.github.dicomflow.androiddicomflow.protocolo.services.Service createAService() {
         //Creating Service Object
         ArrayList<Patient> patients = new ArrayList<Patient>();
         ArrayList<Study> studies = new ArrayList<>();
