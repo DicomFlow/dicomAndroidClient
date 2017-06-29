@@ -218,14 +218,15 @@ public abstract class RequestListFragment extends Fragment {
         }
 
         if (requestCode == REPORT_PICKER_RESULT && resultCode == getActivity().RESULT_OK) {
-            String filePath = data.getData().getPath();
-            Map<String, Object> params = new HashMap<String, Object>();
-            //int requestIndex = data.getIntExtra("index", -1);
             if (index >= 0) {
                 Request r =  mAdapter.getItem(index);
 
-                //com.github.dicomflow.androiddicomflow.protocolo.services.Service requestResult = ServiceFactory.getService(ServiceTypes.REQUESTRESULT, params);
-                Service service = createAService2();
+                String filePath = data.getData().getPath();
+                Map<String, Object> params = new HashMap<String, Object>();
+                params.put("from", "dicomflow@gmail.com");
+
+                com.github.dicomflow.androiddicomflow.protocolo.services.Service service = ServiceFactory.getService(ServiceTypes.REQUESTRESULT, params);
+                //Service service = createAService2();
                 GMailBackgroundSender.enviarEmailWithGmailBackground(getView(), service);
             }
         }
