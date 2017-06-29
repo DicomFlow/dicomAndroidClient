@@ -92,4 +92,6 @@
     <string name="title_requests_put_list">Envios</string>
     <string name="title_requests_result_list">Solicitações</string>
     <string name="title_requests_detail">Detalhes da Requisiçāo</string>
+    <string name="gmail_from_configuracao">dicomflow@gmail.com</string>
+    <string name="gmail_pass_configuracao">pr0t0c0l0ap1d1c0m</string>
 </resources>

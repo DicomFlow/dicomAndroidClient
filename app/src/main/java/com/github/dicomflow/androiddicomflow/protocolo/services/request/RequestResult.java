@@ -1,7 +1,6 @@
 package com.github.dicomflow.androiddicomflow.protocolo.services.request;
 
 import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Result;
-import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Serie;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
@@ -40,7 +39,7 @@ public class RequestResult extends Request{
     }
 
     public Map<String, Object> toMap() {
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = super.toMap();
 
         Map<String, Object> mapList = new HashMap<String, Object>();
         for (Result o : results) mapList.put(o.id.toString(), o.toMap());

@@ -1,34 +1,55 @@
 package com.github.dicomflow.androiddicomflow.activities.requests;
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.creativityapps.gmailbackgroundlibrary.BackgroundMail;
 import com.github.dicomflow.androiddicomflow.R;
 import com.github.dicomflow.androiddicomflow.activities.login.GoogleSignInActivity;
 import com.github.dicomflow.androiddicomflow.activities.outros.BaseActivity;
-import com.github.dicomflow.androiddicomflow.activities.outros.ReceiveXmlFileActivity;
+import com.github.dicomflow.androiddicomflow.activities.outros.FileChooser;
 import com.github.dicomflow.androiddicomflow.protocolo.DicomFlowXmlSerializer;
-import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Credentials;
-import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Patient;
-import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Serie;
-import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Study;
-import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Url;
 import com.github.dicomflow.androiddicomflow.protocolo.services.Service;
-import com.github.dicomflow.androiddicomflow.protocolo.services.request.RequestPut;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.net.URISyntaxException;
 
 public class RequestsListActivity extends BaseActivity {
 
     private static final String TAG = "MainActivity";
+
+    private static final int REPORT_PICKER_RESULT_FOR_REQUEST_PUT = 2000;
+
+    public static String getPath(Context context, Uri uri) throws URISyntaxException {
+        if ("content".equalsIgnoreCase(uri.getScheme())) {
+            String[] projection = {"_data"};
+            Cursor cursor = null;
+
+            try {
+                cursor = context.getContentResolver().query(uri, projection, null, null, null);
+                int column_index = cursor.getColumnIndexOrThrow("_data");
+                if (cursor.moveToFirst()) {
+                    return cursor.getString(column_index);
+                }
+            } catch (Exception e) {
+                // Eat it
+                e.printStackTrace();
+            }
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+
+        return null;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +60,10 @@ public class RequestsListActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        // Button launches NewPostActivity
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //        startActivity(new Intent(RequestsListActivity.this, NewPostActivity.class));
-                //TODO remover esse mock
-//                processarXMl();
-                //TODO remover esse mock
-                enviarEmailWithGmailBackground(v);
+                doLaunchReportPicker();
             }
         });
 
@@ -70,56 +86,6 @@ public class RequestsListActivity extends BaseActivity {
         }
     }
 
-    private void processarXMl() {
-        Intent intent = new Intent(this, ReceiveXmlFileActivity.class);
-        startActivity(intent);
-    }
-
-    private void enviarEmailWithGmailBackground(final View v) {
-        Service service = createAService();
-        String filePath = DicomFlowXmlSerializer.serialize(service);
-
-        BackgroundMail.newBuilder(this)
-                .withUsername("dicomflow@gmail.com")
-                .withPassword("pr0t0c0l0ap1d1c0m")
-                .withMailto("rbrico@gmail.com")
-                .withType(BackgroundMail.TYPE_PLAIN)
-                .withSubject("this is the subject")
-                .withBody("this is the body")
-                .withAttachments(filePath)
-                .withOnSuccessCallback(new BackgroundMail.OnSuccessCallback() {
-                    @Override
-                    public void onSuccess() {
-                        //do some magic
-                        Snackbar.make(v, "Email Enviado ... ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                    }
-                })
-                .withOnFailCallback(new BackgroundMail.OnFailCallback() {
-                    @Override
-                    public void onFail() {
-                        //do some magic
-                        Snackbar.make(v, "Email nao Enviado ... ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                    }
-                })
-                .send();
-    }
-
-    private com.github.dicomflow.androiddicomflow.protocolo.services.Service createAService() {
-        //Creating Service Object
-        ArrayList<Patient> patients = new ArrayList<Patient>();
-        ArrayList<Study> studies = new ArrayList<>();
-        List<Serie> series = new ArrayList<>();
-        series.add(new Serie("1", "bodypart", "description", 1));
-        studies.add(new Study("1", "tipo", "descricao do estudo", 1, 1l, series));
-        studies.add(new Study("2", "tipo", "descricao do estudo 2", 2, 2l, series));
-        patients.add(new Patient("053", "ricardo", "M", "31/10/1985", studies));
-        patients.add(new Patient("054", "maria", "F", "31/10/1980", studies));
-        Credentials credentials = new Credentials("valor de credential 1");
-        Url url = new Url("www.com...", credentials, patients);
-        RequestPut requestPut = new RequestPut("dicomflow@gmail.com", "REPORT", url);
-        return requestPut;
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -139,4 +105,67 @@ public class RequestsListActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REPORT_PICKER_RESULT_FOR_REQUEST_PUT && resultCode == RESULT_OK) {
+            String filePath = data.getData().getPath();
+            File file = new File(filePath);
+
+
+//            if (file.exists()) {
+            try {
+                Uri uri = data.getData();
+                Log.d(TAG, "File Uri: " + uri.toString());
+                // Get the path
+                String path = null;
+                path = getPath(this, uri);
+                Log.d(TAG, "File Path: " + path);
+//                    File root = new File(Environment.getExternalStorageDirectory(), "DicomFiles");
+//                    File xmlFile = new File(root, "request_PUT.xml");
+                Service service = DicomFlowXmlSerializer.deserialize(file.getAbsolutePath());
+                DatabaseUtil.writeNewService(getUid(), service, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Snackbar.make(getWindow().getDecorView().getRootView(), "Erro.", Snackbar.LENGTH_SHORT).show();
+            }
+//            }
+        }
+    }
+
+    private void doLaunchReportPicker() {
+
+        new FileChooser(this).setFileListener(new FileChooser.FileSelectedListener() {
+            @Override
+            public void fileSelected(File file) {
+
+                try {
+//                    File root = new File(Environment.getExternalStorageDirectory(), "DicomFiles");
+//                    File xmlFile = new File(root, "request_PUT.xml");
+                    Service service = DicomFlowXmlSerializer.deserialize(file.getAbsolutePath());
+                    DatabaseUtil.writeNewService(getUid(), service, null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Snackbar.make(getWindow().getDecorView().getRootView(), "2 Erro.", Snackbar.LENGTH_SHORT).show();
+                }
+            }
+        }).showDialog();
+
+
+//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//        intent.setType("*/*");
+//        intent.addCategory(Intent.CATEGORY_OPENABLE);
+//
+//        try {
+//            startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"),
+//                    REPORT_PICKER_RESULT_FOR_REQUEST_PUT);
+//        } catch (android.content.ActivityNotFoundException ex) {
+//            // Potentially direct the user to the Market with a Dialog
+//            Toast.makeText(this, "Please install a File Manager.",
+//                    Toast.LENGTH_SHORT).show();
+//        }
+//        Intent reportPickerIntent = new Intent(Intent.ACTION_GET_CONTENT, ContactsContract.Contacts.CONTENT_URI);
+//        reportPickerIntent.setType("*/*");
+//        startActivityForResult(reportPickerIntent, REPORT_PICKER_RESULT_FOR_REQUEST_PUT);
+    }
 }
