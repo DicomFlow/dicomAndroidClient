@@ -34,7 +34,7 @@ public class ServiceFactory {
 
                 Completed completed = new Completed("1", "OK"); //TODO
                 Integer id = 1; //TODO
-                Result result = new Result(id, completed, data, null, null, null, null, null);
+                Result result = new Result(completed, data, "1234", "1234", null);
                 List resultList = new ArrayList<>();
                 resultList.add(result);
                 service = new RequestResult(from, resultList);

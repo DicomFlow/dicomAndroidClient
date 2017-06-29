@@ -20,14 +20,18 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.github.dicomflow.androiddicomflow.R;
 
 import com.github.dicomflow.androiddicomflow.mail.GMailBackgroundSender;
+import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Completed;
 import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Credentials;
+import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Data;
 import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Patient;
+import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Result;
 import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Serie;
 import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Study;
 import com.github.dicomflow.androiddicomflow.protocolo.dicomobjects.Url;
 import com.github.dicomflow.androiddicomflow.protocolo.services.*;
 import com.github.dicomflow.androiddicomflow.protocolo.services.Service;
 import com.github.dicomflow.androiddicomflow.protocolo.services.request.RequestPut;
+import com.github.dicomflow.androiddicomflow.protocolo.services.request.RequestResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -221,7 +225,7 @@ public abstract class RequestListFragment extends Fragment {
                 Request r =  mAdapter.getItem(index);
 
                 //com.github.dicomflow.androiddicomflow.protocolo.services.Service requestResult = ServiceFactory.getService(ServiceTypes.REQUESTRESULT, params);
-                Service service = createAService();
+                Service service = createAService2();
                 GMailBackgroundSender.enviarEmailWithGmailBackground(getView(), service);
             }
         }
@@ -288,6 +292,32 @@ public abstract class RequestListFragment extends Fragment {
     }
 
 
+    private com.github.dicomflow.androiddicomflow.protocolo.services.Service createAService2() {
+        //Creating Service Object
+        Completed completed = new Completed("1", "OK");
+        Data data = new Data(null, "Data");
+
+        ArrayList<Patient> patients = new ArrayList<Patient>();
+        ArrayList<Study> studies = new ArrayList<>();
+        List<Serie> series = new ArrayList<>();
+        series.add(new Serie("1", "bodypart", "description", 1));
+        studies.add(new Study("1", "tipo", "descricao do estudo", 1, 1l, series));
+        studies.add(new Study("2", "tipo", "descricao do estudo 2", 2, 2l, series));
+        patients.add(new Patient("053", "ricardo", "M", "31/10/1985", studies));
+        patients.add(new Patient("054", "maria", "F", "31/10/1980", studies));
+        Credentials credentials = new Credentials("valor de credential 1");
+        Url url = new Url("www.com...", credentials, patients);
+        List<Url> urls = new ArrayList<Url>();
+        urls.add(url);
+
+        Result result = new Result(completed, data, "123", "1234", urls);
+
+        List<Result> results = new ArrayList<Result>();
+        results.add(result);
+        RequestResult requestResult = new RequestResult("dicomflow@gmail.com", results);
+
+        return requestResult;
+    }
 
 
     @Override

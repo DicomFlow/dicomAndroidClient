@@ -20,7 +20,7 @@ public class RequestResult extends Request{
     @ElementList(name = "results", inline = true) public final List<Result> results;
 
     public RequestResult(
-            String from,
+            @Attribute(name = "from") String from,
             @ElementList(name = "results", inline = true) List<Result> results) {
         super("RESULT", from);
         this.results = results;
@@ -42,7 +42,7 @@ public class RequestResult extends Request{
         Map<String, Object> map = super.toMap();
 
         Map<String, Object> mapList = new HashMap<String, Object>();
-        for (Result o : results) mapList.put(o.id.toString(), o.toMap());
+        //for (Result o : results) mapList.put(o.id.toString(), o.toMap());
         map.put("results", mapList);
         return map;
     }
