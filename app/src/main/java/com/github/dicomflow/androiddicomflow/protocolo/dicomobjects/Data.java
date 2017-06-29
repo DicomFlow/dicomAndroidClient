@@ -10,8 +10,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by ricardobarbosa on 22/06/17.
@@ -20,19 +18,13 @@ import java.util.Map;
 @Root
 public class Data {
     @Attribute public final String filename;
-    @Element(name = "bytes", required = false) public final String bytes;
+    @Element(name = "bytes") public final String encoded;
 
     public Data(
             @Attribute(name = "filename") String filename,
-            @Element(name = "bytes", required = false) String encoded) {
-        if (filename != null && !filename.isEmpty()) {
+            @Element(name = "bytes") String encoded) {
             this.filename = filename;
-            this.bytes = encodeFileToBase64Binary(filename);
-        }else {
-            this.filename = "";
-            this.bytes = encoded != null ? encoded : "";
-        }
-
+            this.encoded = encoded;
     }
 
     private String encodeFileToBase64Binary(String filename){
@@ -51,12 +43,4 @@ public class Data {
 
         return encodedfile;
     }
-
-    public Map<String, Object> toMap() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("filename", filename);
-        map.put("encoded", bytes);
-        return map;
-    }
-
 }

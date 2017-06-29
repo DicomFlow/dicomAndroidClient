@@ -224,6 +224,8 @@ public abstract class RequestListFragment extends Fragment {
                 String filePath = data.getData().getPath();
                 Map<String, Object> params = new HashMap<String, Object>();
                 params.put("from", "dicomflow@gmail.com");
+                params.put("filename", filePath);
+                params.put("bytes", filePath);
 
                 com.github.dicomflow.androiddicomflow.protocolo.services.Service service = ServiceFactory.getService(ServiceTypes.REQUESTRESULT, params);
                 //Service service = createAService2();
