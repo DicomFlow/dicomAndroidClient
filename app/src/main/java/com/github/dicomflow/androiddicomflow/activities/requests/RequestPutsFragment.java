@@ -5,7 +5,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 
 public class RequestPutsFragment extends RequestListFragment {
 
@@ -16,7 +15,7 @@ public class RequestPutsFragment extends RequestListFragment {
         // Last 100 posts, these are automatically the 100 most recent
         // due to sorting by push() keys
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference requestsUserRef = databaseReference.getReference("user-request").child(user.getUid()).child("put");
+        DatabaseReference requestsUserRef = databaseReference.getReference("user-requestsPUT").child(user.getUid());
         Query recentRequestQuery = requestsUserRef.limitToFirst(100);
         return recentRequestQuery;
     }

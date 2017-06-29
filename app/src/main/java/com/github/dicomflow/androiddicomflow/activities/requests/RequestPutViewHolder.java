@@ -5,7 +5,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.github.dicomflow.androiddicomflow.R;
-import com.mikepenz.iconics.view.IconicsImageButton;
 import com.mikepenz.iconics.view.IconicsImageView;
 
 public class RequestPutViewHolder extends RecyclerView.ViewHolder {
@@ -35,10 +34,13 @@ public class RequestPutViewHolder extends RecyclerView.ViewHolder {
         return super.toString() + " '" + messageIdView.getText() + "'";
     }
 
-    public void bindToPost(Request request) {
+    public void bindToPost(Request request, int position) {
         dataDeEnvioView.setText(request.timestamp);
-        //TODO substituir pelo email de quem realmente enviou a mensagem
         requestPutFromView.setText(request.from);
         messageIdView.setText(request.messageID);
+
+        iconicsImageViewDownload.setTag(position);
+        iconicsImageViewForward.setTag(position);
+        iconicsImageViewReply.setTag(position);
     }
 }
