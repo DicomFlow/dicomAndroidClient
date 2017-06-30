@@ -1,1 +1,1 @@
-# AndroidDicomFlow
+# AndroidDicomFlow - Client app 
