@@ -44,12 +44,11 @@ dependencies {
     compile 'com.google.android.gms:play-services-auth:11.0.1'
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile 'com.firebaseui:firebase-ui-database:2.0.0'
-    compile "com.mikepenz:iconics-core:2.8.7@aar"
+    compile 'com.mikepenz:iconics-core:2.8.7@aar'
     compile 'com.mikepenz:google-material-typeface:2.2.0.1@aar'
     compile 'org.apache.commons:commons-lang3:3.6'
     compile 'com.github.yesidlazaro:GmailBackground:1.2.0'
     testCompile 'junit:junit:4.12'
-
 }
 
 apply plugin: 'com.google.gms.google-services'
