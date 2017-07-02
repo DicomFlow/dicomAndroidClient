@@ -177,30 +177,6 @@ public abstract class RequestListFragment extends Fragment {
                     cursor.close();
                 }
             }
-
-
-
-
-            /*// Get the URI and query the content provider for the email
-            Uri contactUri = data.getData();
-            String[] projection = new String[]{ContactsContract.CommonDataKinds.Email.ADDRESS};
-            Cursor cursor = getContext().getContentResolver().query(contactUri, projection, null, null, null);
-
-            // If the cursor returned is valid, get the email
-            if (cursor != null && cursor.moveToFirst()) {
-                int numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS);
-                String email = cursor.getString(numberIndex);
-                try {
-                    solicitarSegundaOpiniao(email, getView());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Snackbar.make(getView(), "Algo deu errado na solicitacao de segunda opiniao", Snackbar.LENGTH_SHORT).show();
-                }
-                Toast.makeText(getContext(), email, Toast.LENGTH_SHORT).show();
-            }
-            if (cursor != null) {
-                cursor.close();
-            }*/
         }
 
         if (requestCode == REPORT_PICKER_RESULT && resultCode == getActivity().RESULT_OK) {
