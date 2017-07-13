@@ -58,7 +58,6 @@
             android:layout_height="24dp"
             android:layout_marginLeft="16dp"
             app:iiv_color="@color/blue_grey_500"
-
             app:iiv_icon="gmd-forward" />
         <com.mikepenz.iconics.view.IconicsImageView
             android:id="@+id/resultButtom"
@@ -68,6 +67,13 @@
             android:layout_marginRight="16dp"
             app:iiv_color="@color/blue_grey_500"
             app:iiv_icon="gmd-mail-reply" />
-
+        <com.mikepenz.iconics.view.IconicsImageView
+            android:id="@+id/reportButtom"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            app:iiv_color="@color/blue_grey_500"
+            app:iiv_icon="gmd-mail-reply" />
     </LinearLayout>
 </RelativeLayout>

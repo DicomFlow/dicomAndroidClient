@@ -7,7 +7,7 @@ import android.widget.TextView;
 import com.github.dicomflow.androiddicomflow.R;
 import com.mikepenz.iconics.view.IconicsImageView;
 
-public class RequestPutViewHolder extends RecyclerView.ViewHolder {
+public class RequestViewHolder extends RecyclerView.ViewHolder {
     public final View mView;
     public final TextView dataDeEnvioView;
     public final TextView requestPutFromView;
@@ -16,8 +16,9 @@ public class RequestPutViewHolder extends RecyclerView.ViewHolder {
     public final IconicsImageView iconicsImageViewDownload;
     public final IconicsImageView iconicsImageViewForward;
     public final IconicsImageView iconicsImageViewReply;
+    public final IconicsImageView iconicsImageViewResult;
 
-    public RequestPutViewHolder(View view) {
+    public RequestViewHolder(View view) {
         super(view);
         mView = view;
         dataDeEnvioView = (TextView) view.findViewById(R.id.data_de_envio);
@@ -27,6 +28,7 @@ public class RequestPutViewHolder extends RecyclerView.ViewHolder {
         iconicsImageViewDownload = (IconicsImageView) view.findViewById(R.id.downloadButtom);
         iconicsImageViewForward = (IconicsImageView) view.findViewById(R.id.forwardButtom);
         iconicsImageViewReply = (IconicsImageView) view.findViewById(R.id.resultButtom);
+        iconicsImageViewResult = (IconicsImageView) view.findViewById(R.id.reportButtom);
     }
 
     @Override
@@ -42,5 +44,6 @@ public class RequestPutViewHolder extends RecyclerView.ViewHolder {
         iconicsImageViewDownload.setTag(position);
         iconicsImageViewForward.setTag(position);
         iconicsImageViewReply.setTag(position);
+        iconicsImageViewResult.setTag(position);
     }
 }

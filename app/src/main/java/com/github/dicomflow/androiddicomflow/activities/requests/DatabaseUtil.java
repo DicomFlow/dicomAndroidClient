@@ -38,4 +38,10 @@ public class DatabaseUtil {
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child("user-requestsPUT");
         return rootRef.child(userId).child(messageID);
     }
+
+    public static DatabaseReference getRequestResultService(String userId, String messageID) {
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child("user-requestsRESULT");
+        return rootRef.child(userId);
+    }
+
 }

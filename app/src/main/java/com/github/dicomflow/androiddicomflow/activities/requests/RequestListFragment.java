@@ -38,10 +38,11 @@ public abstract class RequestListFragment extends Fragment {
     private static final String TAG = "RequestListFragment";
     private static final int CONTACT_PICKER_RESULT = 1000;
     private static final int REPORT_PICKER_RESULT = 2000;
+    private static final int REPORT_RESULT = 3000;
 
     private FirebaseDatabase mDatabase;
 
-    private FirebaseRecyclerAdapter<Request, RequestPutViewHolder> mAdapter;
+    private FirebaseRecyclerAdapter<Request, RequestViewHolder> mAdapter;
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
     private int index;
@@ -73,10 +74,10 @@ public abstract class RequestListFragment extends Fragment {
         mRecycler.setLayoutManager(mManager);
 
         // Set up FirebaseRecyclerAdapter with the Query
-        Query postsQuery = getQuery(mDatabase);
-        mAdapter = new FirebaseRecyclerAdapter<Request , RequestPutViewHolder>(Request.class, R.layout.requests_list_content, RequestPutViewHolder.class, postsQuery) {
+        Query requestPutQuery = getRequestPutQuery(mDatabase);
+        mAdapter = new FirebaseRecyclerAdapter<Request, RequestViewHolder>(Request.class, R.layout.requests_list_content, RequestViewHolder.class, requestPutQuery) {
             @Override
-            protected void populateViewHolder(final RequestPutViewHolder requestViewHolder, final Request model, final int position) {
+            protected void populateViewHolder(final RequestViewHolder requestViewHolder, final Request model, final int position) {
                 final DatabaseReference postRef = getRef(position);
 
                 // Set click listener for the whole post view
@@ -108,9 +109,13 @@ public abstract class RequestListFragment extends Fragment {
                 requestViewHolder.iconicsImageViewReply.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //TODO implementar codigo de RESULT aqui
-                        //Toast.makeText(v.getContext(), "Implement", Toast.LENGTH_SHORT).show();
                         doLaunchReportPicker(v);
+                    }
+                });
+                requestViewHolder.iconicsImageViewResult.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        doLaunchResultPicker(v);
                     }
                 });
             }
@@ -131,6 +136,36 @@ public abstract class RequestListFragment extends Fragment {
         this.index = index;
         reportPickerIntent.setType("application/pdf");
         startActivityForResult(reportPickerIntent, REPORT_PICKER_RESULT);
+    }
+
+    public void doLaunchResultPicker(View view) {
+        //TODO - Buscar no banco o Result
+        int index = (int) view.getTag();
+
+        if (index >= 0) {
+            final Request r =  mAdapter.getItem(index);
+            DatabaseReference ref = DatabaseUtil.getRequestResultService(getUid(), r.messageID);
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Map<String, Object> params = (Map<String, Object>) dataSnapshot.getValue();
+                    System.out.println("Teste");
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Snackbar.make(getView(), "Cancelled. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                }
+
+            });
+
+
+        }
+
+        Intent reportPickerIntent = new Intent(Intent.ACTION_GET_CONTENT, ContactsContract.Contacts.CONTENT_URI);
+        this.index = index;
+        reportPickerIntent.setType("application/pdf");
+        startActivityForResult(reportPickerIntent, REPORT_RESULT);
     }
 
     @Override
@@ -256,7 +291,7 @@ public abstract class RequestListFragment extends Fragment {
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        Snackbar.make(getView(), "Cancelled. sOcorreu um erro no envio. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                        Snackbar.make(getView(), "Cancelled. Ocorreu um erro no envio. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     }
 
                 });
@@ -264,6 +299,11 @@ public abstract class RequestListFragment extends Fragment {
 
             }
         }
+
+        if (requestCode == REPORT_RESULT && resultCode == getActivity().RESULT_OK) {
+            //TODO - Acao de exibir o arquivo de result
+        }
+
     }
 
     private void solicitarSegundaOpiniao(final String email, final View view) {
@@ -335,6 +375,8 @@ public abstract class RequestListFragment extends Fragment {
         return FirebaseAuth.getInstance().getCurrentUser().getEmail();
     }
 
-    public abstract Query getQuery(FirebaseDatabase databaseReference);
+    public abstract Query getRequestPutQuery(FirebaseDatabase databaseReference);
+
+    public abstract Query getRequestResultQuery(FirebaseDatabase databaseReference);
 
 }
