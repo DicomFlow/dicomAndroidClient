@@ -1,4 +1,4 @@
-package com.github.dicomflow.androiddicomflow.activities.requests;
+package com.github.dicomflow.androiddicomflow.activities.certificate;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,17 +13,17 @@ import android.view.MenuItem;
 import com.github.dicomflow.androiddicomflow.R;
 
 /**
- * An activity representing a single Requests detail screen. This
+ * An activity representing a single Certificate detail screen. This
  * activity is only used narrow width devices. On tablet-size devices,
  * item certificateFilePath are presented side-by-side with a list of items
- * in a {@link RequestsListActivity}.
+ * in a {@link CertificateListActivity}.
  */
-public class RequestsDetailActivity extends AppCompatActivity {
+public class CertificateDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_requests_detail);
+        setContentView(R.layout.activity_certificate_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
@@ -31,7 +31,8 @@ public class RequestsDetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
+                //TODO implementar um request put pra esse contato aqui
+                Snackbar.make(view, "Implement request message para esse contato", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -55,12 +56,12 @@ public class RequestsDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(RequestsDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(RequestsDetailFragment.ARG_ITEM_ID));
-            RequestsDetailFragment fragment = new RequestsDetailFragment();
+            arguments.putString(CertificateDetailFragment.ARG_ITEM_ID,
+                    getIntent().getStringExtra(CertificateDetailFragment.ARG_ITEM_ID));
+            CertificateDetailFragment fragment = new CertificateDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.requests_detail_container, fragment)
+                    .add(R.id.certificate_detail_container, fragment)
                     .commit();
         }
     }
@@ -75,7 +76,7 @@ public class RequestsDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            navigateUpTo(new Intent(this, RequestsListActivity.class));
+            navigateUpTo(new Intent(this, CertificateListActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);

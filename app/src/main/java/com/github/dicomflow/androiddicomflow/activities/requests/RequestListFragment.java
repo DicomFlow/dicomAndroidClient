@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,11 +17,12 @@ import android.widget.Toast;
 import com.creativityapps.gmailbackgroundlibrary.BackgroundMail;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.github.dicomflow.androiddicomflow.R;
-import com.github.dicomflow.androiddicomflow.protocolo.services.Service;
-import com.github.dicomflow.androiddicomflow.protocolo.services.ServiceFactory;
-import com.github.dicomflow.androiddicomflow.protocolo.services.ServiceTypes;
+import com.github.dicomflow.androiddicomflow.activities.GenericFragment;
+import com.github.dicomflow.dicomflowjavalib.FactoryService;
+import com.github.dicomflow.dicomflowjavalib.services.Service;
 import com.github.dicomflow.androiddicomflow.util.FileUtil;
-import com.google.firebase.auth.FirebaseAuth;
+import com.github.dicomflow.dicomflowjavalib.services.request.RequestPut;
+import com.github.dicomflow.dicomflowjavalib.services.request.RequestResult;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,7 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class RequestListFragment extends Fragment {
+public abstract class RequestListFragment extends GenericFragment {
 
     private static final String TAG = "RequestListFragment";
     private static final int CONTACT_PICKER_RESULT = 1000;
@@ -177,6 +177,7 @@ public abstract class RequestListFragment extends Fragment {
                     cursor.close();
                 }
             }
+
         }
 
         if (requestCode == REPORT_PICKER_RESULT && resultCode == getActivity().RESULT_OK) {
@@ -197,9 +198,11 @@ public abstract class RequestListFragment extends Fragment {
                         params.put("bytes", filePath);
                         params.put("originalMessageID", r.messageID);
 
-                        final Service service = ServiceFactory.getService(ServiceTypes.REQUESTRESULT, params);
+
 
                         try {
+                            final Service service = FactoryService.getInstance().getService(RequestResult.class, params);
+
                             MessageServiceSender.newBuilder(getContext())
                                     .withService(service)
                                     .withMailto(r.from) //TODO trocar pelo from
@@ -226,6 +229,9 @@ public abstract class RequestListFragment extends Fragment {
                         } catch (Exception e) {
                             e.printStackTrace();
                             Snackbar.make(getView(), "Ocorreu um erro no envio. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                        } catch (FactoryService.ServiceObjectException e) {
+                            e.printStackTrace();
+                            Snackbar.make(getView(), "Ocorreu um erro na fabrica de servico. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                         }
 
                     }
@@ -254,9 +260,8 @@ public abstract class RequestListFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Map<String, Object> params = (Map<String, Object>) dataSnapshot.getValue();
                 params.put("from", getEmail());
-                final Service requestPutSegundaOpiniao = ServiceFactory.getService(ServiceTypes.REQUESTPUT, params);
-
                 try {
+                    final Service requestPutSegundaOpiniao = FactoryService.getInstance().getService(RequestPut.class, params);
                     MessageServiceSender.newBuilder(getContext())
                             .withService(requestPutSegundaOpiniao)
                             .withMailto(email)
@@ -276,6 +281,14 @@ public abstract class RequestListFragment extends Fragment {
                             .withOnFailCallback(new BackgroundMail.OnFailCallback() {
                                 @Override
                                 public void onFail() {
+
+
+
+
+
+
+
+
                                     //do some magic
                                     Snackbar.make(view, "Não conseguimos enviar o email. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                 }
@@ -284,6 +297,9 @@ public abstract class RequestListFragment extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                     Snackbar.make(getView(), "Algo deu errado na solicitacao de segunda opiniao", Snackbar.LENGTH_SHORT).show();
+                } catch (FactoryService.ServiceObjectException e) {
+                    e.printStackTrace();
+                    Snackbar.make(getView(), "Erro na na fabrica de servico.", Snackbar.LENGTH_SHORT).show();
                 }
             }
 
@@ -302,13 +318,6 @@ public abstract class RequestListFragment extends Fragment {
         if (mAdapter != null) {
             mAdapter.cleanup();
         }
-    }
-
-    public String getUid() {
-        return FirebaseAuth.getInstance().getCurrentUser().getUid();
-    }
-    public String getEmail() {
-        return FirebaseAuth.getInstance().getCurrentUser().getEmail();
     }
 
     public abstract Query getQuery(FirebaseDatabase databaseReference);

@@ -10,7 +10,7 @@
 
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="dummy_content">gus@gmail.com</string>
     <string name="title_activity_receive_xml_file">ReceiveXmlFileActivity</string>
     <string name="title_activity_login">Sign in</string>
 
@@ -94,4 +94,9 @@
     <string name="title_requests_detail">Detalhes da Requisiçāo</string>
     <string name="gmail_from_configuracao">dicomflow@gmail.com</string>
     <string name="gmail_pass_configuracao">pr0t0c0l0ap1d1c0m</string>
+    <string name="title_certificate_list">Certificates</string>
+    <string name="title_certificate_detail">Certificate Detail</string>
+
+    <string name="title_activity_new_certificate_receiver_fullscreen">New Certificate</string>
+    <string name="action_settings">Settings</string>
 </resources>

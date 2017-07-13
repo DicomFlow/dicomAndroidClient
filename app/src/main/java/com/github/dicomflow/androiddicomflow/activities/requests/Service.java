@@ -16,7 +16,7 @@ public class Service {
         // Default constructor required for calls to DataSnapshot.getValue(Post.class)
     }
 
-    public Service(com.github.dicomflow.androiddicomflow.protocolo.services.Service serviceDicom) {
+    public Service(com.github.dicomflow.dicomflowjavalib.services.Service serviceDicom) {
         this.messageID = serviceDicom.messageID;
         this.timeout = serviceDicom.timeout;
         this.version = serviceDicom.version;

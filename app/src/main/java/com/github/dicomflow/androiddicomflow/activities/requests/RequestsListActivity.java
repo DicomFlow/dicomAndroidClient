@@ -7,23 +7,20 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.github.dicomflow.androiddicomflow.R;
-import com.github.dicomflow.androiddicomflow.activities.login.GoogleSignInActivity;
 import com.github.dicomflow.androiddicomflow.activities.login.GoogleSignInActivity2;
 import com.github.dicomflow.androiddicomflow.activities.outros.BaseActivity;
-import com.github.dicomflow.androiddicomflow.activities.outros.FileChooser;
-import com.github.dicomflow.androiddicomflow.protocolo.DicomFlowXmlSerializer;
-import com.github.dicomflow.androiddicomflow.protocolo.services.Service;
 import com.github.dicomflow.androiddicomflow.util.FileUtil;
+import com.github.dicomflow.dicomflowjavalib.services.Service;
+import com.github.dicomflow.dicomflowjavalib.utils.DicomFlowXmlSerializer;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.io.File;
 import java.net.URISyntaxException;
 
 public class RequestsListActivity extends BaseActivity {
@@ -33,7 +30,7 @@ public class RequestsListActivity extends BaseActivity {
     private static final int REPORT_PICKER_RESULT_FOR_REQUEST_PUT = 2000;
 
     public static String getPath(Context context, Uri uri) throws URISyntaxException {
-        if ("content".equalsIgnoreCase(uri.getScheme())) {
+        if ("email".equalsIgnoreCase(uri.getScheme())) {
             String[] projection = {"_data"};
             Cursor cursor = null;
 
@@ -62,6 +59,12 @@ public class RequestsListActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
+
+        // Show the Up button in the action bar.
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,11 +118,7 @@ public class RequestsListActivity extends BaseActivity {
             try {
                 Uri uri = data.getData();
                 String filePath = FileUtil.getPath(getBaseContext(), uri);
-
-                Log.d(TAG, "File Uri: " + uri.toString());
-                Log.d(TAG, "File Path: " + filePath);
-
-                Service service = DicomFlowXmlSerializer.deserialize(filePath);
+                Service service = DicomFlowXmlSerializer.getInstance().deserialize(filePath);
                 DatabaseUtil.writeNewService(getUid(), service, null);
             } catch (Exception e) {
                 e.printStackTrace();

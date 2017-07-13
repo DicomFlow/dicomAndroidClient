@@ -32,6 +32,8 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.github.dicomflow.androiddicomflow.R;
+import com.github.dicomflow.androiddicomflow.activities.MainActivity;
+import com.github.dicomflow.androiddicomflow.activities.certificate.CertificateListActivity;
 import com.github.dicomflow.androiddicomflow.activities.outros.BaseActivity;
 import com.github.dicomflow.androiddicomflow.activities.requests.RequestsListActivity;
 import com.google.android.gms.auth.api.Auth;
@@ -307,7 +309,7 @@ public class GoogleSignInActivity2 extends BaseActivity implements
     }
 
     private void intentForAnotherActivity() {
-        Intent intent = new Intent(this, RequestsListActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
     //endregion

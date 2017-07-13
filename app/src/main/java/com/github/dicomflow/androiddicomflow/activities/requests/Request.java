@@ -10,8 +10,8 @@ public class Request extends Service {
         enviada, lida, encaminhada, respondida
     }
 
-//    private com.github.dicomflow.androiddicomflow.protocolo.services.request.RequestPut requestPut;
-//    public Request(com.github.dicomflow.androiddicomflow.protocolo.services.request.RequestPut requestPut) {
+//    private com.github.dicomflow.dicomflowjavalib.services.request.RequestPut requestPut;
+//    public Request(com.github.dicomflow.dicomflowjavalib.services.request.RequestPut requestPut) {
 //        super(requestPut);
 //        this.requestPut = requestPut;
 //    }

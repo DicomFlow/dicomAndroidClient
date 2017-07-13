@@ -1,6 +1,6 @@
 package com.github.dicomflow.androiddicomflow.activities.requests;
 
-import com.github.dicomflow.androiddicomflow.protocolo.services.Service;
+import com.github.dicomflow.dicomflowjavalib.services.Service;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 

@@ -1,12 +1,15 @@
 package com.github.dicomflow.androiddicomflow.activities.requests;
 
 import android.content.Context;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 
 import com.creativityapps.gmailbackgroundlibrary.BackgroundMail;
 import com.github.dicomflow.androiddicomflow.R;
-import com.github.dicomflow.androiddicomflow.protocolo.DicomFlowXmlSerializer;
-import com.github.dicomflow.androiddicomflow.protocolo.services.Service;
+import com.github.dicomflow.dicomflowjavalib.utils.DicomFlowXmlSerializer;
+import com.github.dicomflow.dicomflowjavalib.services.Service;
+
+import java.io.File;
 
 /**
  * Created by ricardobarbosa on 27/06/17.
@@ -48,7 +51,8 @@ public class MessageServiceSender {
     }
 
     public BackgroundMail send() throws Exception {
-        String filePath = DicomFlowXmlSerializer.serialize(service);
+        File root = new File(Environment.getExternalStorageDirectory(), "DicomFiles");
+        String filePath = DicomFlowXmlSerializer.getInstance().serialize(service, root);
         return BackgroundMail.newBuilder(context)
                 .withUsername(R.string.gmail_from_configuracao)
                 .withPassword(R.string.gmail_pass_configuracao)

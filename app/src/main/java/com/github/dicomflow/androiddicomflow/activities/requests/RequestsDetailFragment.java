@@ -44,7 +44,7 @@ public class RequestsDetailFragment extends Fragment {
     public static final String ARG_ITEM_ID = "item_id";
 
     /**
-     * The dummy content this fragment is presenting.
+     * The dummy email this fragment is presenting.
      */
     private Request mItem;
 
@@ -60,9 +60,9 @@ public class RequestsDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
-            // Load the dummy content specified by the fragment
+            // Load the dummy email specified by the fragment
             // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
+            // to load email from a email provider.
             // Get post key from intent
             mKey = getArguments().getString(ARG_ITEM_ID);
             if (mKey == null) {
@@ -87,7 +87,7 @@ public class RequestsDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.requests_detail, container, false);
 
-        // Show the dummy content as text in a TextView.
+        // Show the dummy email as text in a TextView.
         if (mItem != null) {
             ((TextView) rootView.findViewById(R.id.requests_detail)).setText(mItem.messageID);
             // Initialize Views
@@ -109,7 +109,7 @@ public class RequestsDetailFragment extends Fragment {
                 // Get Post object and use the values to update the UI
                 Request post = dataSnapshot.getValue(Request.class);
 
-//                ((TextView) rootView.findViewById(R.id.requests_detail)).setText(post.details);
+//                ((TextView) rootView.findViewById(R.id.requests_detail)).setText(post.certificateFilePath);
                 mAuthorView.setText(post.messageID);
             }
 
