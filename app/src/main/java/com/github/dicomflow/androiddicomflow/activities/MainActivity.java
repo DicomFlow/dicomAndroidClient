@@ -32,6 +32,7 @@ import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
+import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -97,19 +98,23 @@ public class MainActivity extends AppCompatActivity {
 
 
                             if (drawerItem.getIdentifier() == 1) {
-                                startActivity(new Intent(MainActivity.this, CertificateListActivity.class));
-                                return true;
+//                                startActivity(new Intent(MainActivity.this, CertificateListActivity.class));
+//                                return true;
                             }
 
                             if (drawerItem.getIdentifier() == 2) {
-                                startActivity(new Intent(MainActivity.this, RequestsListActivity.class));
-                                return true;
+//                                startActivity(new Intent(MainActivity.this, RequestsListActivity.class));
+//                                return true;
                             }
                             if (drawerItem.getIdentifier() == 0) {
                                 signOut();
                                 startActivity(new Intent(MainActivity.this, GoogleSignInActivity2.class));
                                 finish();
                                 return true;
+                            }
+
+                            if (drawerItem instanceof Nameable) {
+                                toolbar.setTitle(((Nameable) drawerItem).getName().getText(MainActivity.this));
                             }
                         }
 
