@@ -1,31 +1,36 @@
-package com.github.dicomflow.androiddicomflow.activities;
+package com.github.dicomflow.androiddicomflow.activities.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.facebook.login.LoginManager;
 import com.github.dicomflow.androiddicomflow.R;
+import com.github.dicomflow.androiddicomflow.activities.MainActivityFragment;
 import com.github.dicomflow.androiddicomflow.activities.certificate.CertificateListActivity;
+import com.github.dicomflow.androiddicomflow.activities.certificate.CertificateListFragment;
 import com.github.dicomflow.androiddicomflow.activities.login.GoogleSignInActivity2;
-import com.github.dicomflow.androiddicomflow.activities.requests.RequestsListActivity;
+import com.github.dicomflow.androiddicomflow.activities.requests.RequestPutsFragment;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.mikepenz.crossfader.Crossfader;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.MiniDrawer;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
@@ -39,10 +44,16 @@ public class MainActivity extends AppCompatActivity {
     //save our header or result
     private AccountHeader headerResult = null;
     private Drawer result = null;
-    private MiniDrawer miniResult = null;
-    private Crossfader crossFader;
 
     private GoogleApiClient mGoogleApiClient = null;
+    private Handler mHandler;
+
+
+    // tags used to attach the fragments
+    private static final String TAG_HOME = "home";
+    private static final String TAG_CERTIFICATES = "CERTIFICATES";
+    private static final String TAG_REQUESTS = "REQUESTS";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        mHandler = new Handler();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -95,26 +108,23 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         if (drawerItem != null) {
-
-
-                            if (drawerItem.getIdentifier() == 1) {
-//                                startActivity(new Intent(MainActivity.this, CertificateListActivity.class));
-//                                return true;
-                            }
-
-                            if (drawerItem.getIdentifier() == 2) {
-//                                startActivity(new Intent(MainActivity.this, RequestsListActivity.class));
-//                                return true;
-                            }
-                            if (drawerItem.getIdentifier() == 0) {
-                                signOut();
-                                startActivity(new Intent(MainActivity.this, GoogleSignInActivity2.class));
-                                finish();
-                                return true;
-                            }
-
-                            if (drawerItem instanceof Nameable) {
-                                toolbar.setTitle(((Nameable) drawerItem).getName().getText(MainActivity.this));
+                            switch ( (short)drawerItem.getIdentifier()) {
+                                case 0:
+                                    signOut();
+                                    startActivity(new Intent(MainActivity.this, GoogleSignInActivity2.class));
+                                    finish();
+                                    return true;
+                                case 1:
+                                    loadHomeFragment(drawerItem, TAG_CERTIFICATES);
+                                    return true;
+                                case 2:
+                                    loadHomeFragment(drawerItem, TAG_REQUESTS);
+                                    return true;
+                                case 10:
+                                    // launch new intent instead of loading fragment
+                                    startActivity(new Intent(MainActivity.this, CertificateListActivity.class));
+                                    result.closeDrawer();
+                                    return true;
                             }
                         }
 
@@ -133,11 +143,54 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .withSavedInstance(savedInstanceState)
                 .build();
+    }
 
-        // set the selection to the item with the identifier 5
-        if (savedInstanceState == null) {
-//            result.setSelection(1, true);
+
+    /***
+     * Returns respected fragment that user
+     * selected from navigation menu
+     * @param drawerItem
+     */
+    private void loadHomeFragment(final IDrawerItem drawerItem, final String CURRENT_TAG) {
+
+        if (drawerItem instanceof Nameable) {
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            toolbar.setTitle(((Nameable) drawerItem).getName().getText(MainActivity.this));
         }
+
+        // if user select the current navigation menu again, don't do anything
+        // just close the navigation drawer
+        if (getSupportFragmentManager().findFragmentByTag(CURRENT_TAG) != null) {
+            result.closeDrawer();
+            return;
+        }
+
+        // Sometimes, when fragment has huge data, screen seems hanging
+        // when switching between navigation menus
+        // So using runnable, the fragment is loaded with cross fade effect
+        // This effect can be seen in GMail app
+        Runnable mPendingRunnable = new Runnable() {
+            @Override
+            public void run() {
+                // update the main content by replacing fragments
+                Fragment fragment = getHomeFragment(drawerItem.getIdentifier());
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+                fragmentTransaction.replace(R.id.frame, fragment, CURRENT_TAG);
+                fragmentTransaction.commitAllowingStateLoss();
+            }
+        };
+
+        // If mPendingRunnable is not null, then add to the message queue
+        if (mPendingRunnable != null) {
+            mHandler.post(mPendingRunnable);
+        }
+
+        //Closing drawer on item click
+        result.closeDrawer();
+
+        // refresh toolbar menu
+        invalidateOptionsMenu();
     }
 
     @Override
@@ -147,6 +200,19 @@ public class MainActivity extends AppCompatActivity {
         //add the values which need to be saved from the accountHeader to the bundle
         outState = headerResult.saveInstanceState(outState);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //handle the click on the back arrow click
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -170,5 +236,18 @@ public class MainActivity extends AppCompatActivity {
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
         mGoogleApiClient.connect();
+    }
+
+    private Fragment getHomeFragment(Long item) {
+        switch (item.shortValue()) {
+            case 1:
+                CertificateListFragment homeFragment = new CertificateListFragment();
+                return homeFragment;
+            case 2:
+                RequestPutsFragment photosFragment = new RequestPutsFragment();
+                return photosFragment;
+            default:
+                return new MainActivityFragment();
+        }
     }
 }

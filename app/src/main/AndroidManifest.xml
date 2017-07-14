@@ -66,7 +66,6 @@
 
                 <data android:scheme="http" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -74,7 +73,6 @@
 
                 <data android:mimeType="*/*" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -92,11 +90,11 @@
             android:name=".activities.requests.RequestsListActivity"
             android:label="@string/title_requests_list"
             android:launchMode="singleInstance"
-            android:parentActivityName=".activities.MainActivity"
+            android:parentActivityName=".activities.activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
+                android:value=".activities.activity.MainActivity" />
         </activity>
         <activity
             android:name=".activities.requests.RequestsDetailActivity"
@@ -112,11 +110,11 @@
             android:name=".activities.certificate.CertificateListActivity"
             android:label="@string/title_certificate_list"
             android:launchMode="singleInstance"
-            android:parentActivityName=".activities.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:parentActivityName=".activities.activity.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
+                android:value=".activities.activity.MainActivity" />
         </activity>
         <activity
             android:name=".activities.certificate.CertificateDetailActivity"
@@ -140,10 +138,9 @@
                 android:value="com.github.dicomflow.androiddicomflow.activities.certificate.CertificateListActivity" />
         </activity>
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.activity.MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
