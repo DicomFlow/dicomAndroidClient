@@ -17,7 +17,7 @@ public class CertificateViewHolder extends RecyclerView.ViewHolder {
     public final ImageButton imageButtonCertificateMissing;
     public final ImageButton imageButtonCertificateGreen;
     public final ImageButton imageButtonCertificateGray;
-
+    public final ImageButton imageButtonCertificateEnviar;
 
     public CertificateViewHolder(View view) {
         super(view);
@@ -27,6 +27,7 @@ public class CertificateViewHolder extends RecyclerView.ViewHolder {
         imageButtonCertificateMissing = (ImageButton) view.findViewById(R.id.lock_missing);
         imageButtonCertificateGreen = (ImageButton) view.findViewById(R.id.lock_green);
         imageButtonCertificateGray = (ImageButton) view.findViewById(R.id.lock_gray);
+        imageButtonCertificateEnviar = (ImageButton) view.findViewById(R.id.lock_enviar);
 
         imageButtonCertificateMissing.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,11 +49,12 @@ public class CertificateViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindToPost(Certificate certificate, int position) {
-        mContentView.setText(certificate.email);
+        mContentView.setText(certificate.from);
 
         imageButtonCertificateMissing.setTag(position);
         imageButtonCertificateGreen.setTag(position);
         imageButtonCertificateGray.setTag(position);
+        imageButtonCertificateEnviar.setTag(position);
 
         hideButtonsWithStatus(certificate.status);
     }
@@ -60,26 +62,29 @@ public class CertificateViewHolder extends RecyclerView.ViewHolder {
     private void hideButtonsWithStatus(String status) {
 
         switch (status) {
-            case "certificados-trocados-e-confirmados":
+            case "certificados-trocados-e-confirmados": //é pq recebi (request) enviei (result) recebi (confirm)
                 imageButtonCertificateGreen.setVisibility(View.VISIBLE);
                 imageButtonCertificateGray.setVisibility(View.GONE);
                 imageButtonCertificateMissing.setVisibility(View.GONE);
+                imageButtonCertificateEnviar.setVisibility(View.GONE);
                 break;
-            case "aguardando-certificado":
+            case "aguardando-certificado": //é pq enviei (request)
                 imageButtonCertificateGreen.setVisibility(View.GONE);
                 imageButtonCertificateGray.setVisibility(View.GONE);
                 imageButtonCertificateMissing.setVisibility(View.VISIBLE);
+                imageButtonCertificateEnviar.setVisibility(View.GONE);
                 break;
-            case "aguardando-enviar-confirmacao-minha":
-                //nessa tela nao eh considerado esse sttus
+            case "aguardando-enviar-confirmacao-minha": //é pq recebi (request) nao enviei result
                 imageButtonCertificateGreen.setVisibility(View.GONE);
                 imageButtonCertificateGray.setVisibility(View.GONE);
                 imageButtonCertificateMissing.setVisibility(View.GONE);
+                imageButtonCertificateEnviar.setVisibility(View.VISIBLE);
                 break;
-            case "aguardando-receber-confirmacao-dele":
+            case "aguardando-receber-confirmacao-dele": //é pq recebi (request) enviei (result) espero (confirm)
                 imageButtonCertificateGreen.setVisibility(View.GONE);
                 imageButtonCertificateGray.setVisibility(View.VISIBLE);
                 imageButtonCertificateMissing.setVisibility(View.GONE);
+                imageButtonCertificateEnviar.setVisibility(View.GONE);
                 break;
             default: return;
         }

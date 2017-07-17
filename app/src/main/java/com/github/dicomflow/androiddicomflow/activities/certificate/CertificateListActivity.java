@@ -81,14 +81,7 @@ public class CertificateListActivity extends AppCompatActivity {
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LinearLayoutManager mManager = new LinearLayoutManager(CertificateListActivity.this);
-                mManager.setReverseLayout(true);
-                mManager.setStackFromEnd(true);
-                new MaterialDialog.Builder(CertificateListActivity.this)
-                        .title("Aguardando meu certificado")
-                        // second parameter is an optional layout manager. Must be a LinearLayoutManager or GridLayoutManager.
-                        .adapter(mAdapter, mManager)
-                        .show();
+
             }
         });
 
@@ -137,7 +130,7 @@ public class CertificateListActivity extends AppCompatActivity {
         // due to sorting by push() keys
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference requestsUserRef = databaseReference.getReference("user-certificate-request").child(user.getUid());
-        Query recentRequestQuery = requestsUserRef.limitToFirst(100);
+        Query recentRequestQuery = requestsUserRef.orderByChild("status").limitToFirst(100);
         return recentRequestQuery;
     }
 

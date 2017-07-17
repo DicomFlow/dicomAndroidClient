@@ -1,0 +1,11 @@
+<certificateResult name="CERTIFICATE" action="RESULT" version="1.0" type="7">
+   <from>rbrico@gmail.com</from>
+   <timeout>1500215620026</timeout>
+   <timestamp>2017-07-197 11:33:40-0300</timestamp>
+   <messageID>1e054996-eb05-4f89-9f80-47bfb5046ae2</messageID>
+   <domain>domain...</domain>
+   <mail>mail...</mail>
+   <port>port ...</port>
+   <credential>credential ..</credential>
+   <status>SUCCESS</status>
+</certificateResult>

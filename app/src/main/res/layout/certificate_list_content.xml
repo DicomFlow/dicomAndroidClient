@@ -44,6 +44,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/lock_gray"/>
+
+
+        <ImageButton
+            android:id="@+id/lock_enviar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/lock_white"
+            android:backgroundTint="@color/accent"
+            />
     </FrameLayout>
 
 

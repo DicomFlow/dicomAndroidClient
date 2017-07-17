@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service version="1.0" name="Certificate" action="Request" type="6">
+    <messageID>1c6e4925-e071-4de0-b14b-9ee40b64ecf6</messageID>
+    <timestamp>1499086740052</timestamp>
+    <from>dicomflow@gmail.com</from>
+    <domain>150.165.250.228</domain>
+    <mail>dicomflow@gmail.com</mail>
+    <port>8081</port>
+</service>

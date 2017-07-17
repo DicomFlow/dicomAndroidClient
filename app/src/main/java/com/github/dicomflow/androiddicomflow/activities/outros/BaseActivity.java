@@ -9,6 +9,15 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class BaseActivity extends AppCompatActivity {
 
+    public String getUid() {
+        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+    }
+
+    public String getUserEmail() {
+        return FirebaseAuth.getInstance().getCurrentUser().getEmail();
+    }
+
+    //region progress dialog
     @VisibleForTesting
     public ProgressDialog mProgressDialog;
 
@@ -27,19 +36,12 @@ public class BaseActivity extends AppCompatActivity {
             mProgressDialog.dismiss();
         }
     }
-
-    public String getUid() {
-        return FirebaseAuth.getInstance().getCurrentUser().getUid();
-    }
-
-    public String getUserEmail() {
-        return FirebaseAuth.getInstance().getCurrentUser().getEmail();
-    }
-
     @Override
     public void onStop() {
         super.onStop();
         hideProgressDialog();
     }
+    //endregion
+
 
 }

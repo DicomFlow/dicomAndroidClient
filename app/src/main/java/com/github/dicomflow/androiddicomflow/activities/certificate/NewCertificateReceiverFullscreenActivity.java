@@ -1,22 +1,49 @@
 package com.github.dicomflow.androiddicomflow.activities.certificate;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
+import android.widget.TextView;
 
+import com.creativityapps.gmailbackgroundlibrary.BackgroundMail;
 import com.github.dicomflow.androiddicomflow.R;
+import com.github.dicomflow.androiddicomflow.activities.outros.BaseActivity;
+import com.github.dicomflow.androiddicomflow.activities.requests.DatabaseUtil;
+import com.github.dicomflow.androiddicomflow.activities.requests.MessageServiceSender;
+import com.github.dicomflow.androiddicomflow.util.FileUtil;
+import com.github.dicomflow.dicomflowjavalib.FactoryService;
+import com.github.dicomflow.dicomflowjavalib.services.Service;
+import com.github.dicomflow.dicomflowjavalib.services.ServiceIF;
+import com.github.dicomflow.dicomflowjavalib.services.certificate.CertificateResult;
+import com.github.dicomflow.dicomflowjavalib.utils.DicomFlowXmlSerializer;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class NewCertificateReceiverFullscreenActivity extends AppCompatActivity {
+public class NewCertificateReceiverFullscreenActivity extends BaseActivity {
+
+    private static final int REPORT_PICKER_CER_CERTIFICATE_REQUEST = 1000;
+    private final Map<String, Object> params = new HashMap<>();
+    private Service service = null;
+
+    //region controle de full screen
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -35,7 +62,7 @@ public class NewCertificateReceiverFullscreenActivity extends AppCompatActivity 
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
-    private View mContentView;
+    private TextView mContentView;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -86,11 +113,16 @@ public class NewCertificateReceiverFullscreenActivity extends AppCompatActivity 
             return false;
         }
     };
+    //endregion
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+        //region controle de full screen
         setContentView(R.layout.activity_new_certificate_receiver_fullscreen);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -99,7 +131,7 @@ public class NewCertificateReceiverFullscreenActivity extends AppCompatActivity 
 
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
-        mContentView = findViewById(R.id.fullscreen_content);
+        mContentView = (TextView) findViewById(R.id.message_from);
 
 
         // Set up the user interaction to manually show or hide the system UI.
@@ -114,8 +146,66 @@ public class NewCertificateReceiverFullscreenActivity extends AppCompatActivity 
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+        //endregion
+
+        if (getIntent().getExtras().containsKey("filePath"))  {
+
+            try {
+                String filePath = getIntent().getStringExtra("filePath");
+                service = DicomFlowXmlSerializer.getInstance().deserialize(filePath);
+                prepareUI();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Snackbar.make(getWindow().getDecorView().getRootView(), "2 Erro.", Snackbar.LENGTH_SHORT).show();
+            }
+        }
+        else {
+            finish();
+        }
+
     }
 
+    private void prepareUI() {
+
+        switch (service.type) {
+            case ServiceIF.CERTIFICATE_REQUEST:
+                params.put("status", getString(R.string.certificate_status_aguardando_enviar_confirmacao_minha));
+                params.put("pendente", true);
+                mContentView.setText(service.from);
+                ((TextView) findViewById(R.id.info)).setText(String.format(getString(R.string.info_certificate_request), service.from));
+                break;
+        }
+
+        findViewById(R.id.buttonAceitar).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //TODO abrir o diretorio e selecionar certificado dele
+                Intent reportPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                reportPickerIntent.setType("*/*");
+                startActivityForResult(reportPickerIntent, REPORT_PICKER_CER_CERTIFICATE_REQUEST);
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REPORT_PICKER_CER_CERTIFICATE_REQUEST && resultCode == RESULT_OK) {
+            //TODO falta a criptografia
+
+            //TODO preciso validar o certificado aqui
+            Uri uri = data.getData();
+            String filePath = FileUtil.getPath(this, uri);
+            params.put("fileCertificatePath", filePath);
+
+            DatabaseUtil.writeNewService(getUid(), service, params);
+            onBackPressed();
+        }
+    }
+
+    //region Controle de full screen
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -179,4 +269,5 @@ public class NewCertificateReceiverFullscreenActivity extends AppCompatActivity 
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
+    //endregion
 }

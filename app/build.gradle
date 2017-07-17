@@ -74,6 +74,7 @@ dependencies {
     compile 'com.mikepenz:fontawesome-typeface:4.6.0.3@aar'
     compile 'com.mikepenz:octicons-typeface:3.0.0.1@aar'
     testCompile 'junit:junit:4.12'
+    compile files('libs/core-1.56.0.0.jar')
 }
 
 apply plugin: 'com.google.gms.google-services'

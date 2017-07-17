@@ -183,7 +183,7 @@ public abstract class RequestListFragment extends GenericFragment {
         if (requestCode == REPORT_PICKER_RESULT && resultCode == getActivity().RESULT_OK) {
             if (index >= 0) {
                 final Request r =  mAdapter.getItem(index);
-                DatabaseReference ref = DatabaseUtil.getService(getUid(), r.messageID);
+                DatabaseReference ref = DatabaseUtil.getService(getUid(), r.messageID, getContext());
                 ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -225,7 +225,7 @@ public abstract class RequestListFragment extends GenericFragment {
                                             Snackbar.make(getView(), "Não conseguimos enviar o email. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                         }
                                     })
-                                    .send();
+                                    .send("Request Put");
                         } catch (Exception e) {
                             e.printStackTrace();
                             Snackbar.make(getView(), "Ocorreu um erro no envio. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
@@ -253,7 +253,7 @@ public abstract class RequestListFragment extends GenericFragment {
         final Request request = mAdapter.getItem(index);
 
         //TODO FABRICA AQUI - pedir a fabrica um request
-        DatabaseReference ref = DatabaseUtil.getService(getUid(), request.messageID);
+        DatabaseReference ref = DatabaseUtil.getService(getUid(), request.messageID, getContext());
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -272,7 +272,7 @@ public abstract class RequestListFragment extends GenericFragment {
                                     String userId = getUid();
                                     Map<String, Object> params = new HashMap<>();
 
-                                    params.put("segundaOpinaoDe", request.messageID);
+                                    params.put("segundaOpiniaoDe", request.messageID);
                                     DatabaseUtil.writeNewService(userId, requestPutSegundaOpiniao, params);
 
                                     Snackbar.make(view, "Segunda opinião solicitada. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
@@ -293,7 +293,7 @@ public abstract class RequestListFragment extends GenericFragment {
                                     Snackbar.make(view, "Não conseguimos enviar o email. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                 }
                             })
-                            .send();
+                            .send("Request Put");
                 } catch (Exception e) {
                     e.printStackTrace();
                     Snackbar.make(getView(), "Algo deu errado na solicitacao de segunda opiniao", Snackbar.LENGTH_SHORT).show();

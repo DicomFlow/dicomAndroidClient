@@ -1,15 +1,15 @@
 package com.github.dicomflow.androiddicomflow.activities.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -18,8 +18,11 @@ import com.github.dicomflow.androiddicomflow.R;
 import com.github.dicomflow.androiddicomflow.activities.MainActivityFragment;
 import com.github.dicomflow.androiddicomflow.activities.certificate.CertificateListActivity;
 import com.github.dicomflow.androiddicomflow.activities.certificate.CertificateListFragment;
+import com.github.dicomflow.androiddicomflow.activities.certificate.NewCertificateReceiverFullscreenActivity;
 import com.github.dicomflow.androiddicomflow.activities.login.GoogleSignInActivity2;
-import com.github.dicomflow.androiddicomflow.activities.requests.RequestPutsFragment;
+import com.github.dicomflow.androiddicomflow.activities.outros.BaseActivity;
+import com.github.dicomflow.androiddicomflow.fragments.NovoRequestPutsFragment;
+import com.github.dicomflow.androiddicomflow.util.FileUtil;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -39,7 +42,9 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
+
+    private static final int REPORT_PICKER_RESULT_FOR_REQUEST_PUT = 2000;
 
     //save our header or result
     private AccountHeader headerResult = null;
@@ -50,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     // tags used to attach the fragments
+    private static String CURRENT_TAG = "home";
     private static final String TAG_HOME = "home";
     private static final String TAG_CERTIFICATES = "CERTIFICATES";
     private static final String TAG_REQUESTS = "REQUESTS";
@@ -68,8 +74,10 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent reportPickerIntent = new Intent(Intent.ACTION_GET_CONTENT, ContactsContract.Contacts.CONTENT_URI);
+                reportPickerIntent.setType("text/xml");
+                startActivityForResult(reportPickerIntent, REPORT_PICKER_RESULT_FOR_REQUEST_PUT);
+
             }
         });
 
@@ -115,10 +123,12 @@ public class MainActivity extends AppCompatActivity {
                                     finish();
                                     return true;
                                 case 1:
-                                    loadHomeFragment(drawerItem, TAG_CERTIFICATES);
+                                    CURRENT_TAG = TAG_CERTIFICATES;
+                                    loadHomeFragment(drawerItem);
                                     return true;
                                 case 2:
-                                    loadHomeFragment(drawerItem, TAG_REQUESTS);
+                                    CURRENT_TAG = TAG_REQUESTS;
+                                    loadHomeFragment(drawerItem);
                                     return true;
                                 case 10:
                                     // launch new intent instead of loading fragment
@@ -145,13 +155,24 @@ public class MainActivity extends AppCompatActivity {
                 .build();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REPORT_PICKER_RESULT_FOR_REQUEST_PUT && resultCode == RESULT_OK) {
+                Uri uri = data.getData();
+                String filePath = FileUtil.getPath(getBaseContext(), uri);
+                Intent intent = new Intent(this, NewCertificateReceiverFullscreenActivity.class);
+                intent.putExtra("filePath", filePath);
+                startActivity(intent);
+        }
+    }
 
     /***
      * Returns respected fragment that user
      * selected from navigation menu
      * @param drawerItem
      */
-    private void loadHomeFragment(final IDrawerItem drawerItem, final String CURRENT_TAG) {
+    private void loadHomeFragment(final IDrawerItem drawerItem) {
 
         if (drawerItem instanceof Nameable) {
             final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -194,6 +215,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+
+        switch (CURRENT_TAG) {
+            case TAG_CERTIFICATES:
+                getMenuInflater().inflate(R.menu.menu_certificates, menu);
+                break;
+            case TAG_REQUESTS:
+//                getMenuInflater().inflate(R.menu.menu_requests, menu);
+                break;
+        }
+
+        return true;
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         //add the values which need to be saved from the drawer to the bundle
         outState = result.saveInstanceState(outState);
@@ -209,7 +246,6 @@ public class MainActivity extends AppCompatActivity {
             case android.R.id.home:
                 onBackPressed();
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -244,10 +280,11 @@ public class MainActivity extends AppCompatActivity {
                 CertificateListFragment homeFragment = new CertificateListFragment();
                 return homeFragment;
             case 2:
-                RequestPutsFragment photosFragment = new RequestPutsFragment();
-                return photosFragment;
+                NovoRequestPutsFragment requestPutsFragment = new NovoRequestPutsFragment();
+                return requestPutsFragment;
             default:
                 return new MainActivityFragment();
         }
     }
+
 }

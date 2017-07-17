@@ -17,8 +17,8 @@ import com.github.dicomflow.androiddicomflow.R;
 import com.github.dicomflow.androiddicomflow.activities.login.GoogleSignInActivity2;
 import com.github.dicomflow.androiddicomflow.activities.outros.BaseActivity;
 import com.github.dicomflow.androiddicomflow.util.FileUtil;
-import com.github.dicomflow.dicomflowjavalib.services.Service;
 import com.github.dicomflow.dicomflowjavalib.utils.DicomFlowXmlSerializer;
+import com.github.dicomflow.dicomflowjavalib.services.Service;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.net.URISyntaxException;
