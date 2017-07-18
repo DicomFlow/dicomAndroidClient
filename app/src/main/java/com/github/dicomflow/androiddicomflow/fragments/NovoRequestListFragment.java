@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,11 @@ import com.github.dicomflow.androiddicomflow.activities.requests.DatabaseUtil;
 import com.github.dicomflow.androiddicomflow.activities.requests.MessageServiceSender;
 import com.github.dicomflow.androiddicomflow.activities.requests.Request;
 import com.github.dicomflow.androiddicomflow.util.FileUtil;
+import com.github.dicomflow.dicomflowjavalib.FactoryDicomFlowObjects;
 import com.github.dicomflow.dicomflowjavalib.FactoryService;
+import com.github.dicomflow.dicomflowjavalib.dicomobjects.Completed;
+import com.github.dicomflow.dicomflowjavalib.dicomobjects.Data;
+import com.github.dicomflow.dicomflowjavalib.dicomobjects.Result;
 import com.github.dicomflow.dicomflowjavalib.services.Service;
 import com.github.dicomflow.dicomflowjavalib.services.request.RequestPut;
 import com.github.dicomflow.dicomflowjavalib.services.request.RequestResult;
@@ -35,9 +40,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.tooltip.Tooltip;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class NovoRequestListFragment extends GenericFragment {
 
@@ -101,9 +113,9 @@ public abstract class NovoRequestListFragment extends GenericFragment {
                     @Override
                     public void onClick(View v) {
                         index = (int) v.getTag();
-                        //TODO NETO implementar codigo de envio de laudo aqui
-                        Toast.makeText(v.getContext(), "Enviar laudo aqui", Toast.LENGTH_SHORT).show();
-//                        doLaunchContactPicker();
+                        Intent reportPickerIntent = new Intent(Intent.ACTION_GET_CONTENT, ContactsContract.Contacts.CONTENT_URI);
+                        reportPickerIntent.setType("application/pdf");
+                        startActivityForResult(reportPickerIntent, REPORT_PICKER_RESULT);
                     }
                 });
                 requestViewHolder.buttonVerSegundasOpinioes.setOnClickListener(new View.OnClickListener() {
@@ -127,8 +139,20 @@ public abstract class NovoRequestListFragment extends GenericFragment {
                                 requestPutSegundaOpiniaoViewHolder.buttonVerLaudo.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        //TODO NETO implementar a visualizacao do laudo aqui
-                                        Toast.makeText(v.getContext(), "NETO implementar a visualizacao do laudo aqui", Toast.LENGTH_SHORT).show();
+
+                                        if (model.segundaOpiniaoStatus != null && model.segundaOpiniaoStatus.equals("aguardando-segunda-opiniao")) {
+                                            Tooltip.Builder builder = new Tooltip.Builder(v, R.style.Tooltip2)
+                                                    .setCancelable(true)
+                                                    .setDismissOnClick(false)
+                                                    .setCornerRadius(20f)
+                                                    .setGravity(Gravity.BOTTOM)
+                                                    .setText("Aguardando laudo.");
+                                            builder.show();
+                                        }
+                                        else {
+                                            //TODO NETO implementar a visualizacao do laudo aqui
+                                            Toast.makeText(v.getContext(), "NETO implementar a visualizacao do laudo aqui", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
                                 });
                             }
@@ -156,18 +180,10 @@ public abstract class NovoRequestListFragment extends GenericFragment {
         mRecycler.setAdapter(mAdapter);
     }
 
-    public void doLaunchReportPicker(View view) {
-        int index = (int) view.getTag();
-
-        Intent reportPickerIntent = new Intent(Intent.ACTION_GET_CONTENT, ContactsContract.Contacts.CONTENT_URI);
-        this.index = index;
-        reportPickerIntent.setType("application/pdf");
-        startActivityForResult(reportPickerIntent, REPORT_PICKER_RESULT);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //region contact picker result para quando vai pedir segunda opiniao
         if (requestCode == CONTACT_PICKER_RESULT && resultCode == getActivity().RESULT_OK) {
             Cursor cursor = null;
             try {
@@ -198,6 +214,7 @@ public abstract class NovoRequestListFragment extends GenericFragment {
                 }
             }
         }
+        //endregion
 
         if (requestCode == REPORT_PICKER_RESULT && resultCode == getActivity().RESULT_OK) {
             if (index >= 0) {
@@ -206,45 +223,81 @@ public abstract class NovoRequestListFragment extends GenericFragment {
                 ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Map<String, Object> params = (Map<String, Object>) dataSnapshot.getValue();
-                        params.put("from", getEmail());
-
-                        //String filePath = data.getData().getPath();
-                        Uri uri = data.getData();
-                        String filePath = FileUtil.getPath(getContext(), uri);
-                        String fileName = FileUtil.getFileNameFromFilePath(filePath);
-                        params.put("filename", fileName);
-                        params.put("bytes", filePath);
-                        params.put("originalMessageID", r.messageID);
-
-
-
                         try {
-                            final Service service = FactoryService.getInstance().getService(RequestResult.class, params);
 
+                            Map<String, Object> paramsDaRequestPut = (Map<String, Object>) dataSnapshot.getValue();
+
+
+                            FactoryDicomFlowObjects factoryDicomFlowObjects = FactoryDicomFlowObjects.getInstance();
+
+                            //region preparando o Completed.java
+                            Map<String, Object> paramsParaCompleted = new HashMap<>();
+                            paramsParaCompleted.put("status", Completed.Status.SUCCESS.name());
+                            paramsParaCompleted.put("completedMessage", "completedMessage...");
+//                            Completed completed = (Completed) factoryDicomFlowObjects.getDicomFlowObjects(Completed.class, paramsParaCompleted);
+
+                            //endregion
+
+                            //region preparando o Data.java
+                            Uri uri = data.getData();
+                            String filePath = FileUtil.getPath(getContext(), uri);
+                            String fileName = FileUtil.getFileNameFromFilePath(filePath);
+
+                            Map<String, Object> paramsParaData = new HashMap<>();
+                            paramsParaData.put("encoded", FileUtil.encodeFileToBase64Binary(filePath));
+                            paramsParaData.put("filename", fileName);
+//                            Data data = (Data) factoryDicomFlowObjects.getDicomFlowObjects(Data.class, paramsParaData);
+                            //endregion
+
+                            //region preparando a lista de urls que tem os pacientes a partir da mensagem original
+                            Map<String, Object> paramsParaUrl = (Map<String, Object>) paramsDaRequestPut.get("url");
+                            List<Map<String, Object>> urls = new ArrayList<>();
+                            urls.add(paramsParaUrl);
+                            //endregion
+
+                            //region preparando a lista de results
+                            Map<String, Object> paramsParaResult = new HashMap<>();
+//                            paramsParaResult.put("completed", completed.toMap());
+                            paramsParaResult.put("completed", paramsParaCompleted);
+//                            paramsParaResult.put("data", data.toMap());
+                            paramsParaResult.put("data", paramsParaData);
+                            paramsParaResult.put("originalMessageID", r.messageID);
+                            paramsParaResult.put("timestamp",  new SimpleDateFormat("yyyy-MM-DD hh:mm:ssZ").format(new Date()));
+                            paramsParaResult.put("urls", urls);
+//                            Result result = (Result) factoryDicomFlowObjects.getDicomFlowObjects(Result.class, paramsParaResult);
+                            List<Map<String, Object>> results = new ArrayList<>();
+                            results.add(paramsParaResult);
+                            //endregion
+
+                            //region preparando o servico request result
+                            Map<String, Object> paramsParaRequestResult =  new HashMap<>();
+                            paramsParaRequestResult.put("results", results);
+                            paramsParaRequestResult.put("from", getEmail());
+                            paramsParaRequestResult.put("originalMessageID", r.messageID);
+                            FactoryService factoryService = FactoryService.getInstance();
+                            final Service service = factoryService.getService(RequestResult.class, paramsParaRequestResult);
+                            //endregion
+
+                            //region enviando o email
                             MessageServiceSender.newBuilder(getContext())
                                     .withService(service)
                                     .withMailto(r.from) //TODO trocar pelo from
                                     .withOnSuccessCallback(new BackgroundMail.OnSuccessCallback() {
                                         @Override
                                         public void onSuccess() {
-                                            //do some magic
-                                            String userId = getUid();
                                             Map<String, Object> params = new HashMap<>();
-
-                                            DatabaseUtil.writeNewService(userId, service, params);
-
-                                            Snackbar.make(getView(), "Segunda opinião solicitada. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                                            DatabaseUtil.writeNewService( getUid() , service, params);
+                                            Snackbar.make(getView(), "Laudo enviado. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                         }
                                     })
                                     .withOnFailCallback(new BackgroundMail.OnFailCallback() {
                                         @Override
                                         public void onFail() {
-                                            //do some magic
                                             Snackbar.make(getView(), "Não conseguimos enviar o email. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                         }
                                     })
-                                    .send("Request Put");
+                                    .send("[from app] Request Result");
+                            //endregion
                         } catch (Exception e) {
                             e.printStackTrace();
                             Snackbar.make(getView(), "Ocorreu um erro no envio. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
@@ -252,16 +305,13 @@ public abstract class NovoRequestListFragment extends GenericFragment {
                             e.printStackTrace();
                             Snackbar.make(getView(), "Ocorreu um erro na fabrica de servico. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                         }
-
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                         Snackbar.make(getView(), "Cancelled. sOcorreu um erro no envio. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     }
-
                 });
-
 
             }
         }
