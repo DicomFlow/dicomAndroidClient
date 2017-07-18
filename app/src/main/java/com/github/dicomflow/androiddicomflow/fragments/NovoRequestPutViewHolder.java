@@ -34,8 +34,7 @@ public class NovoRequestPutViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindToPost(Request request, int position) {
-        //TODO [REQUEST] por o email aqui
-        requestPutFromView.setText(request.messageID);
+        requestPutFromView.setText(request.from);
 
         buttonEnviarLaudo.setTag(position);
         buttonImagens.setTag(position);

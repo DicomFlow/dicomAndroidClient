@@ -103,4 +103,5 @@
     <string name="certificate_status_aguardando_enviar_confirmacao_minha">aguardando-enviar-confirmacao-minha</string>
     <string name="db_url_user_request_put">user-request-put</string>
     <string name="db_url_user_certificate_request">user-certificate-request</string>
+    <string name="request_put_status_aguardando_segunda_opiniao">aguardando-segunda-opiniao</string>
 </resources>

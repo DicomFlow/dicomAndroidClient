@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.github.dicomflow.androiddicomflow.R;
@@ -77,7 +78,7 @@ public class MainActivity extends BaseActivity {
                 Intent reportPickerIntent = new Intent(Intent.ACTION_GET_CONTENT, ContactsContract.Contacts.CONTENT_URI);
                 reportPickerIntent.setType("text/xml");
                 startActivityForResult(reportPickerIntent, REPORT_PICKER_RESULT_FOR_REQUEST_PUT);
-
+                Toast.makeText(MainActivity.this, "okok", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -174,16 +174,40 @@ public class NewCertificateReceiverFullscreenActivity extends BaseActivity {
                 mContentView.setText(service.from);
                 ((TextView) findViewById(R.id.info)).setText(String.format(getString(R.string.info_certificate_request), service.from));
                 break;
+            case ServiceIF.REQUEST_PUT:
+                mContentView.setText(service.from);
+                ((TextView) findViewById(R.id.info)).setText("Você tem uma nova solicitação de laudo");
+//                ((TextView) findViewById(R.id.info)).setText(String.format(getString(R.string.info_certificate_request), service.from));
+                break;
+            case ServiceIF.REQUEST_RESULT:
+                mContentView.setText(service.from);
+                ((TextView) findViewById(R.id.info)).setText("O laudo chegou");
+//                ((TextView) findViewById(R.id.info)).setText(String.format(getString(R.string.info_certificate_request), service.from));
+                break;
         }
 
         findViewById(R.id.buttonAceitar).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                //TODO abrir o diretorio e selecionar certificado dele
-                Intent reportPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                reportPickerIntent.setType("*/*");
-                startActivityForResult(reportPickerIntent, REPORT_PICKER_CER_CERTIFICATE_REQUEST);
+                switch (service.type) {
+                    case ServiceIF.CERTIFICATE_REQUEST:
+                        //TODO abrir o diretorio e selecionar certificado dele
+                        Intent reportPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                        reportPickerIntent.setType("*/*");
+                        startActivityForResult(reportPickerIntent, REPORT_PICKER_CER_CERTIFICATE_REQUEST);
+                        return;
+                    case ServiceIF.REQUEST_PUT:
+                        DatabaseUtil.writeNewService(getUid(), service, params);
+                        onBackPressed();
+                        return;
+                    case ServiceIF.REQUEST_RESULT:
+                        DatabaseUtil.writeNewService(getUid(), service, params);
+                        onBackPressed();
+                        return;
+
+                }
+
             }
         });
     }

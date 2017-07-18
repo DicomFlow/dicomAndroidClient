@@ -140,7 +140,7 @@ public abstract class NovoRequestListFragment extends GenericFragment {
                                     @Override
                                     public void onClick(View v) {
 
-                                        if (model.segundaOpiniaoStatus != null && model.segundaOpiniaoStatus.equals("aguardando-segunda-opiniao")) {
+                                        if (model.segundaOpiniaoStatus != null && model.segundaOpiniaoStatus.equals(getString(R.string.request_put_status_aguardando_segunda_opiniao))) {
                                             Tooltip.Builder builder = new Tooltip.Builder(v, R.style.Tooltip2)
                                                     .setCancelable(true)
                                                     .setDismissOnClick(false)
@@ -343,6 +343,7 @@ public abstract class NovoRequestListFragment extends GenericFragment {
 
                                     params.put("segundaOpiniaoDe", request.messageID);
                                     params.put("segundaOpiniaoPara", email);
+                                    params.put("segundaOpiniaoStatus", getString(R.string.request_put_status_aguardando_segunda_opiniao));
                                     DatabaseUtil.writeNewService(userId, requestPutSegundaOpiniao, params);
 
                                     Snackbar.make(view, "Segunda opinião solicitada. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
