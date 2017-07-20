@@ -53,6 +53,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -311,4 +312,9 @@ public class GoogleSignInActivity2 extends BaseActivity implements
     }
     //endregion
 
+//    //region criacao de minha chave publica e privada
+//    public static final String ALGORITHM = "RSA";
+//    File filePrivateKey = new File(this.getFilesDir(), "keys/mine/my_private_key.key");
+//    File filePublicKey = new File(this.getFilesDir(), "keys/mine/my_private_key.key");
+//    //endregion
 }

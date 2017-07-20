@@ -26,6 +26,8 @@ import com.github.dicomflow.androiddicomflow.activities.requests.DatabaseUtil;
 import com.github.dicomflow.androiddicomflow.activities.requests.MessageServiceSender;
 import com.github.dicomflow.androiddicomflow.activities.requests.Request;
 import com.github.dicomflow.androiddicomflow.util.FileUtil;
+import com.github.dicomflow.androiddicomflow.util.criptografia.DecoradorServicoAssinado;
+import com.github.dicomflow.androiddicomflow.util.criptografia.EncriptaDecriptaRSA;
 import com.github.dicomflow.dicomflowjavalib.FactoryDicomFlowObjects;
 import com.github.dicomflow.dicomflowjavalib.FactoryService;
 import com.github.dicomflow.dicomflowjavalib.dicomobjects.Completed;
@@ -42,6 +44,12 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.tooltip.Tooltip;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -244,7 +252,7 @@ public abstract class NovoRequestListFragment extends GenericFragment {
                             String fileName = FileUtil.getFileNameFromFilePath(filePath);
 
                             Map<String, Object> paramsParaData = new HashMap<>();
-                            paramsParaData.put("encoded", FileUtil.encodeFileToBase64Binary(filePath));
+                            paramsParaData.put("bytes", FileUtil.encodeFileToBase64Binary(filePath));
                             paramsParaData.put("filename", fileName);
 //                            Data data = (Data) factoryDicomFlowObjects.getDicomFlowObjects(Data.class, paramsParaData);
                             //endregion
@@ -331,6 +339,19 @@ public abstract class NovoRequestListFragment extends GenericFragment {
                 params.put("from", getEmail());
                 try {
                     final Service requestPutSegundaOpiniao = FactoryService.getInstance().getService(RequestPut.class, params);
+
+                    // Verifica se já existe um par de chaves, caso contrário gera-se as chaves..
+                    if (!EncriptaDecriptaRSA.verificaSeExisteChavesNoSO(getContext())) {
+                        // Método responsável por gerar um par de chaves usando o algoritmo RSA e
+                        // armazena as chaves nos seus respectivos arquivos.
+                        EncriptaDecriptaRSA.geraChave(getContext());
+                    }
+                    FileInputStream inputStream = getContext().openFileInput(EncriptaDecriptaRSA.PATH_CHAVE_PRIVADA);
+                    ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+                    final PrivateKey privateKey = (PrivateKey) objectInputStream.readObject();
+                    final DecoradorServicoAssinado decoradorServicoAssinado = new DecoradorServicoAssinado(requestPutSegundaOpiniao, privateKey);
+                    objectInputStream.close();
+
                     MessageServiceSender.newBuilder(getContext())
                             .withService(requestPutSegundaOpiniao)
                             .withMailto(email)
@@ -344,7 +365,8 @@ public abstract class NovoRequestListFragment extends GenericFragment {
                                     params.put("segundaOpiniaoDe", request.messageID);
                                     params.put("segundaOpiniaoPara", email);
                                     params.put("segundaOpiniaoStatus", getString(R.string.request_put_status_aguardando_segunda_opiniao));
-                                    DatabaseUtil.writeNewService(userId, requestPutSegundaOpiniao, params);
+
+                                    DatabaseUtil.writeNewService(userId, decoradorServicoAssinado, params);
 
                                     Snackbar.make(view, "Segunda opinião solicitada. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                 }
@@ -352,17 +374,26 @@ public abstract class NovoRequestListFragment extends GenericFragment {
                             .withOnFailCallback(new BackgroundMail.OnFailCallback() {
                                 @Override
                                 public void onFail() {
-                                    //do some magic
                                     Snackbar.make(view, "Não conseguimos enviar o email. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                 }
                             })
                             .send("Request Put");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Snackbar.make(getView(), "Algo deu errado na solicitacao de segunda opiniao", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(view, "Houve um erro na assinatura do seriço. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 } catch (FactoryService.ServiceObjectException e) {
                     e.printStackTrace();
                     Snackbar.make(getView(), "Erro na na fabrica de servico.", Snackbar.LENGTH_SHORT).show();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    Snackbar.make(view, "Houve um erro na assinatura do serviço. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Snackbar.make(view, "Houve um erro na assinatura do serviço. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                    Snackbar.make(view, "Houve um erro na assinatura do serviço. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Snackbar.make(getView(), "Algo deu errado na solicitacao de segunda opiniao", Snackbar.LENGTH_SHORT).show();
                 }
             }
 

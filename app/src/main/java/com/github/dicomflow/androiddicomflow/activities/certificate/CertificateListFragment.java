@@ -224,11 +224,11 @@ public class CertificateListFragment extends GenericFragment {
                         params.put("bytes", filePath);
                         params.put("originalMessageID", r.messageID);
 
-                        final Service service = ServiceFactory.getService(ServiceTypes.REQUESTRESULT, params);
+                        final Service serviceDecorado = ServiceFactory.getService(ServiceTypes.REQUESTRESULT, params);
 
                         try {
                             MessageServiceSender.newBuilder(getContext())
-                                    .withService(service)
+                                    .withService(serviceDecorado)
                                     .withMailto(r.from) //TODO trocar pelo from
                                     .withOnSuccessCallback(new BackgroundMail.OnSuccessCallback() {
                                         @Override
@@ -237,7 +237,7 @@ public class CertificateListFragment extends GenericFragment {
                                             String userId = getUid();
                                             Map<String, Object> params = new HashMap<>();
 
-                                            DatabaseUtil.writeNewService(userId, service, params);
+                                            DatabaseUtil.writeNewService(userId, serviceDecorado, params);
 
                                             Snackbar.make(getView(), "Segunda opinião solicitada. ", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                                         }

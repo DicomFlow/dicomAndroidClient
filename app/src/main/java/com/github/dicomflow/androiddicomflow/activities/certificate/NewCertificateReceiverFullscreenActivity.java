@@ -177,12 +177,12 @@ public class NewCertificateReceiverFullscreenActivity extends BaseActivity {
             case ServiceIF.REQUEST_PUT:
                 mContentView.setText(service.from);
                 ((TextView) findViewById(R.id.info)).setText("Você tem uma nova solicitação de laudo");
-//                ((TextView) findViewById(R.id.info)).setText(String.format(getString(R.string.info_certificate_request), service.from));
+//                ((TextView) findViewById(R.id.info)).setText(String.format(getString(R.string.info_certificate_request), serviceDecorado.from));
                 break;
             case ServiceIF.REQUEST_RESULT:
                 mContentView.setText(service.from);
                 ((TextView) findViewById(R.id.info)).setText("O laudo chegou");
-//                ((TextView) findViewById(R.id.info)).setText(String.format(getString(R.string.info_certificate_request), service.from));
+//                ((TextView) findViewById(R.id.info)).setText(String.format(getString(R.string.info_certificate_request), serviceDecorado.from));
                 break;
         }
 

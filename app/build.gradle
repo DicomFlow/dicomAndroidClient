@@ -10,6 +10,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -73,6 +74,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.mikepenz:fontawesome-typeface:4.6.0.3@aar'
     compile 'com.mikepenz:octicons-typeface:3.0.0.1@aar'
+    compile 'com.android.support:multidex:1.0.1'
     testCompile 'junit:junit:4.12'
     compile files('libs/core-1.56.0.0.jar')
     compile files('libs/commons-codec-1.10.jar')

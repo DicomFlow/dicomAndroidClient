@@ -3,10 +3,12 @@ package com.github.dicomflow.androiddicomflow.activities.requests;
 import android.content.Context;
 
 import com.github.dicomflow.androiddicomflow.R;
+import com.github.dicomflow.androiddicomflow.util.criptografia.DecoradorServicoAssinado;
 import com.github.dicomflow.dicomflowjavalib.services.Service;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
