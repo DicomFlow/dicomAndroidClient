@@ -8,21 +8,27 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Base64;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.creativityapps.gmailbackgroundlibrary.BackgroundMail;
 import com.github.dicomflow.androiddicomflow.R;
+import com.github.dicomflow.androiddicomflow.activities.activity.MainActivity;
 import com.github.dicomflow.androiddicomflow.activities.outros.BaseActivity;
 import com.github.dicomflow.androiddicomflow.activities.requests.DatabaseUtil;
 import com.github.dicomflow.androiddicomflow.activities.requests.MessageServiceSender;
+import com.github.dicomflow.androiddicomflow.activities.requests.MessageServiceSenderCriptografado;
 import com.github.dicomflow.androiddicomflow.util.FileUtil;
+import com.github.dicomflow.androiddicomflow.util.criptografia.EncriptaDecriptaRSA;
 import com.github.dicomflow.dicomflowjavalib.FactoryService;
 import com.github.dicomflow.dicomflowjavalib.services.Service;
 import com.github.dicomflow.dicomflowjavalib.services.ServiceIF;
+import com.github.dicomflow.dicomflowjavalib.services.certificate.CertificateRequest;
 import com.github.dicomflow.dicomflowjavalib.services.certificate.CertificateResult;
 import com.github.dicomflow.dicomflowjavalib.utils.DicomFlowXmlSerializer;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +36,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -192,10 +199,18 @@ public class NewCertificateReceiverFullscreenActivity extends BaseActivity {
 
                 switch (service.type) {
                     case ServiceIF.CERTIFICATE_REQUEST:
-                        //TODO abrir o diretorio e selecionar certificado dele
-                        Intent reportPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                        reportPickerIntent.setType("*/*");
-                        startActivityForResult(reportPickerIntent, REPORT_PICKER_CER_CERTIFICATE_REQUEST);
+                        //metodo enviando certificado .cer
+                        if (false) {
+                            //TODO abrir o diretorio e selecionar certificado dele
+                            Intent reportPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                            reportPickerIntent.setType("*/*");
+                            startActivityForResult(reportPickerIntent, REPORT_PICKER_CER_CERTIFICATE_REQUEST);
+                        }
+                        //metodo que envia a minha chave publica
+                        else {
+                            enviarCertificateResultComMinhaChavePublica((CertificateRequest) service);
+                        }
+
                         return;
                     case ServiceIF.REQUEST_PUT:
                         DatabaseUtil.writeNewService(getUid(), service, params);
@@ -211,6 +226,54 @@ public class NewCertificateReceiverFullscreenActivity extends BaseActivity {
             }
         });
     }
+
+    //region Enviando um certificate result com chave publica
+    private void enviarCertificateResultComMinhaChavePublica(CertificateRequest certificateRequestOriginal) {
+        try {
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("from", getEmail());
+            params.put("mail", getEmail());
+            params.put("port", getPortDefault());
+            params.put("domain", getDomainDefault());
+            params.put("publickey", Base64.encodeToString(EncriptaDecriptaRSA.getMyPublicKey(this).getEncoded(), Base64.DEFAULT));
+
+            final CertificateResult certificateResult = (CertificateResult) FactoryService.getInstance().getService(CertificateResult.class, params);
+            MessageServiceSender o = MessageServiceSender.newBuilder(this)
+                    .withMailto(certificateRequestOriginal.from) //email de quem pediu
+                    .withService(certificateResult)
+                    .withOnSuccessCallback(new BackgroundMail.OnSuccessCallback() {
+                        @Override
+                        public void onSuccess() {
+                            Toast.makeText(NewCertificateReceiverFullscreenActivity.this, "Resposta a troca de certificado enviado com sucesso", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .withOnFailCallback(new BackgroundMail.OnFailCallback() {
+                        @Override
+                        public void onFail() {
+                            Toast.makeText(NewCertificateReceiverFullscreenActivity.this, "Falha no envio do email", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+            MessageServiceSenderCriptografado messageServiceSenderCriptografado = new MessageServiceSenderCriptografado(this, o);
+            messageServiceSenderCriptografado.send("CERTIFICATE REQUEST");
+
+            DatabaseUtil.writeNewService(getUid(), certificateResult, null);
+        } catch (FactoryService.ServiceObjectException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Erro na fabrica de servico", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Erro ao anexar minha chave publica", Toast.LENGTH_SHORT).show();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Erro ao anexar minha chave publica", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(NewCertificateReceiverFullscreenActivity.this, "Erro ao enviar o email", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+    //endregion
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, final Intent data) {

@@ -346,11 +346,8 @@ public abstract class NovoRequestListFragment extends GenericFragment {
                         // armazena as chaves nos seus respectivos arquivos.
                         EncriptaDecriptaRSA.geraChave(getContext());
                     }
-                    FileInputStream inputStream = getContext().openFileInput(EncriptaDecriptaRSA.PATH_CHAVE_PRIVADA);
-                    ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
-                    final PrivateKey privateKey = (PrivateKey) objectInputStream.readObject();
+                    PrivateKey privateKey = EncriptaDecriptaRSA.getMyPrivateKey(getContext());
                     final DecoradorServicoAssinado decoradorServicoAssinado = new DecoradorServicoAssinado(requestPutSegundaOpiniao, privateKey);
-                    objectInputStream.close();
 
                     MessageServiceSender.newBuilder(getContext())
                             .withService(requestPutSegundaOpiniao)

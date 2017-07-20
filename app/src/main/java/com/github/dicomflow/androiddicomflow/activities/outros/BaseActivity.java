@@ -13,8 +13,16 @@ public class BaseActivity extends AppCompatActivity {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
-    public String getUserEmail() {
+    public String getEmail() {
         return FirebaseAuth.getInstance().getCurrentUser().getEmail();
+    }
+
+    public String getPortDefault() {
+        return "80";
+    }
+
+    public String getDomainDefault() {
+        return getEmail();
     }
 
     //region progress dialog

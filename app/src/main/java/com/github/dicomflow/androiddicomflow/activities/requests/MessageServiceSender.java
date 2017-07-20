@@ -18,15 +18,14 @@ import java.util.Arrays;
  */
 
 public class MessageServiceSender {
-    private Context context;
+    protected Context context;
     private BackgroundMail.OnSuccessCallback onSuccessCallback;
     private BackgroundMail.OnFailCallback onFailCallback;
     private String mailto;
     private Service service;
     private ArrayList<String> attachments = new ArrayList<>();
 
-    private MessageServiceSender(Context context) {
-
+    protected MessageServiceSender(Context context) {
         this.context = context;
     }
 

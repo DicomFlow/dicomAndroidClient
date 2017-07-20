@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 
@@ -55,6 +56,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -249,10 +251,26 @@ public class GoogleSignInActivity2 extends BaseActivity implements
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (!snapshot.hasChild(user.getUid())) {
+                    // Verifica se já existe um par de chaves, caso contrário gera-se as chaves..
+                    if (!EncriptaDecriptaRSA.verificaSeExisteChavesNoSO(GoogleSignInActivity2.this)) {
+                        // Método responsável por gerar um par de chaves usando o algoritmo RSA e
+                        // armazena as chaves nos seus respectivos arquivos.
+                        EncriptaDecriptaRSA.geraChave(GoogleSignInActivity2.this);
+                        Log.d(TAG, "criou a chave");
+                    }
+
                     Map<String, String> info = new HashMap<>();
                     info.put("Display Name", user.getDisplayName());
                     info.put("Email", user.getEmail());
                     info.put("Provider Id", user.getProviderId());
+                    try {
+                        info.put("Public Key", Base64.encodeToString(EncriptaDecriptaRSA.getMyPublicKey(GoogleSignInActivity2.this).getEncoded(), Base64.DEFAULT));
+                        info.put("Private Key", Base64.encodeToString(EncriptaDecriptaRSA.getMyPrivateKey(GoogleSignInActivity2.this).getEncoded(), Base64.DEFAULT));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
                     snapshot.getRef().child(user.getUid()).child("info").setValue(info);
                 }
             }

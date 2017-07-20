@@ -4,7 +4,9 @@ import android.content.Context;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigInteger;
@@ -123,6 +125,43 @@ public class EncriptaDecriptaRSA {
         }
         return null;
     }
+
+    public static PrivateKey getMyPrivateKey(Context context) throws IOException, ClassNotFoundException {
+        PrivateKey privateKey = null;
+        FileInputStream inputStream = null;
+        ObjectInputStream objectInputStream = null;
+
+        try {
+            inputStream = context.openFileInput(EncriptaDecriptaRSA.PATH_CHAVE_PRIVADA);
+            objectInputStream = new ObjectInputStream(inputStream);
+            privateKey = (PrivateKey) objectInputStream.readObject();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (objectInputStream != null) objectInputStream.close();
+            if (inputStream != null) inputStream.close();
+        }
+        return privateKey;
+    }
+
+    public static PublicKey getMyPublicKey(Context context) throws IOException, ClassNotFoundException {
+        PublicKey publicKey = null;
+        FileInputStream inputStream = null;
+        ObjectInputStream objectInputStream = null;
+
+        try {
+            inputStream = context.openFileInput(EncriptaDecriptaRSA.PATH_CHAVE_PUBLICA);
+            objectInputStream = new ObjectInputStream(inputStream);
+            publicKey = (PublicKey) objectInputStream.readObject();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (objectInputStream != null) objectInputStream.close();
+            if (inputStream != null) inputStream.close();
+        }
+        return publicKey;
+    }
+
 
     /**
      * Decriptografa o texto puro usando chave privada.
