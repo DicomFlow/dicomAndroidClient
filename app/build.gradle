@@ -75,6 +75,8 @@ dependencies {
     compile 'com.mikepenz:octicons-typeface:3.0.0.1@aar'
     testCompile 'junit:junit:4.12'
     compile files('libs/core-1.56.0.0.jar')
+    compile files('libs/commons-codec-1.10.jar')
+    compile files('libs/commons-io-2.5.jar')
 }
 
 apply plugin: 'com.google.gms.google-services'

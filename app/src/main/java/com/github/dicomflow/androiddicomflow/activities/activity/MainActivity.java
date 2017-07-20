@@ -1,5 +1,6 @@
 package com.github.dicomflow.androiddicomflow.activities.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,6 +43,12 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.model.interfaces.Nameable;
+
+import org.apache.commons.codec.binary.Base64;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class MainActivity extends BaseActivity {
 
@@ -110,6 +117,7 @@ public class MainActivity extends BaseActivity {
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName("Contatos").withIcon(GoogleMaterial.Icon.gmd_nature_people).withIdentifier(1),
                         new PrimaryDrawerItem().withName("Requisições").withIcon(GoogleMaterial.Icon.gmd_account_box_mail).withIdentifier(2),
+                        new PrimaryDrawerItem().withName("Ver Arquivo").withIcon(GoogleMaterial.Icon.gmd_account_box_mail).withIdentifier(3),
                         new DividerDrawerItem(),
                         new SecondaryDrawerItem().withName("Sair").withIcon(FontAwesome.Icon.faw_sign_out).withIdentifier(0)
                 )
@@ -131,6 +139,10 @@ public class MainActivity extends BaseActivity {
                                     CURRENT_TAG = TAG_REQUESTS;
                                     loadHomeFragment(drawerItem);
                                     return true;
+                                case 3:
+                                    String arquivoBase64 = "RGljb21GbG93";
+                                    abrirArquivoPDF(arquivoBase64);
+                                    return true;
                                 case 10:
                                     // launch new intent instead of loading fragment
                                     startActivity(new Intent(MainActivity.this, CertificateListActivity.class));
@@ -140,6 +152,10 @@ public class MainActivity extends BaseActivity {
                         }
 
                         return false;
+                    }
+
+                    public void abrirArquivoPDF(String base64) {
+                        FileUtil.base64ToFile(base64, getBaseContext(), "teste.txt");
                     }
 
                     private void signOut() {
