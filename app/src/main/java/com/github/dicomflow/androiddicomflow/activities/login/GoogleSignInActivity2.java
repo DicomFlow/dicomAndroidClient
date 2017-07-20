@@ -33,6 +33,7 @@ import com.facebook.login.widget.LoginButton;
 import com.github.dicomflow.androiddicomflow.R;
 import com.github.dicomflow.androiddicomflow.activities.activity.MainActivity;
 import com.github.dicomflow.androiddicomflow.activities.outros.BaseActivity;
+import com.github.dicomflow.androiddicomflow.util.criptografia.EncriptaDecriptaRSA;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -63,7 +64,7 @@ import java.util.Map;
 public class GoogleSignInActivity2 extends BaseActivity implements
         GoogleApiClient.OnConnectionFailedListener {
 
-    private static final String TAG = "GoogleSignInActivity";
+    private static final String TAG = "[GoogleSignInActivity]";
     private static final int RC_SIGN_IN = 9001;
 
 
@@ -307,6 +308,13 @@ public class GoogleSignInActivity2 extends BaseActivity implements
     }
 
     private void intentForAnotherActivity() {
+        // Verifica se já existe um par de chaves, caso contrário gera-se as chaves..
+        if (!EncriptaDecriptaRSA.verificaSeExisteChavesNoSO(this)) {
+            // Método responsável por gerar um par de chaves usando o algoritmo RSA e
+            // armazena as chaves nos seus respectivos arquivos.
+            EncriptaDecriptaRSA.geraChave(this);
+            Log.d(TAG, "criou a chave");
+        }
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }

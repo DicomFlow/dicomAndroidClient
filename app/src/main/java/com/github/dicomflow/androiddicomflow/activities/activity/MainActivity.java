@@ -40,6 +40,7 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.model.interfaces.Nameable;
@@ -119,6 +120,8 @@ public class MainActivity extends BaseActivity {
                         new PrimaryDrawerItem().withName("Requisições").withIcon(GoogleMaterial.Icon.gmd_account_box_mail).withIdentifier(2),
                         new PrimaryDrawerItem().withName("Ver Arquivo").withIcon(GoogleMaterial.Icon.gmd_account_box_mail).withIdentifier(3),
                         new DividerDrawerItem(),
+
+                        new SectionDrawerItem().withDivider(true).withName(""),
                         new SecondaryDrawerItem().withName("Sair").withIcon(FontAwesome.Icon.faw_sign_out).withIdentifier(0)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
