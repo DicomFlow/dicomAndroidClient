@@ -75,6 +75,11 @@ dependencies {
     compile 'com.mikepenz:fontawesome-typeface:4.6.0.3@aar'
     compile 'com.mikepenz:octicons-typeface:3.0.0.1@aar'
     compile 'com.android.support:multidex:1.0.1'
+    compile group: 'com.madgag.spongycastle', name: 'core', version: '1.56.0.0'
+    compile group: 'com.madgag.spongycastle', name: 'pkix', version: '1.54.0.0'
+
+
+
     testCompile 'junit:junit:4.12'
     compile files('libs/core-1.56.0.0.jar')
     compile files('libs/commons-codec-1.10.jar')

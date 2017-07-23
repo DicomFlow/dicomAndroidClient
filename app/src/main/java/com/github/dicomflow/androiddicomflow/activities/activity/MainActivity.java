@@ -432,7 +432,10 @@ public class MainActivity extends BaseActivity {
                         }
                     })
                     .send("CERTIFICATE REQUEST");
-            DatabaseUtil.writeNewService(getUid(), certificateRequest, null);
+            Map<String, Object> outros = new HashMap<>();
+            outros.put("status", "aguardando-certificado");
+            outros.put("to", mailDoDestinatario);
+            DatabaseUtil.writeNewService(getUid(), certificateRequest, outros);
         } catch (FactoryService.ServiceObjectException e) {
             e.printStackTrace();
             Toast.makeText(this, "Erro na fabrica de servico", Toast.LENGTH_SHORT).show();

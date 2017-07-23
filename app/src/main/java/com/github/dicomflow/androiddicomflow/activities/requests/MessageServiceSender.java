@@ -10,6 +10,7 @@ import com.github.dicomflow.dicomflowjavalib.utils.DicomFlowXmlSerializer;
 import com.github.dicomflow.dicomflowjavalib.services.Service;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -23,7 +24,7 @@ public class MessageServiceSender {
     private BackgroundMail.OnFailCallback onFailCallback;
     private String mailto;
     private Service service;
-    private ArrayList<String> attachments = new ArrayList<>();
+    protected ArrayList<String> attachments = new ArrayList<>();
 
     protected MessageServiceSender(Context context) {
         this.context = context;
@@ -33,8 +34,12 @@ public class MessageServiceSender {
         return new MessageServiceSender(context);
     }
 
-    public MessageServiceSender withService(Service service) {
+    public MessageServiceSender withService(Service service) throws Exception {
         this.service = service;
+        //Esse servico sempre vai em anexo serializado em um xml
+        File root = new File(Environment.getExternalStorageDirectory(), "DicomFiles");
+        String filePath = DicomFlowXmlSerializer.getInstance().serialize(service, root);
+        withAttachments(filePath);
         return this;
     }
 
@@ -53,24 +58,13 @@ public class MessageServiceSender {
         return this;
     }
 
-    public MessageServiceSender withAttachments(@NonNull ArrayList<String> attachments) {
-        this.attachments.addAll(attachments);
-        return this;
-    }
-
-    public MessageServiceSender withAttachments(String... attachments) {
+    public MessageServiceSender withAttachments(String... attachments) throws Exception{
         this.attachments.addAll(Arrays.asList(attachments));
         return this;
     }
 
 
     public BackgroundMail send(String subject) throws Exception {
-        File root = new File(Environment.getExternalStorageDirectory(), "DicomFiles");
-
-        //Esse anexo sempre vai
-        String filePath = DicomFlowXmlSerializer.getInstance().serialize(service, root);
-        attachments.add(filePath);
-
         return BackgroundMail.newBuilder(context)
                 .withUsername(R.string.gmail_from_configuracao)
                 .withPassword(R.string.gmail_pass_configuracao)

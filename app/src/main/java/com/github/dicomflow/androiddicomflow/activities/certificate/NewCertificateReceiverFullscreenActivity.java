@@ -238,6 +238,7 @@ public class NewCertificateReceiverFullscreenActivity extends BaseActivity {
             params.put("domain", getDomainDefault());
             params.put("publickey", Base64.encodeToString(EncriptaDecriptaRSA.getMyPublicKey(this).getEncoded(), Base64.DEFAULT));
 
+            params.put("status", CertificateResult.Status.SUCCESS.name());
             final CertificateResult certificateResult = (CertificateResult) FactoryService.getInstance().getService(CertificateResult.class, params);
             MessageServiceSender o = MessageServiceSender.newBuilder(this)
                     .withMailto(certificateRequestOriginal.from) //email de quem pediu
@@ -256,7 +257,7 @@ public class NewCertificateReceiverFullscreenActivity extends BaseActivity {
                     });
 
             MessageServiceSenderCriptografado messageServiceSenderCriptografado = new MessageServiceSenderCriptografado(this, o);
-            messageServiceSenderCriptografado.send("CERTIFICATE REQUEST");
+            messageServiceSenderCriptografado.send("CERTIFICATE RESULT");
 
             DatabaseUtil.writeNewService(getUid(), certificateResult, null);
         } catch (FactoryService.ServiceObjectException e) {

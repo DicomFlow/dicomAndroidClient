@@ -49,7 +49,7 @@ public class CertificateViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bindToPost(Certificate certificate, int position) {
-        mContentView.setText(certificate.from);
+        mContentView.setText(certificate.to);
 
         imageButtonCertificateMissing.setTag(position);
         imageButtonCertificateGreen.setTag(position);

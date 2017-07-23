@@ -72,7 +72,7 @@ public class FileUtil {
             if (isGooglePhotosUri(uri))
                 return uri.getLastPathSegment();
             return getDataColumn(context, uri, null, null);
-        }
+
         // File
         else if ("file".equalsIgnoreCase(uri.getScheme())) {
             return uri.getPath();
