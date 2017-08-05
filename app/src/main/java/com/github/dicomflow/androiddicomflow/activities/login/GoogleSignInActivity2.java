@@ -23,6 +23,7 @@ import android.support.design.widget.Snackbar;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -55,8 +56,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.File;
+import org.spongycastle.operator.OperatorCreationException;
+
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SignatureException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -251,12 +259,26 @@ public class GoogleSignInActivity2 extends BaseActivity implements
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (!snapshot.hasChild(user.getUid())) {
-                    // Verifica se já existe um par de chaves, caso contrário gera-se as chaves..
-                    if (!EncriptaDecriptaRSA.verificaSeExisteChavesNoSO(GoogleSignInActivity2.this)) {
-                        // Método responsável por gerar um par de chaves usando o algoritmo RSA e
-                        // armazena as chaves nos seus respectivos arquivos.
-                        EncriptaDecriptaRSA.geraChave(GoogleSignInActivity2.this);
-                        Log.d(TAG, "criou a chave");
+                    // Verifica se já existe alguma coisa (o que????), caso contrário gera-se o certificado.
+                    if (true) {
+                        try {
+                            X509Certificate certificate = EncriptaDecriptaRSA.generateCertificate(user, GoogleSignInActivity2.this);
+                        } catch (NoSuchAlgorithmException e) {
+                            Toast.makeText(GoogleSignInActivity2.this, "Eita porra 1", Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        } catch (OperatorCreationException e) {
+                            Toast.makeText(GoogleSignInActivity2.this, "Eita porra 2", Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            Toast.makeText(GoogleSignInActivity2.this, "Eita porra 3", Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        } catch (CertificateException e) {
+                            Toast.makeText(GoogleSignInActivity2.this, "Eita porra 4", Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        } catch (NoSuchProviderException e) {
+                            Toast.makeText(GoogleSignInActivity2.this, "Eita porra 5", Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
                     }
 
                     Map<String, String> info = new HashMap<>();
@@ -264,11 +286,28 @@ public class GoogleSignInActivity2 extends BaseActivity implements
                     info.put("Email", user.getEmail());
                     info.put("Provider Id", user.getProviderId());
                     try {
-                        info.put("Public Key", Base64.encodeToString(EncriptaDecriptaRSA.getMyPublicKey(GoogleSignInActivity2.this).getEncoded(), Base64.DEFAULT));
+                        info.put("Public Key", Base64.encodeToString(EncriptaDecriptaRSA.getPublicKey(GoogleSignInActivity2.this, EncriptaDecriptaRSA.PATH_CERTIFICATE).getEncoded(), Base64.DEFAULT));
                         info.put("Private Key", Base64.encodeToString(EncriptaDecriptaRSA.getMyPrivateKey(GoogleSignInActivity2.this).getEncoded(), Base64.DEFAULT));
                     } catch (IOException e) {
+                        Toast.makeText(GoogleSignInActivity2.this, "Eita porra 6", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     } catch (ClassNotFoundException e) {
+                        Toast.makeText(GoogleSignInActivity2.this, "Eita porra 7", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    } catch (CertificateException e) {
+                        Toast.makeText(GoogleSignInActivity2.this, "Eita porra 8", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    } catch (NoSuchAlgorithmException e) {
+                        Toast.makeText(GoogleSignInActivity2.this, "Eita porra 9", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    } catch (InvalidKeyException e) {
+                        Toast.makeText(GoogleSignInActivity2.this, "Eita porra 10", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    } catch (SignatureException e) {
+                        Toast.makeText(GoogleSignInActivity2.this, "Eita porra 11", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    } catch (NoSuchProviderException e) {
+                        Toast.makeText(GoogleSignInActivity2.this, "Eita porra 12", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                     snapshot.getRef().child(user.getUid()).child("info").setValue(info);
@@ -326,13 +365,29 @@ public class GoogleSignInActivity2 extends BaseActivity implements
     }
 
     private void intentForAnotherActivity() {
-        // Verifica se já existe um par de chaves, caso contrário gera-se as chaves..
-        if (!EncriptaDecriptaRSA.verificaSeExisteChavesNoSO(this)) {
-            // Método responsável por gerar um par de chaves usando o algoritmo RSA e
-            // armazena as chaves nos seus respectivos arquivos.
-            EncriptaDecriptaRSA.geraChave(this);
-            Log.d(TAG, "criou a chave");
+        // Verifica se já existe alguma coisa (o que????), caso contrário gera-se o certificado.
+        if (true) {
+            try {
+                X509Certificate certificate = EncriptaDecriptaRSA.generateCertificate(FirebaseAuth.getInstance().getCurrentUser(), GoogleSignInActivity2.this);
+            } catch (NoSuchAlgorithmException e) {
+                Toast.makeText(GoogleSignInActivity2.this, "Eita porra 1", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            } catch (OperatorCreationException e) {
+                Toast.makeText(GoogleSignInActivity2.this, "Eita porra 2", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            } catch (IOException e) {
+                Toast.makeText(GoogleSignInActivity2.this, "Eita porra 3", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            } catch (CertificateException e) {
+                Toast.makeText(GoogleSignInActivity2.this, "Eita porra 4", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            } catch (NoSuchProviderException e) {
+                Toast.makeText(GoogleSignInActivity2.this, "Eita porra 5", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
+            Log.d(TAG, "criou o certificado");
         }
+
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }

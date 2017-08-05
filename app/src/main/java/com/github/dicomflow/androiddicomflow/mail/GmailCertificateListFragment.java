@@ -1,9 +1,8 @@
-package com.github.dicomflow.androiddicomflow.activities.certificate;
+package com.github.dicomflow.androiddicomflow.mail;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,10 +18,10 @@ import com.creativityapps.gmailbackgroundlibrary.BackgroundMail;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.github.dicomflow.androiddicomflow.R;
 import com.github.dicomflow.androiddicomflow.activities.GenericFragment;
-import com.github.dicomflow.androiddicomflow.activities.activity.MainActivity;
+import com.github.dicomflow.androiddicomflow.activities.certificate.Certificate;
+import com.github.dicomflow.androiddicomflow.activities.certificate.CertificateViewHolder;
 import com.github.dicomflow.androiddicomflow.activities.requests.DatabaseUtil;
 import com.github.dicomflow.androiddicomflow.activities.requests.MessageServiceSender;
-import com.github.dicomflow.androiddicomflow.mail.tasks.MakeRequestTask;
 import com.github.dicomflow.androiddicomflow.util.FileUtil;
 import com.github.dicomflow.dicomflowjavalib.FactoryService;
 import com.github.dicomflow.dicomflowjavalib.services.Service;
@@ -40,14 +39,13 @@ import com.yalantis.phoenix.PullToRefreshView;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CertificateListFragment extends GenericFragment {
+public class GmailCertificateListFragment extends GenericFragment {
 
 
     private static final String TAG = "CertificateListFragment";
     private static final int REPORT_PICKER_RESULT = 2000;
     private static final int REPORT_PICKER_CER_CERTIFICATE_CONFIRM = 3000;
-
-    public static final int REFRESH_DELAY = 2000;
+    private static final long REFRESH_DELAY = 1000;
 
     private FirebaseDatabase mDatabase;
 
@@ -58,7 +56,7 @@ public class CertificateListFragment extends GenericFragment {
     private int index;
     private PullToRefreshView mPullToRefreshView;
 
-    public CertificateListFragment() {}
+    public GmailCertificateListFragment() {}
 
     @Override
     public View onCreateView (LayoutInflater inflater, ViewGroup container,
@@ -92,17 +90,6 @@ public class CertificateListFragment extends GenericFragment {
 
     private void readUnreadEmails() {
         Toast.makeText(getContext(), "Lendo emails", Toast.LENGTH_SHORT).show();
-        getResultsFromApi(new MakeRequestTask.IMakeRequestTask() {
-            @Override
-            public String getQuery() {
-                return "is:unread subject:([certificate request]) has:attachment";
-            }
-
-            @Override
-            public String getUid() {
-                return CertificateListFragment.this.getUid();
-            }
-        });
     }
 
     @Override

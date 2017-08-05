@@ -122,7 +122,7 @@ public class MessageServiceSenderCriptografado extends MessageServiceSenderDecor
         //preciso criar novos arquivos temporarios (cache)
 
         //// TODO: 20/07/17 IMPORTANTE trocar pela chave publica do destinatario
-        PublicKey publicKeyDoDestinatario = EncriptaDecriptaRSA.getMyPublicKey(context);
+        PublicKey publicKeyDoDestinatario = EncriptaDecriptaRSA.getPublicKey(context, EncriptaDecriptaRSA.PATH_CERTIFICATE);
         for (String filePath : attachementsOriginais) {
 
             //pegar os bytes do original

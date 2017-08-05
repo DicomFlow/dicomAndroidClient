@@ -344,6 +344,7 @@ public abstract class NovoRequestListFragment extends GenericFragment {
                     if (!EncriptaDecriptaRSA.verificaSeExisteChavesNoSO(getContext())) {
                         // Método responsável por gerar um par de chaves usando o algoritmo RSA e
                         // armazena as chaves nos seus respectivos arquivos.
+
                         EncriptaDecriptaRSA.geraChave(getContext());
                     }
                     PrivateKey privateKey = EncriptaDecriptaRSA.getMyPrivateKey(getContext());

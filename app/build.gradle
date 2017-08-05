@@ -93,6 +93,7 @@ dependencies {
     compile 'com.mikepenz:octicons-typeface:3.0.0.1@aar'
     compile 'com.android.support:multidex:1.0.1'
     compile 'pub.devrel:easypermissions:0.3.0'
+    compile 'com.yalantis:phoenix:1.2.3'
     testCompile 'junit:junit:4.12'
 }
 

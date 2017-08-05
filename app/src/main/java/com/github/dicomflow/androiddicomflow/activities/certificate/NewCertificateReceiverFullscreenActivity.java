@@ -236,7 +236,7 @@ public class NewCertificateReceiverFullscreenActivity extends BaseActivity {
             params.put("mail", getEmail());
             params.put("port", getPortDefault());
             params.put("domain", getDomainDefault());
-            params.put("publickey", Base64.encodeToString(EncriptaDecriptaRSA.getMyPublicKey(this).getEncoded(), Base64.DEFAULT));
+            params.put("publickey", Base64.encodeToString(EncriptaDecriptaRSA.getPublicKey(this, EncriptaDecriptaRSA.PATH_CERTIFICATE).getEncoded(), Base64.DEFAULT));
 
             params.put("status", CertificateResult.Status.SUCCESS.name());
             final CertificateResult certificateResult = (CertificateResult) FactoryService.getInstance().getService(CertificateResult.class, params);

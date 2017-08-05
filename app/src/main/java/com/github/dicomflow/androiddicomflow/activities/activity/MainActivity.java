@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
@@ -30,24 +29,17 @@ import com.github.dicomflow.androiddicomflow.activities.login.GoogleSignInActivi
 import com.github.dicomflow.androiddicomflow.activities.outros.BaseActivity;
 import com.github.dicomflow.androiddicomflow.activities.requests.DatabaseUtil;
 import com.github.dicomflow.androiddicomflow.activities.requests.MessageServiceSender;
-import com.github.dicomflow.androiddicomflow.activities.requests.Request;
 import com.github.dicomflow.androiddicomflow.fragments.NovoRequestPutsFragment;
+import com.github.dicomflow.androiddicomflow.mail.GmailCertificateListFragment;
 import com.github.dicomflow.androiddicomflow.util.FileUtil;
-import com.github.dicomflow.androiddicomflow.util.criptografia.DecoradorServicoAssinado;
 import com.github.dicomflow.androiddicomflow.util.criptografia.EncriptaDecriptaRSA;
 import com.github.dicomflow.dicomflowjavalib.FactoryService;
-import com.github.dicomflow.dicomflowjavalib.services.Service;
 import com.github.dicomflow.dicomflowjavalib.services.certificate.CertificateRequest;
-import com.github.dicomflow.dicomflowjavalib.services.request.RequestPut;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -63,9 +55,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 
-import org.spongycastle.asn1.bc.EncryptedSecretKeyData;
-
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -90,6 +80,8 @@ public class MainActivity extends BaseActivity {
     private static final String TAG_HOME = "home";
     private static final String TAG_CERTIFICATES = "CERTIFICATES";
     private static final String TAG_REQUESTS = "REQUESTS";
+    //gmail
+    private static final String TAG_CERTIFICATES_GMAIL = "CERTIFICATES_GMAIL";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,13 +130,16 @@ public class MainActivity extends BaseActivity {
                 .withToolbar(toolbar)
                 .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header
                 .addDrawerItems(
+//                        new PrimaryDrawerItem().withName("Certificate (gmail)").withIcon(GoogleMaterial.Icon.gmd_nature_people).withIdentifier(7),
+                        new PrimaryDrawerItem().withName("Trocar certificados").withIcon(GoogleMaterial.Icon.gmd_lock).withIdentifier(6),
                         new PrimaryDrawerItem().withName("Contatos").withIcon(GoogleMaterial.Icon.gmd_nature_people).withIdentifier(1),
                         new PrimaryDrawerItem().withName("Requisições").withIcon(GoogleMaterial.Icon.gmd_account_box_mail).withIdentifier(2),
                         new PrimaryDrawerItem().withName("Ver Arquivo").withIcon(GoogleMaterial.Icon.gmd_account_box_mail).withIdentifier(3),
-                        new SectionDrawerItem().withDivider(true).withName("Minhas chaves"),
-                        new PrimaryDrawerItem().withName("Private key").withIcon(GoogleMaterial.Icon.gmd_lock).withIdentifier(4),
-                        new PrimaryDrawerItem().withName("Public key").withIcon(GoogleMaterial.Icon.gmd_lock_open).withIdentifier(5),
-                        new PrimaryDrawerItem().withName("Trocar certificados").withIcon(GoogleMaterial.Icon.gmd_lock).withIdentifier(6),
+
+                        new SectionDrawerItem().withDivider(true).withName("Segurança"),
+                        new PrimaryDrawerItem().withName("My Private key").withIcon(GoogleMaterial.Icon.gmd_lock).withIdentifier(4),
+                        new PrimaryDrawerItem().withName("My Public key").withIcon(GoogleMaterial.Icon.gmd_lock_open).withIdentifier(5),
+
                         new DividerDrawerItem(),
                         new SecondaryDrawerItem().withName("Sair").withIcon(FontAwesome.Icon.faw_sign_out).withIdentifier(0)
                 )
@@ -186,7 +181,7 @@ public class MainActivity extends BaseActivity {
                                     return true;
                                 case 5:
                                     try {
-                                        PublicKey publicKey = EncriptaDecriptaRSA.getMyPublicKey(MainActivity.this);
+                                        PublicKey publicKey = EncriptaDecriptaRSA.getPublicKey(MainActivity.this, EncriptaDecriptaRSA.PATH_CERTIFICATE);
                                         new MaterialDialog.Builder(MainActivity.this)
                                                 .title("Public Key")
                                                 .content(publicKey.toString())
@@ -199,6 +194,10 @@ public class MainActivity extends BaseActivity {
                                 case 6:
                                     abrirContactPickerParaIniciarCertificateRequest();
                                     return true;
+//                                case 7:
+//                                    CURRENT_TAG = TAG_CERTIFICATES_GMAIL;
+//                                    loadHomeFragment(drawerItem);
+//                                    return true;
                                 case 10:
                                     // launch new intent instead of loading fragment
                                     startActivity(new Intent(MainActivity.this, CertificateListActivity.class));
@@ -392,6 +391,10 @@ public class MainActivity extends BaseActivity {
             case 2:
                 NovoRequestPutsFragment requestPutsFragment = new NovoRequestPutsFragment();
                 return requestPutsFragment;
+
+//            case 7:
+//                GmailCertificateListFragment gmailCertificateListFragment = new GmailCertificateListFragment();
+//                return gmailCertificateListFragment;
             default:
                 return new MainActivityFragment();
         }
@@ -413,10 +416,10 @@ public class MainActivity extends BaseActivity {
             params.put("mail", getEmail());
             params.put("port", getPortDefault());
             params.put("domain", getDomainDefault());
-            params.put("publickey", Base64.encodeToString(EncriptaDecriptaRSA.getMyPublicKey(this).getEncoded(), Base64.DEFAULT));
+            params.put("publickey", Base64.encodeToString(EncriptaDecriptaRSA.getPublicKey(this, EncriptaDecriptaRSA.PATH_CERTIFICATE).getEncoded(), Base64.DEFAULT));
 
             final CertificateRequest certificateRequest = (CertificateRequest) FactoryService.getInstance().getService(CertificateRequest.class, params);
-            MessageServiceSender.newBuilder(this)
+            MessageServiceSender messageServiceSender = MessageServiceSender.newBuilder(this)
                     .withMailto(mailDoDestinatario)
                     .withService(certificateRequest)
                     .withOnSuccessCallback(new BackgroundMail.OnSuccessCallback() {
@@ -430,8 +433,12 @@ public class MainActivity extends BaseActivity {
                         public void onFail() {
                             Toast.makeText(MainActivity.this, "Falha no envio do email", Toast.LENGTH_SHORT).show();
                         }
-                    })
-                    .send("CERTIFICATE REQUEST");
+                    });
+
+            File certificateFile = new File(getFilesDir(), EncriptaDecriptaRSA.PATH_CERTIFICATE);
+            messageServiceSender.withAttachments(certificateFile.getAbsolutePath());
+
+            messageServiceSender.send("CERTIFICATE REQUEST");
             Map<String, Object> outros = new HashMap<>();
             outros.put("status", "aguardando-certificado");
             outros.put("to", mailDoDestinatario);
