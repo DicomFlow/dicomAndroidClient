@@ -2,6 +2,10 @@ package com.github.dicomflow.androiddicomflow.activities.requests;
 
 public class Request extends Service {
 
+    public String segundaOpiniaoDe;
+    public String segundaOpiniaoPara;
+    public String segundaOpiniaoStatus;
+
     public Request() {
         // Default constructor required for calls to DataSnapshot.getValue(Post.class)
     }
@@ -10,8 +14,8 @@ public class Request extends Service {
         enviada, lida, encaminhada, respondida
     }
 
-//    private com.github.dicomflow.androiddicomflow.protocolo.services.request.RequestPut requestPut;
-//    public Request(com.github.dicomflow.androiddicomflow.protocolo.services.request.RequestPut requestPut) {
+//    private com.github.dicomflow.dicomflowjavalib.services.request.RequestPut requestPut;
+//    public Request(com.github.dicomflow.dicomflowjavalib.services.request.RequestPut requestPut) {
 //        super(requestPut);
 //        this.requestPut = requestPut;
 //    }

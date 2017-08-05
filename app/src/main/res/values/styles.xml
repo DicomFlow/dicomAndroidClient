@@ -60,4 +60,11 @@
         <item name="android:gravity">center</item>
         <item name="android:textSize">36sp</item>
     </style>
+
+    <style name="Tooltip2">
+        <item name="android:text">qwqwrqwfqwfqwfqwfqwf</item>
+        <item name="android:textColor">?android:textColorPrimaryInverse</item>
+        <item name="android:textSize">14sp</item>
+        <item name="backgroundColor">#000000</item>
+    </style>
 </resources>

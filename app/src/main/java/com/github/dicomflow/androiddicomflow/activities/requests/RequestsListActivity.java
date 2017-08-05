@@ -5,23 +5,22 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.github.dicomflow.androiddicomflow.R;
-import com.github.dicomflow.androiddicomflow.activities.login.GoogleSignInActivity;
 import com.github.dicomflow.androiddicomflow.activities.login.GoogleSignInActivity2;
 import com.github.dicomflow.androiddicomflow.activities.outros.BaseActivity;
-import com.github.dicomflow.androiddicomflow.activities.outros.FileChooser;
-import com.github.dicomflow.androiddicomflow.protocolo.DicomFlowXmlSerializer;
-import com.github.dicomflow.androiddicomflow.protocolo.services.Service;
+import com.github.dicomflow.androiddicomflow.util.FileUtil;
+import com.github.dicomflow.dicomflowjavalib.utils.DicomFlowXmlSerializer;
+import com.github.dicomflow.dicomflowjavalib.services.Service;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.io.File;
 import java.net.URISyntaxException;
 
 public class RequestsListActivity extends BaseActivity {
@@ -31,7 +30,7 @@ public class RequestsListActivity extends BaseActivity {
     private static final int REPORT_PICKER_RESULT_FOR_REQUEST_PUT = 2000;
 
     public static String getPath(Context context, Uri uri) throws URISyntaxException {
-        if ("content".equalsIgnoreCase(uri.getScheme())) {
+        if ("email".equalsIgnoreCase(uri.getScheme())) {
             String[] projection = {"_data"};
             Cursor cursor = null;
 
@@ -60,6 +59,12 @@ public class RequestsListActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
+
+        // Show the Up button in the action bar.
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,63 +115,21 @@ public class RequestsListActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REPORT_PICKER_RESULT_FOR_REQUEST_PUT && resultCode == RESULT_OK) {
-            String filePath = data.getData().getPath();
-            File file = new File(filePath);
-
-
-//            if (file.exists()) {
             try {
                 Uri uri = data.getData();
-                Log.d(TAG, "File Uri: " + uri.toString());
-                // Get the path
-                String path = null;
-                path = getPath(this, uri);
-                Log.d(TAG, "File Path: " + path);
-//                    File root = new File(Environment.getExternalStorageDirectory(), "DicomFiles");
-//                    File xmlFile = new File(root, "request_PUT.xml");
-                Service service = DicomFlowXmlSerializer.deserialize(file.getAbsolutePath());
+                String filePath = FileUtil.getPath(getBaseContext(), uri);
+                Service service = DicomFlowXmlSerializer.getInstance().deserialize(filePath);
                 DatabaseUtil.writeNewService(getUid(), service, null);
             } catch (Exception e) {
                 e.printStackTrace();
                 Snackbar.make(getWindow().getDecorView().getRootView(), "Erro.", Snackbar.LENGTH_SHORT).show();
             }
-//            }
         }
     }
 
     private void doLaunchReportPicker() {
-
-        new FileChooser(this).setFileListener(new FileChooser.FileSelectedListener() {
-            @Override
-            public void fileSelected(File file) {
-
-                try {
-//                    File root = new File(Environment.getExternalStorageDirectory(), "DicomFiles");
-//                    File xmlFile = new File(root, "request_PUT.xml");
-                    Service service = DicomFlowXmlSerializer.deserialize(file.getAbsolutePath());
-                    DatabaseUtil.writeNewService(getUid(), service, null);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Snackbar.make(getWindow().getDecorView().getRootView(), "2 Erro.", Snackbar.LENGTH_SHORT).show();
-                }
-            }
-        }).showDialog();
-
-
-//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-//        intent.setType("*/*");
-//        intent.addCategory(Intent.CATEGORY_OPENABLE);
-//
-//        try {
-//            startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"),
-//                    REPORT_PICKER_RESULT_FOR_REQUEST_PUT);
-//        } catch (android.content.ActivityNotFoundException ex) {
-//            // Potentially direct the user to the Market with a Dialog
-//            Toast.makeText(this, "Please install a File Manager.",
-//                    Toast.LENGTH_SHORT).show();
-//        }
-//        Intent reportPickerIntent = new Intent(Intent.ACTION_GET_CONTENT, ContactsContract.Contacts.CONTENT_URI);
-//        reportPickerIntent.setType("*/*");
-//        startActivityForResult(reportPickerIntent, REPORT_PICKER_RESULT_FOR_REQUEST_PUT);
+        Intent reportPickerIntent = new Intent(Intent.ACTION_GET_CONTENT, ContactsContract.Contacts.CONTENT_URI);
+        reportPickerIntent.setType("text/xml");
+        startActivityForResult(reportPickerIntent, REPORT_PICKER_RESULT_FOR_REQUEST_PUT);
     }
 }

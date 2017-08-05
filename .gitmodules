@@ -1,1 +1,4 @@
 
+[submodule "dicomFlowJavalib"]
+	path = dicomFlowJavalib
+	url = git@github.com:DicomFlow/dicomFlowJavalib.git

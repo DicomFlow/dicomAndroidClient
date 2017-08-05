@@ -15,7 +15,9 @@ import android.util.Base64;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * Created by netolucena on 29/06/2017.
@@ -65,14 +67,14 @@ public class FileUtil {
             }
         }
         // MediaStore (and general)
-        else if ("content".equalsIgnoreCase(uri.getScheme())) {
+        else if ("email".equalsIgnoreCase(uri.getScheme())) {
             // Return the remote address
             if (isGooglePhotosUri(uri))
                 return uri.getLastPathSegment();
             return getDataColumn(context, uri, null, null);
-        }
-        // File
-        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+
+            // File
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
             return uri.getPath();
         }
         return null;
@@ -120,7 +122,7 @@ public class FileUtil {
      * @return Whether the Uri authority is Google Photos.
      */
     public static boolean isGooglePhotosUri(Uri uri) {
-        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
+        return "com.google.android.apps.photos.email".equals(uri.getAuthority());
     }
 
     public static String getFileNameFromFilePath(String filePath) {
@@ -156,4 +158,18 @@ public class FileUtil {
             return null;
         }
     }
+
+    public static void base64ToFile(String base64, Context context, String fileName) {
+
+        String filePath = context.getFilesDir() + fileName;
+        File file = new File(filePath);
+
+        byte[] data = Base64.decode(base64, Base64.CRLF);
+        try (OutputStream stream = new FileOutputStream(fileName)) {
+            stream.write(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

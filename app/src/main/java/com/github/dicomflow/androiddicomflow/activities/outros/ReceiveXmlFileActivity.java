@@ -10,8 +10,8 @@ import android.widget.Toast;
 
 import com.github.dicomflow.androiddicomflow.R;
 import com.github.dicomflow.androiddicomflow.activities.requests.DatabaseUtil;
-import com.github.dicomflow.androiddicomflow.protocolo.DicomFlowXmlSerializer;
-import com.github.dicomflow.androiddicomflow.protocolo.services.Service;
+import com.github.dicomflow.dicomflowjavalib.utils.DicomFlowXmlSerializer;
+import com.github.dicomflow.dicomflowjavalib.services.Service;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -80,7 +80,7 @@ public class ReceiveXmlFileActivity extends BaseActivity {
     }
 
     private Service deserializeXML(File xmlFile) throws Exception {
-        Service service = DicomFlowXmlSerializer.deserialize(xmlFile.getAbsolutePath());
+        Service service = DicomFlowXmlSerializer.getInstance().deserialize(xmlFile.getAbsolutePath());
         return service;
     }
 

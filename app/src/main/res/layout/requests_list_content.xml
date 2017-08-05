@@ -67,7 +67,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             app:iiv_color="@color/blue_grey_500"
-            app:iiv_icon="gmd-mail-reply" />
+            app:iiv_icon="gmd-from-reply" />
 
     </LinearLayout>
 </RelativeLayout>

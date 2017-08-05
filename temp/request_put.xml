@@ -1,0 +1,63 @@
+<service name="REQUEST" action="PUT" version="1.0" type="10">
+   <from>rbrico@gmail.com</from>
+   <timeout>1500215619886</timeout>
+   <timestamp>2017-07-197 11:33:39-0300</timestamp>
+   <messageID>ed9791ec-e8d3-4c04-8449-640bcfbe19e0</messageID>
+   <requestType>Report</requestType>
+   <url value="value">
+      <credentials>
+         <value>value</value>
+      </credentials>
+      <patient id="id" name="name" gender="gender" birthdate="birthdate">
+         <study id="id" type="type..." description="description..." datetime="1272033581" size="1">
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+         </study>
+         <study id="id" type="type..." description="description..." datetime="1272033581" size="1">
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+         </study>
+         <study id="id" type="type..." description="description..." datetime="1272033581" size="1">
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+         </study>
+      </patient>
+      <patient id="id" name="name" gender="gender" birthdate="birthdate">
+         <study id="id" type="type..." description="description..." datetime="1272033581" size="1">
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+         </study>
+         <study id="id" type="type..." description="description..." datetime="1272033581" size="1">
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+         </study>
+         <study id="id" type="type..." description="description..." datetime="1272033581" size="1">
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+         </study>
+      </patient>
+      <patient id="id" name="name" gender="gender" birthdate="birthdate">
+         <study id="id" type="type..." description="description..." datetime="1272033581" size="1">
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+         </study>
+         <study id="id" type="type..." description="description..." datetime="1272033581" size="1">
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+         </study>
+         <study id="id" type="type..." description="description..." datetime="1272033581" size="1">
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+            <serie id="id" bodypart="type..." description="description..." instances="1"/>
+         </study>
+      </patient>
+   </url>
+</service>

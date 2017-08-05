@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.github.dicomflow.androiddicomflow.R;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.view.IconicsImageView;
 
 public class RequestPutViewHolder extends RecyclerView.ViewHolder {
@@ -19,6 +20,7 @@ public class RequestPutViewHolder extends RecyclerView.ViewHolder {
 
     public RequestPutViewHolder(View view) {
         super(view);
+
         mView = view;
         dataDeEnvioView = (TextView) view.findViewById(R.id.data_de_envio);
         requestPutFromView = (TextView) view.findViewById(R.id.request_put_from);
